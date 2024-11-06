@@ -1,0 +1,48 @@
+.nav {
+    display: flex;
+    justify-content: space-around; 
+    align-items: center;
+    padding: 1rem;
+}
+
+.nav a {
+    color: var(--accent);
+    text-decoration: none;
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    transition: color 0.2s ease-in-out;
+}
+
+.nav a span {
+    margin-left: 0.5rem;
+}
+
+@media (max-width: 767px) {
+    .nav a span {
+        display: none;
+    }
+
+    .nav a {
+        margin: 0 0.5rem;
+        font-size: 1.8rem;
+        width: auto;
+    }
+}
+
+@media (min-width: 768px) {
+    .nav {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .nav a {
+        margin: 0 1rem;
+        font-size: 1.2rem;
+    }
+
+    .nav a span {
+        display: inline;
+    }
+}
