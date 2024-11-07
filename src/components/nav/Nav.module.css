@@ -18,19 +18,29 @@
     margin-left: 0.5rem;
 }
 
-@media (max-width: 767px) {
+@media (max-width: 600px) {
+
+    .nav {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        background-color: var(--background-color);
+        box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
+    }
+
     .nav a span {
         display: none;
     }
 
     .nav a {
         margin: 0 0.5rem;
-        font-size: 1.8rem;
         width: auto;
     }
+
 }
 
-@media (min-width: 768px) {
+@media (min-width: 600px) {
     .nav {
         flex-direction: row;
         justify-content: space-between;

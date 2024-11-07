@@ -8,3 +8,9 @@
     width: 100vw;
     max-width: 1200px;
 }
+
+@media (max-width: 600px) {
+    .footer {
+        display: none;
+    }
+}

@@ -18,24 +18,24 @@ export default function Nav() {
   return (
     <nav className={nav}>
       <Link href="/">
-        <FaHome /> Home
+        <FaHome /> <span>Home</span>
       </Link>
       {/* {session && ( */}
       <>
         <Link href="/today">
-          <FaAngleDown /> Today
+          <FaAngleDown /> <span>Today</span>
         </Link>
         <Link href="/tomorrow">
-          <FaAngleRight /> Tomorrow
+          <FaAngleRight /> <span>Tomorrow</span>
         </Link>
         <Link href="/someday">
-          <FaAngleDoubleRight /> Someday
+          <FaAngleDoubleRight /> <span>Someday</span>
         </Link>
         <Link href="/add">
-          <FaPlus /> Add Task
+          <FaPlus /> <span>Add Task</span>
         </Link>
         <Link href="/settings">
-          <FaUserCircle /> Settings
+          <FaUserCircle /> <span>Settings</span>
         </Link>
       </>
       {/* )} */}
