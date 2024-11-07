@@ -17,21 +17,16 @@ const geistMono = localFont({
   weight: "100 900",
 });
 
-export const metadata = {
-  title: "DeepFlow",
-  description: "Keep track of your most important tasks for today",
-};
-
-export default function RootLayout({ children }) {
+export default function App({ Component, pageProps }) {
   // const session = await getServerSession(authOptions);
 
   return (
-    <html lang="en">
-      {/* <SessionProvider session={session}> */}
-      <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        <Main_Layout>{children}</Main_Layout>
-      </body>
-      {/* </SessionProvider> */}
-    </html>
+    // <SessionProvider session={session}>
+    <div className={`${geistSans.variable} ${geistMono.variable}`}>
+      <Main_Layout>
+        <Component {...pageProps} />
+      </Main_Layout>
+    </div>
+    // </SessionProvider> */
   );
 }
