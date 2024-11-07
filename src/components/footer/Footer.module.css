@@ -1,0 +1,16 @@
+.footer {
+    background: var(--accent);
+    padding: 0.75rem;
+    text-align: center;
+    font-size: 14px;
+    color: var(--primary-dark);
+    margin-top: 20px;
+    width: 100vw;
+    max-width: 1200px;
+}
+
+@media (max-width: 600px) {
+    .footer {
+        display: none;
+    }
+}
