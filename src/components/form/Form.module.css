@@ -1,0 +1,25 @@
+.form {
+    max-width: 400px;
+    margin: auto;
+    
+  }
+  
+  .radio-groups {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+  
+  .radio-group {
+    flex: 1;
+  }
+  
+  .radio-group p {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+  }
+  
+  .label, .input {
+    display: inline-block;
+    margin-bottom: 0.5rem;
+  }

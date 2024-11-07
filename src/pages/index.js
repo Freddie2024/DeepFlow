@@ -1,5 +1,7 @@
 import Image from "next/image";
 import styles from "./index.module.css";
+import Link from "next/link";
+import Form from "../components/form/Form";
 
 export default function Home() {
   return (
@@ -21,6 +23,7 @@ export default function Home() {
           <li>3. Task</li>
         </ul>
         <h2>Create your first task!</h2>
+        <Form />
       </div>
     </>
   );

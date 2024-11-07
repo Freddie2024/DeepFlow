@@ -31,7 +31,7 @@ export default function Nav() {
         <Link href="/someday">
           <FaAngleDoubleRight /> <span>Someday</span>
         </Link>
-        <Link href="/add">
+        <Link href="/create">
           <FaPlus /> <span>Add Task</span>
         </Link>
         <Link href="/settings">
