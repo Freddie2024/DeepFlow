@@ -1,8 +1,20 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styles from "./Form.module.css";
-// import { form } from "./Form.module.css";
 
 export default function Form({ onSubmit }) {
+  useEffect(() => {
+    const textarea = document.getElementById("description");
+
+    function autoResize() {
+      textarea.style.height = "auto";
+      textarea.style.height = `${textarea.scrollHeight}px`;
+    }
+
+    textarea.addEventListener("input", autoResize);
+
+    return () => textarea.removeEventListener("input", autoResize);
+  }, []);
+
   return (
     <>
       <form className={styles.form} aria-label="Task Form" onSubmit={onSubmit}>
@@ -12,6 +24,7 @@ export default function Form({ onSubmit }) {
           name="title"
           type="text"
           required
+          className={styles.formInput}
           // defaultValue={defaultData?.title}
         />{" "}
         <br />
@@ -19,8 +32,9 @@ export default function Form({ onSubmit }) {
         <textarea
           id="description"
           name="description"
-          cols="40"
-          rows="5"
+          rows="2"
+          maxlength="500"
+          className={styles.formInput}
           // defaultValue={defaultData?.description}
         />
         {/* <div className={styles.radioGroups}> */}
