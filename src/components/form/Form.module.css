@@ -1,0 +1,54 @@
+.form {
+  max-width: 450px;
+  margin: 2rem auto;
+  background-color: var(--primary);
+  padding: 2rem;
+  border-radius: 40px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border: 2px solid var(--white);
+  color: var(--white);
+  }
+
+  .formInput {
+    width: 100%;
+    padding: 0.5rem;
+    margin-top: 0.5rem;
+    margin-bottom: 1rem;
+    border-radius: 10px;
+    border: 1px solid var(--grey-dark);
+    background-color: var(--white); 
+    color: var(--black); 
+    resize: none; 
+    overflow: hidden; 
+  }
+  
+  
+  .radioGroups {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+  
+  .radioGroup {
+    flex: 1;
+  }
+  
+  .radioGroup p {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+  }
+  
+  .label, .input {
+    display: inline-block;
+    margin-bottom: 0.5rem;
+  }
+
+  .submitButton {
+    background-color: var(--accent);
+    color: var(--primary-dark);
+    border: 2px solid var(--grey-light);
+    border-radius: 40px;
+    padding: 0 1rem;
+    margin: 1rem auto 0;
+    display: block;
+  }
