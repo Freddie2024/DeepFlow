@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
-import styles from "./Form.module.css";
+import styles from "./TaskForm.module.css";
 
-export default function Form({ onSubmit }) {
+export default function TaskForm({ onSubmit }) {
   useEffect(() => {
     const textarea = document.getElementById("description");
 
