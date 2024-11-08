@@ -33,21 +33,12 @@ export default function Form({ onSubmit }) {
           id="description"
           name="description"
           rows="2"
-          maxlength="500"
+          maxLength="500"
           className={styles.formInput}
           // defaultValue={defaultData?.description}
         />
-        {/* <div className={styles.radioGroups}> */}
-        {/* <div className={styles.radioGroup}> */}
-        {/* Inline-Style für Flexbox weil Import aus Form.module.css nicht funktioniert */}
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            gap: "1rem",
-          }}
-        >
-          <div style={{ flex: 1 }}>
+        <section className={styles.radioGroups}>
+          <div className={styles.radioGroup}>
             <p>Duration:</p>
             <input type="radio" name="duration" id="3hours" value="3hours" />
             <label htmlFor="3hours"> 3 hours</label> <br />
@@ -56,8 +47,7 @@ export default function Form({ onSubmit }) {
             <input type="radio" name="duration" id="20min" value="20min" />
             <label htmlFor="20min"> 20 minutes</label>
           </div>
-          {/* <div className={styles.radioGroup}> */}
-          <div style={{ flex: 1 }}>
+          <div className={styles.radioGroup}>
             <p>Due:</p>
             <input type="radio" name="day" id="today" value="today" required />
             <label htmlFor="today"> Today</label> <br />
@@ -66,10 +56,10 @@ export default function Form({ onSubmit }) {
             <input type="radio" name="day" id="someday" value="someday" />
             <label htmlFor="someday"> Someday</label> <br />
           </div>
-        </div>
-        <button type="submit">
+        </section>
+        <button className={styles.submitButton} type="submit">
           {/* {defaultData ? "Update task" :  */}
-          "Add task"
+          Add task
           {/* } */}
         </button>
       </form>
