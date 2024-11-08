@@ -1,0 +1,63 @@
+.card {
+    max-width: 450px;
+    margin: 2rem auto;
+    background-color: var(--primary);
+    padding: 2rem;
+    border-radius: 40px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border: 2px solid var(--white);
+    color: var(--white);
+  }
+  
+  .cardContent {
+    margin-bottom: 1rem;
+  }
+  
+  .cardTitle {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+  }
+  
+  .checkbox {
+    margin-right: 0.5rem;
+  }
+  
+  .cardDescription {
+    font-size: 1rem;
+    margin-bottom: 1rem;
+  }
+  
+  .cardDetails {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.9rem;
+  }
+  
+  .priority {
+    font-weight: bold;
+  }
+  
+  .buttonContainer {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 1rem;
+  }
+  
+  .editButton,
+  .deleteButton {
+    background-color: var(--accent);
+    color: var(--primary-dark);
+    border: 2px solid var(--grey-light);
+    border-radius: 20px;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+  }
+  
+  .deleteButton {
+    background-color: var(--black-light);
+    color: var(--white);
+  }
+  
