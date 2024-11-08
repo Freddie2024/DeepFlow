@@ -1,5 +1,6 @@
 // "use client";
 
+import React from "react";
 import Link from "next/link";
 import { nav } from "./Nav.module.css";
 import {
@@ -22,13 +23,13 @@ export default function Nav() {
       </Link>
       {/* {session && ( */}
       <>
-        <Link href="/today">
+        <Link href="/tasks/today">
           <FaAngleDown /> <span>Today</span>
         </Link>
-        <Link href="/tomorrow">
+        <Link href="/tasks/tomorrow">
           <FaAngleRight /> <span>Tomorrow</span>
         </Link>
-        <Link href="/someday">
+        <Link href="/tasks/someday">
           <FaAngleDoubleRight /> <span>Someday</span>
         </Link>
         <Link href="/create">

@@ -1,7 +1,7 @@
 import Image from "next/image";
 import styles from "./index.module.css";
 import Link from "next/link";
-import Form from "../components/form/Form";
+import TaskForm from "../components/taskForm/TaskForm";
 
 export default function Home() {
   return (
@@ -14,7 +14,7 @@ export default function Home() {
         ones with a total of 6 hours.
       </p>
 
-      <Form />
+      <TaskForm />
     </>
   );
 }
