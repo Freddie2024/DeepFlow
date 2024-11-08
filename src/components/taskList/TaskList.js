@@ -10,11 +10,7 @@ export default function TaskList({ tasks = [] }) {
             <h2>{task.title}</h2>
             <p>{task.description}</p>
             <p>Duration: {task.duration}</p>
-            {task._id ? (
-              <Link href={`/tasks/${task._id}`}>View Details</Link>
-            ) : (
-              <span>No ID available</span>
-            )}
+            <Link href={`/tasks/${task._id}`}>View Details</Link>
           </li>
         );
       })}

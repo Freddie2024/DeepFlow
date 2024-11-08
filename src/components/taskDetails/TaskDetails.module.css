@@ -1,5 +1,5 @@
 .card {
-    max-width: 450px;
+    max-width: 400px;
     margin: 2rem auto;
     background-color: var(--primary);
     padding: 2rem;
@@ -23,6 +23,7 @@
   
   .checkbox {
     margin-right: 0.5rem;
+    border: 1px solid var(--accent);
   }
   
   .cardDescription {
@@ -47,7 +48,8 @@
   }
   
   .editButton,
-  .deleteButton {
+  .deleteButton,
+  .checkboxButton {
     background-color: var(--accent);
     color: var(--primary-dark);
     border: 2px solid var(--grey-light);
@@ -59,5 +61,10 @@
   .deleteButton {
     background-color: var(--black-light);
     color: var(--white);
+  }
+
+  .checkboxButton {
+    background-color: var(--secondary);
+    padding: 0.5rem 0.5rem 0.5rem 1rem;
   }
   
