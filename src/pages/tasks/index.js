@@ -1,6 +1,6 @@
-import { mockTasks } from "@/src/mockData"; // Change later
 import TaskDetails from "@/src/components/taskDetails/TaskDetails";
 import TaskList from "@/src/components/taskList/TaskList";
+import { useTasks } from "@/src/hooks/useTasks";
 
 export default function AllTasksInDetailPage() {
   const { task, tasks, toggleTaskCompletion, editTask, deleteTask } =
@@ -8,7 +8,7 @@ export default function AllTasksInDetailPage() {
   return (
     <TaskList
       title="All tasks"
-      tasks={mockTasks}
+      tasks={tasks}
       onToggle={toggleTaskCompletion}
       onEdit={editTask}
       onDelete={deleteTask}

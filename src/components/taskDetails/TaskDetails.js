@@ -1,5 +1,4 @@
 import styles from "./TaskDetails.module.css";
-import { useState, useEffect } from "react";
 
 export default function TaskDetails({
   task,

@@ -1,15 +1,11 @@
 import TaskList from "@/src/components/taskList/TaskList";
-// import { mockTasks } from "@/src/mockData";
+import { useRouter } from "next/router";
 import { useTasks } from "@/src/hooks/useTasks";
 
-export default function Today() {
+export default function TasksByDate() {
   const { tasks, toggleTaskCompletion, editTask, deleteTask } = useTasks();
-
-  if (!tasks.length) {
-    return <p>Loading tasks...</p>;
-  }
-
-  console.log("Tasks:", tasks);
+  const router = useRouter();
+  const { slug } = router.query;
 
   const formatDuration = (priority) => {
     switch (priority) {
@@ -24,17 +20,19 @@ export default function Today() {
     }
   };
 
-  const todaysTasks = tasks
-    .filter((task) => task.dueDate === "today")
+  const filteredTasks = tasks
+    .filter((task) => task.dueDate === slug)
     .map((task) => ({
       ...task,
       duration: formatDuration(task.priority),
     }));
 
+  const title = `Tasks for ${slug}`;
+
   return (
     <TaskList
-      title="Tasks for today"
-      tasks={todaysTasks}
+      title={title}
+      tasks={filteredTasks}
       onToggle={toggleTaskCompletion}
       onEdit={editTask}
       onDelete={deleteTask}
