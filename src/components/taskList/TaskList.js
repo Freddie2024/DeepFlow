@@ -11,7 +11,7 @@ export default function TaskList({ tasks = [], onToggle, onEdit, onDelete }) {
           onToggle={onToggle}
           onEdit={onEdit}
           onDelete={onDelete}
-        />,
+        />
       ))}
     </ul>
   );
