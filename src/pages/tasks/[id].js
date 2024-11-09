@@ -11,11 +11,11 @@ export default function TaskDetailsPage() {
   const [task, setTask] = useState(null);
 
   useEffect(() => {
-    if (tasks && id) {
+    if (router.isReady && tasks && id) {
       const foundTask = tasks.find((task) => task._id === id);
       setTask(foundTask);
     }
-  }, [tasks, id]);
+  }, [tasks, id, router.isReady]);
 
   if (!task) return <p>Loading task details...</p>;
 
