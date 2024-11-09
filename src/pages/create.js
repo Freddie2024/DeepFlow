@@ -1,4 +1,4 @@
-import Form from "../components/form/Form";
+import Form from "../components/taskForm/TaskForm";
 import Link from "next/link";
 
 export default function CreateTaskPage() {
