@@ -1,10 +1,16 @@
 import TaskList from "@/src/components/taskList/TaskList";
-import { mockTasks } from "@/src/mockData";
+// import { mockTasks } from "@/src/mockData";
 import { useTasks } from "@/src/hooks/useTasks";
 
 export default function Today() {
-  const { task, tasks, toggleTaskCompletion, editTask, deleteTask } =
-    useTasks();
+  const { tasks, toggleTaskCompletion, editTask, deleteTask } = useTasks();
+
+  if (!tasks.length) {
+    return <p>Loading tasks...</p>;
+  }
+
+  console.log("Tasks:", tasks);
+
   const formatDuration = (priority) => {
     switch (priority) {
       case "long":
@@ -18,12 +24,10 @@ export default function Today() {
     }
   };
 
-  const todaysTasks = mockTasks
+  const todaysTasks = tasks
     .filter((task) => task.dueDate === "today")
     .map((task) => ({
-      _id: task._id,
-      title: task.title,
-      description: task.description,
+      ...task,
       duration: formatDuration(task.priority),
     }));
 
