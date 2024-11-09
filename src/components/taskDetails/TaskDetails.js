@@ -1,6 +1,13 @@
 import styles from "./TaskDetails.module.css";
+import { useState, useEffect } from "react";
 
-export default function TaskDetails({ task, tasks }) {
+export default function TaskDetails({
+  task,
+  tasks,
+  onToggle,
+  onEdit,
+  onDelete,
+}) {
   const formatDuration = (priority) => {
     switch (priority) {
       case "long":
@@ -29,7 +36,7 @@ export default function TaskDetails({ task, tasks }) {
           <nav className={styles.buttonContainer} aria-label="Task Actions">
             <button
               className={styles.editButton}
-              onClick={() => handleEdit(task._id)}
+              onClick={() => onEdit(task._id)}
               aria-label="Edit task"
             >
               Edit
@@ -40,13 +47,13 @@ export default function TaskDetails({ task, tasks }) {
                 type="checkbox"
                 className={styles.checkbox}
                 checked={task.completed}
-                onChange={() => handleToggleCompleted(task._id)}
+                onChange={() => onToggle(task._id)}
                 aria-label="Mark task as completed"
               />
             </label>
             <button
               className={styles.deleteButton}
-              onClick={() => handleDelete(task._id)}
+              onClick={() => onDelete(task._id)}
               aria-label="Delete task"
             >
               Delete
@@ -56,16 +63,4 @@ export default function TaskDetails({ task, tasks }) {
       ))}
     </section>
   );
-}
-
-function handleToggleCompleted(taskId) {
-  console.log(`Toggle completed for task with ID: ${taskId}`);
-}
-
-function handleEdit(taskId) {
-  console.log(`Edit task with ID: ${taskId}`);
-}
-
-function handleDelete(taskId) {
-  console.log(`Delete task with ID: ${taskId}`);
 }

@@ -1,19 +1,18 @@
 import Link from "next/link";
-import { mockTasks } from "@/src/mockData";
+import TaskCard from "../taskCard/TaskCard";
 
-export default function TaskList({ tasks = [] }) {
+export default function TaskList({ tasks = [], onToggle, onEdit, onDelete }) {
   return (
     <ul className="task-list">
-      {tasks.map((task) => {
-        return (
-          <li key={task._id} className="task-item">
-            <h2>{task.title}</h2>
-            <p>{task.description}</p>
-            <p>Duration: {task.duration}</p>
-            <Link href={`/tasks/${task._id}`}>View Details</Link>
-          </li>
-        );
-      })}
+      {tasks.map((task) => (
+        <TaskCard
+          key={task._id}
+          task={task}
+          onToggle={onToggle}
+          onEdit={onEdit}
+          onDelete={onDelete}
+        />,
+      ))}
     </ul>
   );
 }

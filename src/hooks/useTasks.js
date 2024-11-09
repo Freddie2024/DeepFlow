@@ -25,21 +25,28 @@ export function useTasks() {
 
   const editTask = (taskId, updatedTask) => {
     setTasks((prevTasks) =>
-      prevTasks.map((task) => (task.id === taskId ? updatedTask : task))
+      prevTasks.map((task) =>
+        task._id === taskId ? { ...task, ...updatedTask } : task
+      )
     );
   };
 
   const toggleTaskCompletion = (taskId) => {
     setTasks((prevTasks) =>
       prevTasks.map((task) =>
-        task.id === taskId ? { ...task, completed: !task.completed } : task
+        task._id === taskId ? { ...task, completed: !task.completed } : task
       )
     );
+  };
+
+  const deleteTask = (taskId) => {
+    setTasks((prevTasks) => prevTasks.filter((task) => task._id !== taskId));
   };
 
   return {
     tasks,
     editTask,
     toggleTaskCompletion,
+    deleteTask,
   };
 }

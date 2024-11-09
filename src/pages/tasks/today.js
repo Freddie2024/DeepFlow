@@ -1,7 +1,10 @@
 import TaskList from "@/src/components/taskList/TaskList";
 import { mockTasks } from "@/src/mockData";
+import { useTasks } from "@/src/hooks/useTasks";
 
 export default function Today() {
+  const { task, tasks, toggleTaskCompletion, editTask, deleteTask } =
+    useTasks();
   const formatDuration = (priority) => {
     switch (priority) {
       case "long":
@@ -27,7 +30,12 @@ export default function Today() {
   return (
     <>
       <h1>Tasks for today</h1>
-      <TaskList tasks={todaysTasks} />
+      <TaskList
+        tasks={todaysTasks}
+        onToggle={toggleTaskCompletion}
+        onEdit={editTask}
+        onDelete={deleteTask}
+      />
     </>
   );
 }
