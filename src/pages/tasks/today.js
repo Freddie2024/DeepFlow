@@ -28,14 +28,12 @@ export default function Today() {
     }));
 
   return (
-    <>
-      <h1>Tasks for today</h1>
-      <TaskList
-        tasks={todaysTasks}
-        onToggle={toggleTaskCompletion}
-        onEdit={editTask}
-        onDelete={deleteTask}
-      />
-    </>
+    <TaskList
+      title="Tasks for today"
+      tasks={todaysTasks}
+      onToggle={toggleTaskCompletion}
+      onEdit={editTask}
+      onDelete={deleteTask}
+    />
   );
 }
