@@ -33,13 +33,11 @@ export default function TaskDetails({
             <span>Duration: {formatDuration(task.priority)}</span>
           </footer>
           <nav className={styles.buttonContainer} aria-label="Task Actions">
-            <button
-              className={styles.editButton}
-              onClick={() => onEdit(task._id)}
-              aria-label="Edit task"
-            >
-              Edit
-            </button>
+            <Link href={`/tasks/${task._id}/edit`}>
+              <button className={styles.editButton} aria-label="Edit task">
+                Edit
+              </button>
+            </Link>
             <label className={styles.checkboxButton}>
               <span>Done: </span>
               <input

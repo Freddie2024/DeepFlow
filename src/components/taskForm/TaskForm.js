@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import styles from "./TaskForm.module.css";
 
-export default function TaskForm({ onSubmit }) {
+export default function TaskForm({ onSubmit, defaultData = {} }) {
   useEffect(() => {
     const textarea = document.getElementById("description");
 
@@ -25,7 +25,7 @@ export default function TaskForm({ onSubmit }) {
           type="text"
           required
           className={styles.formInput}
-          // defaultValue={defaultData?.title}
+          defaultValue={defaultData?.title}
         />{" "}
         <br />
         <label htmlFor="description">Description: </label> <br />
@@ -35,12 +35,19 @@ export default function TaskForm({ onSubmit }) {
           rows="2"
           maxLength="500"
           className={styles.formInput}
-          // defaultValue={defaultData?.description}
+          defaultValue={defaultData?.description}
         />
         <section className={styles.radioGroups}>
           <div className={styles.radioGroup}>
             <p>Duration:</p>
-            <input type="radio" name="priority" id="long" value="long" />
+            <input
+              type="radio"
+              name="priority"
+              id="long"
+              value="long"
+              defaultChecked={defaultData?.priority === "long"}
+              required
+            />
             <label htmlFor="long"> 3 hours</label> <br />
             <input type="radio" name="priority" id="medium" value="medium" />
             <label htmlFor="medium"> 1 hour</label> <br />
@@ -54,6 +61,7 @@ export default function TaskForm({ onSubmit }) {
               name="dueDate"
               id="today"
               value="today"
+              defaultChecked={defaultData?.dueDate === "today"}
               required
             />
             <label htmlFor="today"> Today</label> <br />
