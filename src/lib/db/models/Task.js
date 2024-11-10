@@ -28,7 +28,8 @@ const taskSchema = new Schema({
   },
   user: {
     type: String,
-    required: true,
+    // required: true,
+    default: "user1",
   },
 });
 

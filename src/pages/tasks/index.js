@@ -1,4 +1,3 @@
-import TaskDetails from "@/src/components/taskDetails/TaskDetails";
 import TaskList from "@/src/components/taskList/TaskList";
 import { useTasks } from "@/src/hooks/useTasks";
 

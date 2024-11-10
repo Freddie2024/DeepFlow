@@ -22,13 +22,13 @@ export default function Nav() {
       </Link>
       {/* {session && ( */}
       <>
-        <Link href="/tasks/today">
+        <Link href="/tasks/list/today">
           <FaAngleDown /> <span>Today</span>
         </Link>
-        <Link href="/tasks/tomorrow">
+        <Link href="/tasks/list/tomorrow">
           <FaAngleRight /> <span>Tomorrow</span>
         </Link>
-        <Link href="/tasks/someday">
+        <Link href="/tasks/list/someday">
           <FaAngleDoubleRight /> <span>Someday</span>
         </Link>
         <Link href="/create">
