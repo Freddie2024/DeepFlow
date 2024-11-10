@@ -40,20 +40,26 @@ export default function TaskForm({ onSubmit }) {
         <section className={styles.radioGroups}>
           <div className={styles.radioGroup}>
             <p>Duration:</p>
-            <input type="radio" name="duration" id="3hours" value="3hours" />
-            <label htmlFor="3hours"> 3 hours</label> <br />
-            <input type="radio" name="duration" id="1hour" value="1hour" />
-            <label htmlFor="1hour"> 1 hour</label> <br />
-            <input type="radio" name="duration" id="20min" value="20min" />
-            <label htmlFor="20min"> 20 minutes</label>
+            <input type="radio" name="priority" id="long" value="long" />
+            <label htmlFor="long"> 3 hours</label> <br />
+            <input type="radio" name="priority" id="medium" value="medium" />
+            <label htmlFor="medium"> 1 hour</label> <br />
+            <input type="radio" name="priority" id="short" value="short" />
+            <label htmlFor="short"> 20 minutes</label>
           </div>
           <div className={styles.radioGroup}>
             <p>Due:</p>
-            <input type="radio" name="day" id="today" value="today" required />
+            <input
+              type="radio"
+              name="dueDate"
+              id="today"
+              value="today"
+              required
+            />
             <label htmlFor="today"> Today</label> <br />
-            <input type="radio" name="day" id="tomorrow" value="tomorrow" />
+            <input type="radio" name="dueDate" id="tomorrow" value="tomorrow" />
             <label htmlFor="tomorrow"> Tomorrow</label> <br />
-            <input type="radio" name="day" id="someday" value="someday" />
+            <input type="radio" name="dueDate" id="someday" value="someday" />
             <label htmlFor="someday"> Someday</label> <br />
           </div>
         </section>

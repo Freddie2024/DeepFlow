@@ -20,6 +20,8 @@ export default function TasksByDate() {
     }
   };
 
+  if (!tasks) return <p>Loading tasks...</p>;
+
   const filteredTasks = tasks
     .filter((task) => task.dueDate === slug)
     .map((task) => ({

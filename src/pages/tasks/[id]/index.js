@@ -1,5 +1,4 @@
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
 import { useTasks } from "@/src/hooks/useTasks";
 import TaskDetails from "@/src/components/taskDetails/TaskDetails";
 
@@ -8,16 +7,10 @@ export default function TaskDetailsPage() {
   const { id } = router.query;
   const { tasks, toggleTaskCompletion, editTask, deleteTask } = useTasks();
 
-  const [task, setTask] = useState(null);
+  const task = tasks?.find((task) => task._id === id);
 
-  useEffect(() => {
-    if (router.isReady && tasks && id) {
-      const foundTask = tasks.find((task) => task._id === id);
-      setTask(foundTask);
-    }
-  }, [tasks, id, router.isReady]);
-
-  if (!task) return <p>Loading task details...</p>;
+  if (!tasks) return <p>Loading tasks...</p>;
+  if (!task) return <p>Task not found.</p>;
 
   const handleDelete = (taskId) => {
     deleteTask(taskId);
@@ -25,13 +18,11 @@ export default function TaskDetailsPage() {
   };
 
   return (
-    <>
-      <TaskDetails
-        task={task}
-        onToggle={toggleTaskCompletion}
-        onEdit={editTask}
-        onDelete={handleDelete}
-      />
-    </>
+    <TaskDetails
+      task={task}
+      onToggle={toggleTaskCompletion}
+      onEdit={editTask}
+      onDelete={handleDelete}
+    />
   );
 }
