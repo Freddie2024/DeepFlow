@@ -17,9 +17,8 @@ const taskSchema = new Schema({
     required: true,
   },
   dueDate: {
-    type: String,
-    enum: ["today", "tomorrow", "someday"],
-    default: "today",
+    type: Date,
+    default: null,
     required: true,
   },
   completed: {

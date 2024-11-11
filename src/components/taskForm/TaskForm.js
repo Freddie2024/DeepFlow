@@ -1,7 +1,11 @@
 import React, { useEffect } from "react";
 import styles from "./TaskForm.module.css";
+import { useState } from "react";
 
 export default function TaskForm({ onSubmit, defaultData = {} }) {
+  const [dueOption, setDueOption] = useState("today");
+  const [confirmNoDate, setConfirmNoDate] = useState(false);
+
   useEffect(() => {
     const textarea = document.getElementById("description");
 
@@ -14,6 +18,38 @@ export default function TaskForm({ onSubmit, defaultData = {} }) {
 
     return () => textarea.removeEventListener("input", autoResize);
   }, []);
+
+  function handleSubmit(event) {
+    event.preventDefault();
+    const formData = new FormData(event.target);
+    const taskData = Object.fromEntries(formData);
+
+    let dueDate;
+    if (dueOption === "later") {
+      dueDate = taskData.dueDate || null;
+    } else if (dueOption === "today") {
+      dueDate = new Date().toISOString().split("T")[0];
+    } else if (dueOption === "tomorrow") {
+      const tomorrow = new Date();
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      dueDate = tomorrow.toISOString().split("T")[0];
+    } else if (dueOption === "someday" && confirmNoDate) {
+      dueDate = null;
+    } else {
+      alert(
+        "Please confirm that you want to add this task without a due date."
+      );
+      return;
+    }
+
+    taskData.dueDate = dueDate;
+    onSubmit(taskData);
+  }
+
+  function handleDueOptionChange(option) {
+    setDueOption(option);
+    setConfirmNoDate(false);
+  }
 
   return (
     <>
@@ -58,23 +94,66 @@ export default function TaskForm({ onSubmit, defaultData = {} }) {
             <p>Due:</p>
             <input
               type="radio"
-              name="dueDate"
+              name="dueOption"
               id="today"
               value="today"
+              onChange={() => handleDueOptionChange("today")}
               defaultChecked={defaultData?.dueDate === "today"}
               required
             />
             <label htmlFor="today"> Today</label> <br />
-            <input type="radio" name="dueDate" id="tomorrow" value="tomorrow" />
+            <input
+              type="radio"
+              name="dueOption"
+              id="tomorrow"
+              value="tomorrow"
+              onChange={() => handleDueOptionChange("tomorrow")}
+            />
             <label htmlFor="tomorrow"> Tomorrow</label> <br />
-            <input type="radio" name="dueDate" id="someday" value="someday" />
+            <input
+              type="radio"
+              name="dueOption"
+              id="laterDate"
+              value="laterDate"
+              onChange={() => handleDueOptionChange("laterDate")}
+            />
+            <label htmlFor="laterDate"> Later Date</label> <br />
+            {dueOption === "laterDate" && (
+              <input
+                type="date"
+                name="dueDate"
+                className={styles.formInput}
+                defaultValue={defaultData?.dueDate || ""}
+              />
+            )}
+            <input
+              type="radio"
+              name="dueOption"
+              id="someday"
+              value="someday"
+              onChange={() => handleDueOptionChange("someday")}
+            />
             <label htmlFor="someday"> Someday</label> <br />
           </div>
         </section>
-        <button className={styles.submitButton} type="submit">
-          {/* {defaultData ? "Update task" :  */}
+        {dueOption === "someday" && (
+          <div className={styles.confirmNoDate}>
+            <label>
+              <input
+                type="checkbox"
+                checked={confirmNoDate}
+                onChange={() => setConfirmNoDate(!confirmNoDate)}
+              />
+              Are you sure you don't want to set a date?
+            </label>
+          </div>
+        )}
+        <button
+          className={styles.submitButton}
+          type="submit"
+          disabled={dueOption === "someday" && !confirmNoDate}
+        >
           Add task
-          {/* } */}
         </button>
       </form>
     </>
