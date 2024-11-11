@@ -1,12 +1,7 @@
 import styles from "./TaskDetails.module.css";
+import Link from "next/link";
 
-export default function TaskDetails({
-  task,
-  tasks,
-  onToggle,
-  onEdit,
-  onDelete,
-}) {
+export default function TaskDetails({ task, tasks, onToggle, onDelete }) {
   const formatDuration = (priority) => {
     switch (priority) {
       case "long":
