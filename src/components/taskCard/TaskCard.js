@@ -1,7 +1,7 @@
 import Link from "next/link";
 import styles from "./TaskCard.module.css";
 
-export default function TaskCard({ task, onToggle, onEdit, onDelete }) {
+export default function TaskCard({ task, onToggle, onDelete }) {
   return (
     <li className={styles.card}>
       <h2 className={styles.cardTitle}>{task.title}</h2>
@@ -9,13 +9,11 @@ export default function TaskCard({ task, onToggle, onEdit, onDelete }) {
         <span className={styles.viewDetailsLink}>View Details</span>
       </Link>
       <div className={styles.buttonContainer} aria-label="Task Actions">
-        <button
-          className={styles.editButton}
-          onClick={() => onEdit(task._id)}
-          aria-label="Edit task"
-        >
-          Edit
-        </button>
+        <Link href={`/tasks/${task._id}/edit`}>
+          <button className={styles.editButton} aria-label="Edit task">
+            Edit
+          </button>
+        </Link>
         <label className={styles.checkboxButton}>
           <span>Done: </span>
           <input

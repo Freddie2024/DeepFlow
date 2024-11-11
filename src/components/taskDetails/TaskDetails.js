@@ -1,12 +1,7 @@
 import styles from "./TaskDetails.module.css";
+import Link from "next/link";
 
-export default function TaskDetails({
-  task,
-  tasks,
-  onToggle,
-  onEdit,
-  onDelete,
-}) {
+export default function TaskDetails({ task, tasks, onToggle, onDelete }) {
   const formatDuration = (priority) => {
     switch (priority) {
       case "long":
@@ -33,13 +28,11 @@ export default function TaskDetails({
             <span>Duration: {formatDuration(task.priority)}</span>
           </footer>
           <nav className={styles.buttonContainer} aria-label="Task Actions">
-            <button
-              className={styles.editButton}
-              onClick={() => onEdit(task._id)}
-              aria-label="Edit task"
-            >
-              Edit
-            </button>
+            <Link href={`/tasks/${task._id}/edit`}>
+              <button className={styles.editButton} aria-label="Edit task">
+                Edit
+              </button>
+            </Link>
             <label className={styles.checkboxButton}>
               <span>Done: </span>
               <input
