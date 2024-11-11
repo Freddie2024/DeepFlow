@@ -1,20 +1,26 @@
-import Image from "next/image";
-import styles from "./index.module.css";
-import Link from "next/link";
 import TaskForm from "../components/taskForm/TaskForm";
+import { useTasks } from "../hooks/useTasks";
+import TaskList from "../components/taskList/TaskList";
 
 export default function Home() {
-  return (
-    <>
-      <h1>Today</h1>
+  const { tasks, addNewTask } = useTasks();
 
-      <h2>No tasks so far.</h2>
-      <p>
-        Create 6 tasks you want to focus on today: 1 major, 2 medium, 3 small
-        ones with a total of 6 hours.
-      </p>
+  async function handleAddTask(event) {
+    event.preventDefault();
+    const formData = new FormData(event.target);
+    const newTask = Object.fromEntries(formData);
+    await addNewTask(newTask);
+  }
 
-      <TaskForm />
-    </>
-  );
+  if (!tasks || tasks.lenght === 0) {
+    return (
+      <>
+        <h2>No tasks so far</h2>
+        <p>Create your first task!</p>
+        <TaskForm onSubmit={handleAddTask} />
+      </>
+    );
+  }
+
+  return <TaskList title="All Tasks" tasks={tasks} showDueDate={true} />;
 }

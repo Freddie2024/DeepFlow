@@ -7,6 +7,7 @@ export default function TaskList({
   onToggle,
   onEdit,
   onDelete,
+  showDueDate = false,
 }) {
   return (
     <div className={styles.container}>
@@ -19,6 +20,7 @@ export default function TaskList({
             onToggle={onToggle}
             onEdit={onEdit}
             onDelete={onDelete}
+            showDueDate={showDueDate}
           />
         ))}
       </ul>
