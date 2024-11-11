@@ -31,14 +31,18 @@ export default function TasksByDate() {
 
   const filteredTasks = tasks
     .filter((task) => {
+      const taskDueDate = task.dueDate
+        ? new Date(task.dueDate).toISOString().split("T")[0]
+        : null;
+
       if (slug === "today") {
-        return task.dueDate === todayDate;
+        return taskDueDate === todayDate;
       } else if (slug === "tomorrow") {
-        return task.dueDate === tomorrowDateString;
+        return taskDueDate === tomorrowDateString;
       } else if (slug === "someday") {
-        return task.dueDate === null;
+        return taskDueDate === null;
       } else if (slug === "later-date") {
-        return task.dueDate && task.dueDate > todayDate;
+        return taskDueDate && taskDueDate > todayDate;
       }
       return false;
     })
