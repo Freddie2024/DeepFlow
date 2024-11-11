@@ -28,6 +28,10 @@ export default function Nav() {
         <Link href="/tasks/list/tomorrow">
           <FaAngleRight /> <span>Tomorrow</span>
         </Link>
+        <Link href="/tasks/later-date">
+          {/* hier noch ein passendes kalender-icon einfügen */}
+          <FaAngleDoubleRight /> <span>Later Date</span>
+        </Link>
         <Link href="/tasks/list/someday">
           <FaAngleDoubleRight /> <span>Someday</span>
         </Link>
