@@ -2,7 +2,6 @@ import TaskForm from "../components/taskForm/TaskForm";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useTasks } from "../hooks/useTasks";
-import TaskForm from "../components/taskForm/TaskForm";
 // import { useSession }
 
 export default function CreateTaskPage() {
