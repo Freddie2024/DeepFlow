@@ -30,7 +30,7 @@ export default function TaskForm({
     determineDueOption(defaultData.dueDate)
   );
   const [priority, setPriority] = useState(defaultData.priority || "long");
-  const [confirmNoDate, setConfirmNoDate] = useState(dueOption === "someday");
+  const [confirmNoDate, setConfirmNoDate] = useState(false);
 
   console.log("Initial dueOption:", dueOption);
   console.log("Initial priority:", priority);
@@ -96,7 +96,7 @@ export default function TaskForm({
 
   function handleDueOptionChange(option) {
     setDueOption(option);
-    setConfirmNoDate(false);
+    setConfirmNoDate(option === "someday");
   }
 
   return (
@@ -193,7 +193,11 @@ export default function TaskForm({
                 type="date"
                 name="dueDate"
                 className={styles.formInput}
-                defaultValue={defaultData?.dueDate || ""}
+                defaultValue={
+                  defaultData?.dueDate
+                    ? new Date(defaultData.dueDate).toISOString().split("T")[0]
+                    : ""
+                }
               />
             )}
             <input
