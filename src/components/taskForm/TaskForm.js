@@ -154,7 +154,7 @@ export default function TaskForm({
                 checked={confirmNoDate}
                 onChange={() => setConfirmNoDate(!confirmNoDate)}
               />
-              Are you sure you don't want to set a date?
+              Save this task without a specific date?
             </label>
           </div>
         )}
