@@ -1,16 +1,57 @@
 import React, { useEffect, useState } from "react";
 import styles from "./TaskForm.module.css";
 
+function determineDueOption(dueDate) {
+  if (!dueDate) return "someday";
+
+  const formattedDueDate = new Date(dueDate).toISOString().split("T")[0];
+  const today = new Date().toISOString().split("T")[0];
+  const tomorrow = new Date(new Date().setDate(new Date().getDate() + 1))
+    .toISOString()
+    .split("T")[0];
+
+  console.log("Determining due option for dueDate:", formattedDueDate);
+
+  if (formattedDueDate === today) return "today";
+  if (formattedDueDate === tomorrow) return "tomorrow";
+  return "later";
+}
+
 export default function TaskForm({
   onSubmit,
   defaultData = {},
   isEditing = false,
   onCancel,
 }) {
+  // const initialDueOption = determineDueOption(defaultData.dueDate || "today");
+  // const initialPriority = defaultData.priority || "long";
+
   const [dueOption, setDueOption] = useState(
-    defaultData.dueDate ? defaultData.dueDate : "today"
+    determineDueOption(defaultData.dueDate)
   );
-  const [confirmNoDate, setConfirmNoDate] = useState(false);
+  const [priority, setPriority] = useState(defaultData.priority || "long");
+  const [confirmNoDate, setConfirmNoDate] = useState(dueOption === "someday");
+
+  console.log("Initial dueOption:", dueOption);
+  console.log("Initial priority:", priority);
+
+  // useEffect(() => {
+  //   if (isEditing && defaultData) {
+  //     setPriority(defaultData.priority || "long");
+
+  //     const initialDueOption = determineDueOption(defaultData.dueDate);
+  //     setDueOption(initialDueOption);
+
+  //     if (initialDueOption === "someday") {
+  //       setConfirmNoDate(true);
+  //     } else {
+  //       setDueOption("later");
+  //     }
+  //   } else {
+  //     setDueOption("today");
+  //     setPriority("long");
+  //   }
+  // }, [defaultData, isEditing]);
 
   useEffect(() => {
     const textarea = document.getElementById("description");
@@ -92,13 +133,28 @@ export default function TaskForm({
               name="priority"
               id="long"
               value="long"
-              defaultChecked={defaultData?.priority === "long"}
+              checked={priority === "long"}
+              onChange={() => setPriority("long")}
               required
             />
             <label htmlFor="long"> 3 hours</label> <br />
-            <input type="radio" name="priority" id="medium" value="medium" />
+            <input
+              type="radio"
+              name="priority"
+              id="medium"
+              value="medium"
+              checked={priority === "medium"}
+              onChange={() => setPriority("medium")}
+            />
             <label htmlFor="medium"> 1 hour</label> <br />
-            <input type="radio" name="priority" id="short" value="short" />
+            <input
+              type="radio"
+              name="priority"
+              id="short"
+              value="short"
+              checked={priority === "short"}
+              onChange={() => setPriority("short")}
+            />
             <label htmlFor="short"> 20 minutes</label>
           </div>
           <div className={styles.radioGroup}>
@@ -109,7 +165,8 @@ export default function TaskForm({
               id="today"
               value="today"
               onChange={() => handleDueOptionChange("today")}
-              defaultChecked={defaultData?.dueDate === "today"}
+              // defaultChecked={defaultData?.dueDate === "today"}
+              checked={dueOption === "today"}
               required
             />
             <label htmlFor="today"> Today</label> <br />
@@ -119,17 +176,19 @@ export default function TaskForm({
               id="tomorrow"
               value="tomorrow"
               onChange={() => handleDueOptionChange("tomorrow")}
+              checked={dueOption === "tomorrow"}
             />
             <label htmlFor="tomorrow"> Tomorrow</label> <br />
             <input
               type="radio"
               name="dueOption"
-              id="laterDate"
-              value="laterDate"
-              onChange={() => handleDueOptionChange("laterDate")}
+              id="later"
+              value="later"
+              onChange={() => handleDueOptionChange("")}
+              checked={dueOption === "later"}
             />
-            <label htmlFor="laterDate"> Later Date</label> <br />
-            {dueOption === "laterDate" && (
+            <label htmlFor="later"> Later Date</label> <br />
+            {dueOption === "later" && (
               <input
                 type="date"
                 name="dueDate"
@@ -143,6 +202,7 @@ export default function TaskForm({
               id="someday"
               value="someday"
               onChange={() => handleDueOptionChange("someday")}
+              checked={dueOption === "someday"}
             />
             <label htmlFor="someday"> Someday</label> <br />
           </div>
