@@ -16,12 +16,8 @@ export default function EditTaskPage() {
     }
   }, [id, tasks]);
 
-  async function handleEditTask(event) {
-    event.preventDefault();
-    const formData = new FormData(event.target);
-    const updatedData = Object.fromEntries(formData);
-
-    await editTask(id, updatedData);
+  async function handleEditTask(taskData) {
+    await editTask(id, taskData);
     router.back();
   }
 
@@ -30,7 +26,7 @@ export default function EditTaskPage() {
   return (
     <>
       <h2>Edit Task</h2>
-      <TaskForm onSubmit={handleEditTask} defaultData={task} />
+      <TaskForm onSubmit={handleEditTask} defaultData={task} isEditing={true} />
     </>
   );
 }

@@ -5,10 +5,12 @@ export default function TaskList({
   title,
   tasks = [],
   onToggle,
-  onEdit,
+  // onEdit,
   onDelete,
   showDueDate = false,
 }) {
+  console.log("onDelete prop in TaskList:", onDelete);
+
   return (
     <div className={styles.container}>
       <h1 className={styles.title}>{title}</h1>
@@ -18,7 +20,7 @@ export default function TaskList({
             key={task._id}
             task={task}
             onToggle={onToggle}
-            onEdit={onEdit}
+            // onEdit={onEdit}
             onDelete={onDelete}
             showDueDate={showDueDate}
           />
