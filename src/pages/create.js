@@ -1,7 +1,8 @@
-import Form from "../components/taskForm/TaskForm";
+import TaskForm from "../components/taskForm/TaskForm";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useTasks } from "../hooks/useTasks";
+import TaskForm from "../components/taskForm/TaskForm";
 // import { useSession }
 
 export default function CreateTaskPage() {
@@ -27,7 +28,7 @@ export default function CreateTaskPage() {
       <Link href="/" passHref legacyBehavior>
         back
       </Link>
-      <Form onSubmit={handleAddNewTask} formName={"add-task"} />
+      <TaskForm onSubmit={handleAddNewTask} formName={"add-task"} />
     </>
   );
 }

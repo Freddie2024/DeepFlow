@@ -2,7 +2,12 @@ import React, { useEffect } from "react";
 import styles from "./TaskForm.module.css";
 import { useState } from "react";
 
-export default function TaskForm({ onSubmit, defaultData = {} }) {
+export default function TaskForm({
+  onSubmit,
+  defaultData = {},
+  isEditing = false,
+  onCancel,
+}) {
   const [dueOption, setDueOption] = useState("today");
   const [confirmNoDate, setConfirmNoDate] = useState(false);
 
@@ -43,6 +48,7 @@ export default function TaskForm({ onSubmit, defaultData = {} }) {
     }
 
     taskData.dueDate = dueDate;
+
     onSubmit(taskData);
   }
 
@@ -53,7 +59,11 @@ export default function TaskForm({ onSubmit, defaultData = {} }) {
 
   return (
     <>
-      <form className={styles.form} aria-label="Task Form" onSubmit={onSubmit}>
+      <form
+        className={styles.form}
+        aria-label="Task Form"
+        onSubmit={handleSubmit}
+      >
         <label htmlFor="title">Title: </label> <br />
         <input
           id="title"
@@ -148,13 +158,22 @@ export default function TaskForm({ onSubmit, defaultData = {} }) {
             </label>
           </div>
         )}
-        <button
-          className={styles.submitButton}
-          type="submit"
-          disabled={dueOption === "someday" && !confirmNoDate}
-        >
-          Add task
-        </button>
+        <div className={styles.buttonContainer}>
+          <button
+            className={styles.submitButton}
+            type="submit"
+            disabled={dueOption === "someday" && !confirmNoDate}
+          >
+            {isEditing ? "Save" : "Add Task"}
+          </button>
+          {/* <button
+            type="button"
+            className={styles.cancelButton}
+            onClick={onCancel}
+          >
+            Cancel
+          </button> */}
+        </div>
       </form>
     </>
   );

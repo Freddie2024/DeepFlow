@@ -6,6 +6,9 @@ import TaskForm from "@/src/components/taskForm/TaskForm";
 export default function TasksByDate() {
   const { tasks, toggleTaskCompletion, editTask, deleteTask, addNewTask } =
     useTasks();
+
+  console.log("deleteTask from useTasks:", deleteTask);
+
   const router = useRouter();
   const { slug } = router.query;
 
@@ -42,9 +45,10 @@ export default function TasksByDate() {
       } else if (slug === "someday") {
         return taskDueDate === null;
       } else if (slug === "later") {
-        const taskDateObj = task.dueDate ? new Date(task.dueDate) : null;
-        const todayDateObj = new Date(todayDate);
-        return taskDateObj && taskDateObj > todayDateObj;
+        return taskDueDate && taskDueDate > todayDate;
+        // const taskDateObj = task.dueDate ? new Date(task.dueDate) : null;
+        // const todayDateObj = new Date(todayDate);
+        // return taskDateObj && taskDateObj > todayDateObj;
       }
       return false;
     })
@@ -96,7 +100,7 @@ export default function TasksByDate() {
       title={`Tasks for ${slug.replace("-", " ")}`}
       tasks={filteredTasks}
       onToggle={toggleTaskCompletion}
-      onEdit={editTask}
+      // onEdit={editTask}
       onDelete={deleteTask}
     />
   );

@@ -11,6 +11,7 @@ export function useTasks() {
         body: JSON.stringify(newTask),
       });
       if (response.ok) {
+        console.log("Server response data:", await response.json());
         mutate();
       } else {
         console.error("Failed to add task:", await response.json());
@@ -61,6 +62,8 @@ export function useTasks() {
       });
       if (response.ok) {
         mutate();
+      } else {
+        console.error("Failed to delete task");
       }
     } catch (error) {
       console.error("Failed to delete task:", error);

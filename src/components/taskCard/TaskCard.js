@@ -2,21 +2,38 @@ import Link from "next/link";
 import styles from "./TaskCard.module.css";
 
 export default function TaskCard({ task, onToggle, onDelete, showDueDate }) {
-  const dueDateClass =
-    task.dueDate === "today"
-      ? styles.dueDateToday
-      : task.dueDate === "tomorrow"
-      ? styles.dueDateTomorrow
-      : styles.dueDateSomeday;
+  const todayDate = new Date().toISOString().split("T")[0];
+  const tomorrowDate = new Date();
+  tomorrowDate.setDate(new Date().getDate() + 1);
+  const tomorrowDateString = tomorrowDate.toISOString().split("T")[0];
+
+  let dueDateLabel = "";
+  let dueDateClass = "";
+
+  const taskDueDateString = task.dueDate
+    ? new Date(task.dueDate).toISOString().split("T")[0]
+    : null;
+
+  if (taskDueDateString === todayDate) {
+    dueDateLabel = "Today";
+    dueDateClass = styles.dueDateToday;
+  } else if (taskDueDateString === tomorrowDateString) {
+    dueDateLabel = "Tomorrow";
+    dueDateClass = styles.dueDateTomorrow;
+  } else if (!task.dueDate) {
+    dueDateLabel = "Someday";
+    dueDateClass = styles.dueDateSomeday;
+  } else {
+    dueDateLabel = new Date(task.dueDate).toLocaleDateString("de-DE");
+    dueDateClass = styles.dueDateLater;
+  }
 
   return (
     <li className={styles.card}>
       <div className={styles.topRow}>
         {showDueDate && (
           <p className={`${styles.dueDateLabel} ${dueDateClass}`}>
-            {task.dueDate === "today" && "Today"}
-            {task.dueDate === "tomorrow" && "Tomorrow"}
-            {task.dueDate === "someday" && "Someday"}
+            {dueDateLabel}
           </p>
         )}
         <Link href={`/tasks/${task._id}`}>
