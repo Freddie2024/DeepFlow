@@ -10,7 +10,7 @@ export default function TaskDetailsPage() {
   const task = tasks?.find((task) => task._id === id);
 
   if (!tasks) return <p>Loading tasks...</p>;
-  if (!task) return <p>Task not found.</p>;
+  if (!task) return <p>Sorry, task not found.</p>;
 
   const handleDelete = (taskId) => {
     deleteTask(taskId);

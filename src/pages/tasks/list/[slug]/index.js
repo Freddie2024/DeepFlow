@@ -22,12 +22,12 @@ export default function TasksByDate() {
     }
   };
 
-  if (!tasks) return <p>Loading tasks...</p>;
-
   const todayDate = new Date().toISOString().split("T")[0];
   const tomorrowDate = new Date();
   tomorrowDate.setDate(new Date().getDate() + 1);
   const tomorrowDateString = tomorrowDate.toISOString().split("T")[0];
+
+  if (!tasks || !slug) return <p>Loading page...</p>;
 
   const filteredTasks = tasks
     .filter((task) => {
@@ -41,8 +41,10 @@ export default function TasksByDate() {
         return taskDueDate === tomorrowDateString;
       } else if (slug === "someday") {
         return taskDueDate === null;
-      } else if (slug === "later-date") {
-        return taskDueDate && taskDueDate > todayDate;
+      } else if (slug === "later") {
+        const taskDateObj = task.dueDate ? new Date(task.dueDate) : null;
+        const todayDateObj = new Date(todayDate);
+        return taskDateObj && taskDateObj > todayDateObj;
       }
       return false;
     })
@@ -56,9 +58,8 @@ export default function TasksByDate() {
       "Create 6 tasks you want to focus on today: 1 major, 2 medium, 3 small ones with a total of 6 hours.",
     tomorrow:
       "Create 6 tasks you want to focus on tomorrow: 1 major, 2 medium, 3 small ones with a total of 6 hours.",
-    someday: "No tasks so far. Create your first task to get started!",
-    "later-date":
-      "No upcoming tasks scheduled. Add tasks with specific future dates!",
+    someday: "No tasks so far.",
+    later: "No upcoming tasks scheduled. Add tasks with specific future dates!",
   };
 
   if (filteredTasks.length === 0) {
@@ -78,7 +79,7 @@ export default function TasksByDate() {
               newTask.dueDate = tomorrowDateString;
             } else if (slug === "someday") {
               newTask.dueDate = null;
-            } else if (slug === "later-date") {
+            } else if (slug === "later") {
               alert("Please select a specific future date in the form.");
               return;
             }

@@ -5,6 +5,8 @@ import mongoose from "mongoose";
 export default async function handler(request, response) {
   const { id } = request.query;
 
+  console.log("Request ID:", id);
+
   if (!id) {
     return response.status(400).json({ error: "ID is required" });
   }
