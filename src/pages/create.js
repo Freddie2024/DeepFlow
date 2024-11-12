@@ -24,9 +24,7 @@ export default function CreateTaskPage() {
   return (
     <>
       <h2 id="add-task">Add Task</h2>
-      <Link href="/" passHref legacyBehavior>
-        back
-      </Link>
+      <Link href="/">back</Link>
       <TaskForm onSubmit={handleAddNewTask} formName={"add-task"} />
     </>
   );

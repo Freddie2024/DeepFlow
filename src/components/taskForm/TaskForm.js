@@ -1,6 +1,5 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./TaskForm.module.css";
-import { useState } from "react";
 
 export default function TaskForm({
   onSubmit,
@@ -8,7 +7,9 @@ export default function TaskForm({
   isEditing = false,
   onCancel,
 }) {
-  const [dueOption, setDueOption] = useState("today");
+  const [dueOption, setDueOption] = useState(
+    defaultData.dueDate ? defaultData.dueDate : "today"
+  );
   const [confirmNoDate, setConfirmNoDate] = useState(false);
 
   useEffect(() => {
@@ -25,7 +26,7 @@ export default function TaskForm({
   }, []);
 
   function handleSubmit(event) {
-    event.preventDefault();
+    if (!isEditing) event.preventDefault();
     const formData = new FormData(event.target);
     const taskData = Object.fromEntries(formData);
 
@@ -49,7 +50,7 @@ export default function TaskForm({
 
     taskData.dueDate = dueDate;
 
-    onSubmit(taskData);
+    onSubmit(isEditing ? taskData : event);
   }
 
   function handleDueOptionChange(option) {
