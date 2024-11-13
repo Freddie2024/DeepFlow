@@ -37,18 +37,8 @@ export default function TaskForm({
       : ""
   );
 
-  console.log("Initial dueOption state:", dueOption);
-  console.log("defaultData.dueDate:", defaultData.dueDate);
-  // console.log("defaultDueOption:", defaultDueOption);
-
   const [priority, setPriority] = useState(defaultData.priority || "");
   const [confirmNoDate, setConfirmNoDate] = useState(false);
-
-  // useEffect(() => {
-  //   if (!isEditing) {
-  //     setDueOption(defaultDueOption);
-  //   }
-  // }, [defaultDueOption, isEditing]);
 
   useEffect(() => {
     setConfirmNoDate(false);
