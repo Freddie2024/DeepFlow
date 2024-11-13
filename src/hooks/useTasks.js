@@ -3,6 +3,8 @@ import useSWR from "swr";
 export function useTasks() {
   const { data: tasks, error, mutate } = useSWR("/api/tasks", fetchTasks);
 
+  const loading = !tasks && !error;
+
   const addNewTask = async (newTask) => {
     try {
       const response = await fetch("/api/tasks", {
@@ -72,6 +74,7 @@ export function useTasks() {
 
   return {
     tasks,
+    loading,
     error,
     addNewTask,
     editTask,

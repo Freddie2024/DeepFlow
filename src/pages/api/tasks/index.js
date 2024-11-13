@@ -1,4 +1,4 @@
-import dbConnect from "@/src/lib/db/connect";
+import dbConnect from "@/src/lib/db/mongoose";
 import Task from "@/src/lib/db/models/Task";
 
 export default async function handler(request, response) {
