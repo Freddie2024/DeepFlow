@@ -10,8 +10,6 @@ function determineDueOption(dueDate) {
     .toISOString()
     .split("T")[0];
 
-  console.log("Determining due option for dueDate:", formattedDueDate);
-
   if (formattedDueDate === today) return "today";
   if (formattedDueDate === tomorrow) return "tomorrow";
   return "later";
@@ -23,35 +21,11 @@ export default function TaskForm({
   isEditing = false,
   onCancel,
 }) {
-  // const initialDueOption = determineDueOption(defaultData.dueDate || "today");
-  // const initialPriority = defaultData.priority || "long";
-
   const [dueOption, setDueOption] = useState(
     determineDueOption(defaultData.dueDate)
   );
   const [priority, setPriority] = useState(defaultData.priority || "long");
   const [confirmNoDate, setConfirmNoDate] = useState(false);
-
-  console.log("Initial dueOption:", dueOption);
-  console.log("Initial priority:", priority);
-
-  // useEffect(() => {
-  //   if (isEditing && defaultData) {
-  //     setPriority(defaultData.priority || "long");
-
-  //     const initialDueOption = determineDueOption(defaultData.dueDate);
-  //     setDueOption(initialDueOption);
-
-  //     if (initialDueOption === "someday") {
-  //       setConfirmNoDate(true);
-  //     } else {
-  //       setDueOption("later");
-  //     }
-  //   } else {
-  //     setDueOption("today");
-  //     setPriority("long");
-  //   }
-  // }, [defaultData, isEditing]);
 
   useEffect(() => {
     const textarea = document.getElementById("description");
@@ -165,7 +139,6 @@ export default function TaskForm({
               id="today"
               value="today"
               onChange={() => handleDueOptionChange("today")}
-              // defaultChecked={defaultData?.dueDate === "today"}
               checked={dueOption === "today"}
               required
             />
