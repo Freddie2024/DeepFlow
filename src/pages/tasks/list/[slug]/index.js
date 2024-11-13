@@ -2,15 +2,35 @@ import TaskList from "@/src/components/taskList/TaskList";
 import { useRouter } from "next/router";
 import { useTasks } from "@/src/hooks/useTasks";
 import TaskForm from "@/src/components/taskForm/TaskForm";
+import { useEffect, useState, useCallback } from "react";
 
 export default function TasksByDate() {
-  const { tasks, toggleTaskCompletion, editTask, deleteTask, addNewTask } =
-    useTasks();
-
-  console.log("deleteTask from useTasks:", deleteTask);
+  const {
+    tasks,
+    loading,
+    toggleTaskCompletion,
+    editTask,
+    deleteTask,
+    addNewTask,
+  } = useTasks();
+  const [filteredTasks, setFilteredTasks] = useState([]);
 
   const router = useRouter();
   const { slug } = router.query;
+
+  const todayDate = new Date().toISOString().split("T")[0];
+  const tomorrowDate = new Date();
+  tomorrowDate.setDate(new Date().getDate() + 1);
+  const tomorrowDateString = tomorrowDate.toISOString().split("T")[0];
+
+  const dueOptionMap = {
+    today: "today",
+    tomorrow: "tomorrow",
+    later: "later",
+    someday: "someday",
+  };
+
+  const defaultDueOption = dueOptionMap[slug] || "today";
 
   const formatDuration = (priority) => {
     switch (priority) {
@@ -25,83 +45,99 @@ export default function TasksByDate() {
     }
   };
 
-  const todayDate = new Date().toISOString().split("T")[0];
-  const tomorrowDate = new Date();
-  tomorrowDate.setDate(new Date().getDate() + 1);
-  const tomorrowDateString = tomorrowDate.toISOString().split("T")[0];
+  const filterTasks = useCallback(() => {
+    return tasks
+      ? tasks
+          .filter((task) => {
+            const taskDueDate = task.dueDate
+              ? new Date(task.dueDate).toISOString().split("T")[0]
+              : null;
 
-  if (!tasks || !slug) return <p>Loading page...</p>;
+            if (slug === "today") {
+              return taskDueDate === todayDate;
+            } else if (slug === "tomorrow") {
+              return taskDueDate === tomorrowDateString;
+            } else if (slug === "someday") {
+              return taskDueDate === null;
+            } else if (slug === "later") {
+              return taskDueDate && taskDueDate > tomorrowDateString;
+            }
+            return false;
+          })
+          .map((task) => ({
+            ...task,
+            duration: formatDuration(task.priority),
+          }))
+      : [];
+  }, [tasks, slug, todayDate, tomorrowDateString]);
 
-  const filteredTasks = tasks
-    .filter((task) => {
-      const taskDueDate = task.dueDate
-        ? new Date(task.dueDate).toISOString().split("T")[0]
-        : null;
+  useEffect(() => {
+    if (!loading) {
+      setFilteredTasks(filterTasks());
+    }
+  }, [tasks, filterTasks, loading]);
 
-      if (slug === "today") {
-        return taskDueDate === todayDate;
-      } else if (slug === "tomorrow") {
-        return taskDueDate === tomorrowDateString;
-      } else if (slug === "someday") {
-        return taskDueDate === null;
-      } else if (slug === "later") {
-        return taskDueDate && taskDueDate > todayDate;
-        // const taskDateObj = task.dueDate ? new Date(task.dueDate) : null;
-        // const todayDateObj = new Date(todayDate);
-        // return taskDateObj && taskDateObj > todayDateObj;
-      }
-      return false;
-    })
-    .map((task) => ({
-      ...task,
-      duration: formatDuration(task.priority),
-    }));
+  const handleFormSubmit = async (event) => {
+    event.preventDefault();
+    const formData = new FormData(event.target);
+    const newTask = Object.fromEntries(formData);
+
+    const dueDate = getDueDateBySlug(slug);
+    if (dueDate !== null || slug !== "later") {
+      newTask.dueDate = dueDate;
+    } else if (slug === "later" && !newTask.dueDate) {
+      alert("Please select a specific future date in the form.");
+      return;
+    }
+
+    await addNewTask(newTask);
+    setFilteredTasks(filterTasks());
+  };
+
+  const handleEditTask = async (updatedTask) => {
+    await editTask(updatedTask);
+    setFilteredTasks(filterTasks());
+  };
+
+  const getDueDateBySlug = (slug) => {
+    if (slug === "today") return todayDate;
+    if (slug === "tomorrow") return tomorrowDateString;
+    if (slug === "someday") return null;
+    return null;
+  };
 
   const emptyMessage = {
     today:
       "Create 6 tasks you want to focus on today: 1 major, 2 medium, 3 small ones with a total of 6 hours.",
     tomorrow:
       "Create 6 tasks you want to focus on tomorrow: 1 major, 2 medium, 3 small ones with a total of 6 hours.",
-    someday: "No tasks so far.",
+    someday:
+      "Set aside tasks you want to complete someday but that are not urgent.",
     later: "No upcoming tasks scheduled. Add tasks with specific future dates!",
   };
 
-  if (filteredTasks.length === 0) {
-    return (
-      <>
-        <h2>No tasks for {slug}</h2>
-        <p>{emptyMessage[slug] || "No tasks available."}</p>
-        <TaskForm
-          onSubmit={async (event) => {
-            event.preventDefault();
-            const formData = new FormData(event.target);
-            const newTask = Object.fromEntries(formData);
-
-            if (slug === "today") {
-              newTask.dueDate = todayDate;
-            } else if (slug === "tomorrow") {
-              newTask.dueDate = tomorrowDateString;
-            } else if (slug === "someday") {
-              newTask.dueDate = null;
-            } else if (slug === "later") {
-              alert("Please select a specific future date in the form.");
-              return;
-            }
-
-            await addNewTask(newTask);
-          }}
-        />
-      </>
-    );
-  }
+  if (loading) return <p>Loading tasks...</p>;
 
   return (
-    <TaskList
-      title={`Tasks for ${slug.replace("-", " ")}`}
-      tasks={filteredTasks}
-      onToggle={toggleTaskCompletion}
-      // onEdit={editTask}
-      onDelete={deleteTask}
-    />
+    <>
+      <h2>Tasks for {slug}</h2>
+      {filteredTasks.length > 0 ? (
+        <TaskList
+          title={`Tasks for ${slug}`}
+          tasks={filteredTasks}
+          onToggle={toggleTaskCompletion}
+          onEdit={handleEditTask}
+          onDelete={deleteTask}
+        />
+      ) : (
+        <>
+          <p>{emptyMessage[slug] || "No tasks available."}</p>
+          <TaskForm
+            onSubmit={handleFormSubmit}
+            defaultDueOption={defaultDueOption}
+          />
+        </>
+      )}
+    </>
   );
 }

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import styles from "./TaskForm.module.css";
 
 function determineDueOption(dueDate) {
-  if (!dueDate) return "someday";
+  if (dueDate === null || dueDate === undefined) return "someday";
 
   const formattedDueDate = new Date(dueDate).toISOString().split("T")[0];
   const today = new Date().toISOString().split("T")[0];
@@ -10,8 +10,16 @@ function determineDueOption(dueDate) {
     .toISOString()
     .split("T")[0];
 
+  console.log(
+    "Inside determineDueOption - formattedDueDate:",
+    formattedDueDate
+  );
+  console.log("Inside determineDueOption - today:", today);
+  console.log("Inside determineDueOption - tomorrow:", tomorrow);
+
   if (formattedDueDate === today) return "today";
   if (formattedDueDate === tomorrow) return "tomorrow";
+
   return "later";
 }
 
@@ -20,12 +28,31 @@ export default function TaskForm({
   defaultData = {},
   isEditing = false,
   onCancel,
+  // defaultDueOption = "today",
 }) {
   const [dueOption, setDueOption] = useState(
-    determineDueOption(defaultData.dueDate)
+    isEditing
+      ? // && defaultData.dueDate !== undefined
+        determineDueOption(defaultData.dueDate)
+      : ""
   );
-  const [priority, setPriority] = useState(defaultData.priority || "long");
+
+  console.log("Initial dueOption state:", dueOption);
+  console.log("defaultData.dueDate:", defaultData.dueDate);
+  // console.log("defaultDueOption:", defaultDueOption);
+
+  const [priority, setPriority] = useState(defaultData.priority || "");
   const [confirmNoDate, setConfirmNoDate] = useState(false);
+
+  // useEffect(() => {
+  //   if (!isEditing) {
+  //     setDueOption(defaultDueOption);
+  //   }
+  // }, [defaultDueOption, isEditing]);
+
+  useEffect(() => {
+    setConfirmNoDate(false);
+  }, []);
 
   useEffect(() => {
     const textarea = document.getElementById("description");
@@ -63,6 +90,9 @@ export default function TaskForm({
       return;
     }
 
+    console.log("Due option selected:", dueOption);
+    console.log("Calculated due date:", dueDate);
+
     taskData.dueDate = dueDate;
 
     onSubmit(isEditing ? taskData : event);
@@ -70,7 +100,9 @@ export default function TaskForm({
 
   function handleDueOptionChange(option) {
     setDueOption(option);
-    setConfirmNoDate(option === "someday");
+    if (option !== "someday") {
+      setConfirmNoDate(false);
+    }
   }
 
   return (
@@ -157,7 +189,7 @@ export default function TaskForm({
               name="dueOption"
               id="later"
               value="later"
-              onChange={() => handleDueOptionChange("")}
+              onChange={() => handleDueOptionChange("later")}
               checked={dueOption === "later"}
             />
             <label htmlFor="later"> Later Date</label> <br />
