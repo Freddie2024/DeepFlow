@@ -1,6 +1,24 @@
 import { useRouter } from "next/router";
 import { useTasks } from "@/src/hooks/useTasks";
 import TaskDetails from "@/src/components/taskDetails/TaskDetails";
+import { getSession } from "next-auth/react";
+
+export async function getServerSideProps(context) {
+  const session = await getSession(context);
+
+  if (!session) {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: { session },
+  };
+}
 
 export default function TaskDetailsPage() {
   const router = useRouter();
@@ -21,7 +39,7 @@ export default function TaskDetailsPage() {
     <TaskDetails
       task={task}
       onToggle={toggleTaskCompletion}
-      onEdit={editTask}
+      // onEdit={editTask}
       onDelete={handleDelete}
     />
   );

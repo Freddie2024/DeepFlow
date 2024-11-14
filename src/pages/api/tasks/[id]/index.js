@@ -1,62 +1,76 @@
 import dbConnect from "@/src/lib/db/mongoose";
 import Task from "@/src/lib/db/models/Task";
 import mongoose from "mongoose";
+import { getSession } from "next-auth/react";
 
-export default async function handler(request, response) {
-  const { id } = request.query;
+export default async function handler(req, res) {
+  await dbConnect();
+
+  const session = await getSession({ req });
+  if (!session) {
+    return res.status(401).json({ error: "Unauthorized" });
+  }
+
+  const userId = session.user.userId;
+  const { id } = req.query;
 
   console.log("Request ID:", id);
 
   if (!id) {
-    return response.status(400).json({ error: "ID is required" });
+    return res.status(400).json({ error: "ID is required" });
   }
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
-    return response.status(400).json({ error: "Invalid ID format" });
+    return res.status(400).json({ error: "Invalid ID format" });
   }
 
-  await dbConnect();
-
-  if (request.method === "GET") {
+  if (req.method === "GET") {
     try {
-      const task = await Task.findById(id);
+      const task = await Task.findOne({ _id: id, user: userId });
 
       if (!task) {
-        return response.status(404).json({ error: "Task not found" });
+        return res.status(404).json({ error: "Task not found" });
       }
 
-      response.status(200).json(task);
+      res.status(200).json(task);
     } catch (error) {
       console.error(error);
-      response.status(500).json({ error: "Failed to retrieve task" });
+      res.status(500).json({ error: "Failed to retrieve task" });
     }
-  } else if (request.method === "PATCH") {
+  } else if (req.method === "PATCH") {
     try {
-      const updatedTask = await Task.findByIdAndUpdate(id, request.body, {
-        new: true,
-        runValidators: true,
-      });
+      const updatedTask = await Task.findOneAndUpdate(
+        { _id: id, user: userId },
+        req.body,
+        {
+          new: true,
+          runValidators: true,
+        }
+      );
       if (!updatedTask) {
-        return response.status(404).json({ error: "Task not found" });
+        return res.status(404).json({ error: "Task not found" });
       }
-      response.status(200).json(updatedTask);
+      res.status(200).json(updatedTask);
     } catch (error) {
       console.error(error);
-      response.status(400).json({ error: "Failed to update task" });
+      res.status(400).json({ error: "Failed to update task" });
     }
-  } else if (request.method === "DELETE") {
+  } else if (req.method === "DELETE") {
     try {
-      const deletedTask = await Task.findByIdAndDelete(id);
+      const deletedTask = await Task.ffindOneAndDelete({
+        _id: id,
+        user: userId,
+      });
       if (!deletedTask) {
-        return response.status(404).json({ error: "Task not found" });
+        return res.status(404).json({ error: "Task not found" });
       }
-      response.status(200).json({ message: "Task deleted successfully" });
+      res.status(200).json({ message: "Task deleted successfully" });
     } catch (error) {
       console.error(error);
-      response.status(500).json({ error: "Failed to delete task" });
+      res.status(500).json({ error: "Failed to delete task" });
     }
   } else {
-    response.setHeader("Allow", ["GET", "PATCH", "DELETE"]);
-    response.status(405).end(`Method ${request.method} Not Allowed`);
+    res.setHeader("Allow", ["GET", "PATCH", "DELETE"]);
+    res.status(405).end(`Method ${req.method} Not Allowed`);
   }
 }

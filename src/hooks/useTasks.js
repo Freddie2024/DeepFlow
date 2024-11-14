@@ -7,17 +7,17 @@ export function useTasks() {
 
   const addNewTask = async (newTask) => {
     try {
-      const response = await fetch("/api/tasks", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(newTask),
-      });
-      if (response.ok) {
-        console.log("Server response data:", await response.json());
-        mutate();
-      } else {
-        console.error("Failed to add task:", await response.json());
-      }
+      await mutate(async (currentTasks) => {
+        const response = await fetch("/api/tasks", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(newTask),
+        });
+        if (!response.ok) throw new Error("Failed to add task");
+
+        const savedTask = await response.json();
+        return [...currentTasks, savedTask];
+      }, false);
     } catch (error) {
       console.error("Failed to add task:", error);
     }

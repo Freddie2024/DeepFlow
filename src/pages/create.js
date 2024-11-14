@@ -2,23 +2,37 @@ import TaskForm from "../components/taskForm/TaskForm";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useTasks } from "../hooks/useTasks";
-// import { useSession }
+import { useSession } from "next-auth/react";
+import { useEffect } from "react";
 
 export default function CreateTaskPage() {
   const router = useRouter();
   const { addNewTask } = useTasks();
-  // const { data: session } = useSession();
+  const { data: session, status } = useSession();
+
+  useEffect(() => {
+    if (status === "unauthenticated") {
+      router.push("/");
+    }
+  }, [status, router]);
 
   async function handleAddNewTask(event) {
     event.preventDefault();
     const formData = new FormData(event.target);
     const data = Object.fromEntries(formData);
 
-    // data.user = session?.user?.email || "defaultUser@example.com";
-    data.user = "user1";
+    data.user = session?.user?.email || "defaultUser@example.com";
 
     await addNewTask(data);
     router.push("/");
+  }
+
+  if (status === "loading") {
+    return <p>Lade...</p>;
+  }
+
+  if (!session) {
+    return null;
   }
 
   return (
