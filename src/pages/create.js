@@ -1,3 +1,5 @@
+"use client";
+
 import TaskForm from "../components/taskForm/TaskForm";
 import Link from "next/link";
 import { useRouter } from "next/router";

@@ -1,3 +1,5 @@
+"use client";
+
 import useSWR from "swr";
 
 export function useTasks() {
@@ -7,7 +9,7 @@ export function useTasks() {
 
   const addNewTask = async (newTask) => {
     try {
-      await mutate(async (currentTasks) => {
+      await mutate(async (currentTasks = []) => {
         const response = await fetch("/api/tasks", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -73,7 +75,7 @@ export function useTasks() {
   };
 
   return {
-    tasks,
+    tasks: tasks || [],
     loading,
     error,
     addNewTask,

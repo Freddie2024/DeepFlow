@@ -38,7 +38,7 @@ export default function Home() {
     );
   }
 
-  if (tasks.length === 0) {
+  if (!tasks || tasks.length === 0) {
     return (
       <>
         <h2>No tasks so far</h2>
@@ -46,6 +46,10 @@ export default function Home() {
         <TaskForm onSubmit={handleAddNewTask} />
       </>
     );
+  }
+
+  if (loading) {
+    return <p>Loading tasks...</p>;
   }
 
   return (

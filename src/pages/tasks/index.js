@@ -1,3 +1,5 @@
+"use client";
+
 import TaskList from "@/src/components/taskList/TaskList";
 import { useTasks } from "@/src/hooks/useTasks";
 import { getSession } from "next-auth/react";

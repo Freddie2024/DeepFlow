@@ -1,3 +1,5 @@
+"use client";
+
 import TaskCard from "../taskCard/TaskCard";
 import styles from "./TaskList.module.css";
 
@@ -9,8 +11,6 @@ export default function TaskList({
   onDelete,
   showDueDate = false,
 }) {
-  console.log("onDelete prop in TaskList:", onDelete);
-
   return (
     <div className={styles.container}>
       <h1 className={styles.title}>{title}</h1>

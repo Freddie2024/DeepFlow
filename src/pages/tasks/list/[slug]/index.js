@@ -1,3 +1,5 @@
+"use client";
+
 import TaskList from "@/src/components/taskList/TaskList";
 import { useRouter } from "next/router";
 import { useTasks } from "@/src/hooks/useTasks";
