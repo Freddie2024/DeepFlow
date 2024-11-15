@@ -2,7 +2,7 @@
 
 import TaskList from "@/src/components/taskList/TaskList";
 import { useTasks } from "@/src/hooks/useTasks";
-import { getSession } from "next-auth/react";
+import { useSession, getSession } from "next-auth/react";
 
 export async function getServerSideProps(context) {
   const session = await getSession(context);
@@ -22,17 +22,33 @@ export async function getServerSideProps(context) {
 }
 
 export default function AllTasksInDetailPage() {
-  const { task, tasks, toggleTaskCompletion, editTask, deleteTask } =
-    useTasks();
+  const { tasks, toggleTaskCompletion, editTask, deleteTask } = useTasks();
+  const { data: session } = useSession();
+
+  async function handleToggleTaskCompletion(taskId) {
+    if (!session) {
+      console.error("User is not authenticated");
+      return;
+    }
+    await toggleTaskCompletion(taskId);
+  }
+
+  async function handleDeleteTask(taskId) {
+    if (!session) {
+      console.error("User is not authenticated");
+      return;
+    }
+    await deleteTask(taskId);
+  }
+
   return (
     <>
-      <p>Test: pages/tasks/index</p>
       <TaskList
         title="All tasks"
         tasks={tasks}
-        onToggle={toggleTaskCompletion}
+        onToggle={handleToggleTaskCompletion}
         // onEdit={editTask}
-        onDelete={deleteTask}
+        onDelete={handleDeleteTask}
       />
     </>
   );

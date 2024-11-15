@@ -60,7 +60,7 @@ export default function TaskForm({
   }, []);
 
   function handleSubmit(event) {
-    if (!isEditing) event.preventDefault();
+    event.preventDefault();
     const formData = new FormData(event.target);
     const taskData = Object.fromEntries(formData);
 

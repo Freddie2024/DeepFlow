@@ -12,6 +12,8 @@ export default function CreateTaskPage() {
   const { addNewTask } = useTasks();
   const { data: session, status } = useSession();
 
+  console.log("Session on CreateTaskPage:", session);
+
   useEffect(() => {
     if (status === "unauthenticated") {
       router.push("/");
@@ -23,14 +25,14 @@ export default function CreateTaskPage() {
     const formData = new FormData(event.target);
     const data = Object.fromEntries(formData);
 
-    data.user = session?.user?.email || "defaultUser@example.com";
+    data.userId = session?.user?.id;
 
     await addNewTask(data);
     router.push("/");
   }
 
   if (status === "loading") {
-    return <p>Lade...</p>;
+    return <p>Loading...</p>;
   }
 
   if (!session) {

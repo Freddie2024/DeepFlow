@@ -1,20 +1,19 @@
 import dbConnect from "@/src/lib/db/mongoose";
 import Task from "@/src/lib/db/models/Task";
 import mongoose from "mongoose";
-import { getSession } from "next-auth/react";
+import { getServerSession } from "next-auth";
+import { authOptions } from "../../auth/[...nextauth]";
 
 export default async function handler(req, res) {
   await dbConnect();
 
-  const session = await getSession({ req });
+  const session = await getServerSession(req, res, authOptions);
   if (!session) {
     return res.status(401).json({ error: "Unauthorized" });
   }
 
   const userId = session.user.userId;
   const { id } = req.query;
-
-  console.log("Request ID:", id);
 
   if (!id) {
     return res.status(400).json({ error: "ID is required" });
@@ -26,21 +25,18 @@ export default async function handler(req, res) {
 
   if (req.method === "GET") {
     try {
-      const task = await Task.findOne({ _id: id, user: userId });
-
-      if (!task) {
-        return res.status(404).json({ error: "Task not found" });
-      }
-
+      const task = (await Task.find({ userId: userId })) || [];
       res.status(200).json(task);
     } catch (error) {
       console.error(error);
-      res.status(500).json({ error: "Failed to retrieve task" });
+      res
+        .status(500)
+        .json({ error: error.message || "Failed to retrieve task" });
     }
   } else if (req.method === "PATCH") {
     try {
       const updatedTask = await Task.findOneAndUpdate(
-        { _id: id, user: userId },
+        { userId: userId },
         req.body,
         {
           new: true,
@@ -53,13 +49,12 @@ export default async function handler(req, res) {
       res.status(200).json(updatedTask);
     } catch (error) {
       console.error(error);
-      res.status(400).json({ error: "Failed to update task" });
+      res.status(400).json({ error: error.message || "Failed to update task" });
     }
   } else if (req.method === "DELETE") {
     try {
-      const deletedTask = await Task.ffindOneAndDelete({
-        _id: id,
-        user: userId,
+      const deletedTask = await Task.findOneAndDelete({
+        userId: userId,
       });
       if (!deletedTask) {
         return res.status(404).json({ error: "Task not found" });
@@ -67,7 +62,7 @@ export default async function handler(req, res) {
       res.status(200).json({ message: "Task deleted successfully" });
     } catch (error) {
       console.error(error);
-      res.status(500).json({ error: "Failed to delete task" });
+      res.status(500).json({ error: error.message || "Failed to delete task" });
     }
   } else {
     res.setHeader("Allow", ["GET", "PATCH", "DELETE"]);

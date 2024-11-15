@@ -7,35 +7,58 @@ import { useEffect } from "react";
 
 export default function Home() {
   const { data: session, status } = useSession();
-  const { tasks, addNewTask, deleteTask, toggleTaskCompletion, editTask } =
-    useTasks();
+
+  console.log("Session on HomePage:", session);
+
+  const {
+    tasks,
+    addNewTask,
+    deleteTask,
+    toggleTaskCompletion,
+    editTask,
+    loading,
+  } = useTasks();
   const router = useRouter();
 
   async function handleAddNewTask(event) {
     event.preventDefault();
+    if (!session) {
+      console.error("User is not authenticated");
+      return;
+    }
     const formData = new FormData(event.target);
     const newTask = Object.fromEntries(formData);
+
+    newTask.userId = session.user.userId;
     await addNewTask(newTask);
   }
 
   useEffect(() => {
-    if (session) {
+    if (session === "authenticated") {
       router.push("/tasks/list/today");
     }
   }, [session, router]);
+
+  if (status === "loading") {
+    return <p>Loading session...</p>;
+  }
 
   if (!session) {
     return (
       <div>
         <h2>Welcome to DeepFlow</h2>
         <p>Please create an account or log in to see your tasks.</p>
-        <button onClick={() => signIn("google")}>Login with Google</button>
+        <button onClick={() => signIn("google")}>Log in with Google</button>
         <p>or</p>
         <button onClick={() => signIn()}>
-          Create account / Login with email
+          Create account or log in with email
         </button>
       </div>
     );
+  }
+
+  if (status === "authenticated" && loading) {
+    return <p>Loading all tasks...</p>;
   }
 
   if (!tasks || tasks.length === 0) {
@@ -46,10 +69,6 @@ export default function Home() {
         <TaskForm onSubmit={handleAddNewTask} />
       </>
     );
-  }
-
-  if (loading) {
-    return <p>Loading tasks...</p>;
   }
 
   return (

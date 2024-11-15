@@ -2,6 +2,7 @@ import localFont from "next/font/local";
 import "../styles/globals.css";
 import Main_Layout from "../components/layouts/Main_Layout";
 import { SessionProvider } from "next-auth/react";
+import { SWRConfig } from "swr";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -14,12 +15,19 @@ const geistMono = localFont({
   weight: "100 900",
 });
 
-export default function App({ Component, ...pageProps }) {
+const fetcher = (url) => fetch(url).then((res) => res.json());
+
+export default function App({
+  Component,
+  pageProps: { session, ...pageProps },
+}) {
   return (
-    <SessionProvider>
+    <SessionProvider session={session}>
       <div className={`${geistSans.variable} ${geistMono.variable}`}>
         <Main_Layout>
-          <Component {...pageProps} />
+          <SWRConfig value={{ fetcher }}>
+            <Component {...pageProps} />
+          </SWRConfig>
         </Main_Layout>
       </div>
     </SessionProvider>

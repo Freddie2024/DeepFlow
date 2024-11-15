@@ -1,11 +1,15 @@
 import dbConnect from "@/src/lib/db/mongoose";
 import Task from "@/src/lib/db/models/Task";
-import { getSession } from "next-auth/react";
+// import { getSession } from "next-auth/react";
+import { getServerSession } from "next-auth";
+import { authOptions } from "../auth/[...nextauth]";
 
 export default async function handler(req, res) {
   await dbConnect();
 
-  const session = await getSession({ req });
+  // const session = await getSession({ req });
+  const session = await getServerSession(req, res, authOptions);
+  // console.log("session;:::::", session);
   if (!session) {
     return res.status(401).json({ error: "Unauthorized" });
   }
@@ -23,8 +27,10 @@ export default async function handler(req, res) {
   }
 
   if (req.method === "POST") {
+    // console.log("req.body, userID", req.body, userId);
     try {
-      const taskData = { ...req.body, user: userId };
+      const taskData = { ...req.body };
+      console.log("taskData", taskData);
       const newTask = await Task.create(taskData);
       res.status(201).json(newTask);
     } catch (error) {
