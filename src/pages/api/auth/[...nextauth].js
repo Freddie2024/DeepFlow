@@ -1,5 +1,3 @@
-console.log("nextauth.js loaded");
-
 import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import { MongoDBAdapter } from "@next-auth/mongodb-adapter";
@@ -56,7 +54,6 @@ export const authOptions = {
     //   return token;
     // },
     async session({ session, user }) {
-      console.log("Session Callback triggered");
       // console.log("Token in session callback:", token);
 
       // if (token?.userId) {
@@ -65,7 +62,6 @@ export const authOptions = {
       //   console.warn("User ID not found in token.");
       // }
 
-      console.log("Final session object:", session);
       return session;
     },
   },

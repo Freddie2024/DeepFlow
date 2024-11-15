@@ -18,7 +18,6 @@ const taskSchema = new Schema({
   },
   dueDate: {
     type: Date,
-    default: null,
   },
   completed: {
     type: Boolean,

@@ -27,10 +27,11 @@ export default async function handler(req, res) {
   }
 
   if (req.method === "POST") {
-    // console.log("req.body, userID", req.body, userId);
+    console.log("Received data:", req.body);
+    console.log("Query params:", req.query);
     try {
-      const taskData = { ...req.body };
-      console.log("taskData", taskData);
+      const taskData = { ...req.body, user: userId };
+      console.log("Saving taskData:", taskData);
       const newTask = await Task.create(taskData);
       res.status(201).json(newTask);
     } catch (error) {

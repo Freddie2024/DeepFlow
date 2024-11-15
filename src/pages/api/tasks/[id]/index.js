@@ -34,6 +34,8 @@ export default async function handler(req, res) {
         .json({ error: error.message || "Failed to retrieve task" });
     }
   } else if (req.method === "PATCH") {
+    console.log("Received data:", req.body);
+    console.log("Query params:", req.query);
     try {
       const updatedTask = await Task.findOneAndUpdate(
         { userId: userId },
@@ -52,6 +54,8 @@ export default async function handler(req, res) {
       res.status(400).json({ error: error.message || "Failed to update task" });
     }
   } else if (req.method === "DELETE") {
+    console.log("Received data:", req.body);
+    console.log("Query params:", req.query);
     try {
       const deletedTask = await Task.findOneAndDelete({
         userId: userId,
