@@ -1,23 +1,45 @@
+"use client";
+
 import useSWR from "swr";
+import { useSession } from "next-auth/react";
 
 export function useTasks() {
-  const { data: tasks, error, mutate } = useSWR("/api/tasks", fetchTasks);
+  const { data: session, status } = useSession();
 
-  const loading = !tasks && !error;
+  const {
+    data: tasks,
+    error,
+    mutate,
+  } = useSWR(
+    session?.user?.userId ? `/api/tasks/${session.user.userId}` : null
+  );
+
+  const loading = status === "loading" || (!tasks && !error);
 
   const addNewTask = async (newTask) => {
+    if (!session || !session.user?.userId) {
+      console.error("Session or userId is not available");
+      return;
+    }
+
+    const taskData = { ...newTask, userId: session.user.userId };
+
     try {
       const response = await fetch("/api/tasks", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(newTask),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(taskData),
       });
-      if (response.ok) {
-        console.log("Server response data:", await response.json());
-        mutate();
-      } else {
-        console.error("Failed to add task:", await response.json());
+
+      if (!response.ok) {
+        const errorDetails = await response.json();
+        console.error("Failed to add task:", errorDetails);
+        throw new Error("Failed to add task");
       }
+
+      mutate();
     } catch (error) {
       console.error("Failed to add task:", error);
     }
@@ -27,12 +49,15 @@ export function useTasks() {
     try {
       const response = await fetch(`/api/tasks/${taskId}`, {
         method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(updatedTask),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ ...updatedTask, userId: session.user.userId }),
       });
-      if (response.ok) {
-        mutate();
+      if (!response.ok) {
+        throw new Error("Failed to update task");
       }
+      // mutate(); CHECK IF THIS IS NEEDED!!!
     } catch (error) {
       console.error("Failed to edit task:", error);
     }
@@ -45,8 +70,13 @@ export function useTasks() {
     try {
       const response = await fetch(`/api/tasks/${taskId}`, {
         method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ completed: !task.completed }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          completed: !task.completed,
+          userId: session.user.userId,
+        }),
       });
 
       if (response.ok) {
@@ -61,19 +91,23 @@ export function useTasks() {
     try {
       const response = await fetch(`/api/tasks/${taskId}`, {
         method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
       });
-      if (response.ok) {
-        mutate();
-      } else {
+      if (!response.ok) {
         console.error("Failed to delete task");
+        throw new Error("Failed to delete task");
       }
+
+      mutate();
     } catch (error) {
       console.error("Failed to delete task:", error);
     }
   };
 
   return {
-    tasks,
+    tasks: tasks || [],
     loading,
     error,
     addNewTask,
@@ -82,10 +116,4 @@ export function useTasks() {
     deleteTask,
     mutate,
   };
-}
-
-async function fetchTasks() {
-  const response = await fetch("/api/tasks");
-  if (!response.ok) throw new Error("Failed to fetch tasks");
-  return await response.json();
 }

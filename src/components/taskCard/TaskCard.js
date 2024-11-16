@@ -1,8 +1,11 @@
+"use client";
+
 import Link from "next/link";
 import styles from "./TaskCard.module.css";
 
 export default function TaskCard({ task, onToggle, onDelete, showDueDate }) {
   const todayDate = new Date().toISOString().split("T")[0];
+
   const tomorrowDate = new Date();
   tomorrowDate.setDate(new Date().getDate() + 1);
   const tomorrowDateString = tomorrowDate.toISOString().split("T")[0];

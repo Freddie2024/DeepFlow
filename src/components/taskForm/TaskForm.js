@@ -1,21 +1,33 @@
+"use client";
+
 import React, { useEffect, useState } from "react";
 import styles from "./TaskForm.module.css";
+
+function getLocalISOString(date) {
+  if (!(date instanceof Date) || isNaN(date)) {
+    console.error("Invalid date passed to getLocalISOString:", date);
+    return null;
+  }
+  const offset = date.getTimezoneOffset() * 60000;
+  const localISOString = new Date(date.getTime() - offset)
+    .toISOString()
+    .split("T")[0];
+
+  return localISOString;
+}
 
 function determineDueOption(dueDate) {
   if (dueDate === null || dueDate === undefined) return "someday";
 
-  const formattedDueDate = new Date(dueDate).toISOString().split("T")[0];
-  const today = new Date().toISOString().split("T")[0];
-  const tomorrow = new Date(new Date().setDate(new Date().getDate() + 1))
-    .toISOString()
-    .split("T")[0];
+  const formattedDueDate = getLocalISOString(new Date(dueDate));
 
-  console.log(
-    "Inside determineDueOption - formattedDueDate:",
-    formattedDueDate
-  );
-  console.log("Inside determineDueOption - today:", today);
-  console.log("Inside determineDueOption - tomorrow:", tomorrow);
+  const today = getLocalISOString(new Date());
+
+  const tomorrow = (() => {
+    const temp = new Date();
+    temp.setDate(temp.getDate() + 1);
+    return getLocalISOString(temp);
+  })();
 
   if (formattedDueDate === today) return "today";
   if (formattedDueDate === tomorrow) return "tomorrow";
@@ -28,13 +40,11 @@ export default function TaskForm({
   defaultData = {},
   isEditing = false,
   onCancel,
-  // defaultDueOption = "today",
 }) {
   const [dueOption, setDueOption] = useState(
     isEditing
-      ? // && defaultData.dueDate !== undefined
-        determineDueOption(defaultData.dueDate)
-      : ""
+      ? determineDueOption(getLocalISOString(new Date(defaultData.dueDate)))
+      : "today"
   );
 
   const [priority, setPriority] = useState(defaultData.priority || "");
@@ -58,19 +68,21 @@ export default function TaskForm({
   }, []);
 
   function handleSubmit(event) {
-    if (!isEditing) event.preventDefault();
+    event.preventDefault();
+
     const formData = new FormData(event.target);
     const taskData = Object.fromEntries(formData);
 
-    let dueDate;
+    let dueDate = null;
+
     if (dueOption === "later") {
       dueDate = taskData.dueDate || null;
     } else if (dueOption === "today") {
-      dueDate = new Date().toISOString().split("T")[0];
+      dueDate = getLocalISOString(new Date());
     } else if (dueOption === "tomorrow") {
       const tomorrow = new Date();
       tomorrow.setDate(tomorrow.getDate() + 1);
-      dueDate = tomorrow.toISOString().split("T")[0];
+      dueDate = getLocalISOString(tomorrow);
     } else if (dueOption === "someday" && confirmNoDate) {
       dueDate = null;
     } else {
@@ -80,12 +92,18 @@ export default function TaskForm({
       return;
     }
 
-    console.log("Due option selected:", dueOption);
-    console.log("Calculated due date:", dueDate);
-
     taskData.dueDate = dueDate;
 
-    onSubmit(isEditing ? taskData : event);
+    if (isEditing) {
+      onSubmit(taskData);
+    } else {
+      const dueDateInput = document.createElement("input");
+      dueDateInput.type = "hidden";
+      dueDateInput.name = "dueDate";
+      dueDateInput.value = dueDate || "";
+      event.target.appendChild(dueDateInput);
+      onSubmit(event);
+    }
   }
 
   function handleDueOptionChange(option) {
@@ -190,7 +208,7 @@ export default function TaskForm({
                 className={styles.formInput}
                 defaultValue={
                   defaultData?.dueDate
-                    ? new Date(defaultData.dueDate).toISOString().split("T")[0]
+                    ? getLocalISOString(new Date(defaultData.dueDate))
                     : ""
                 }
               />

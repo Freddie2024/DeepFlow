@@ -1,10 +1,32 @@
+"use client";
+
 import TaskList from "@/src/components/taskList/TaskList";
 import { useRouter } from "next/router";
 import { useTasks } from "@/src/hooks/useTasks";
 import TaskForm from "@/src/components/taskForm/TaskForm";
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useMemo, useRef } from "react";
+import { useSession, getSession } from "next-auth/react";
+
+export async function getServerSideProps(context) {
+  const session = await getSession(context);
+
+  if (!session) {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: { session },
+  };
+}
 
 export default function TasksByDate() {
+  const { data: session } = useSession();
+
   const {
     tasks,
     loading,
@@ -14,14 +36,16 @@ export default function TasksByDate() {
     addNewTask,
   } = useTasks();
   const [filteredTasks, setFilteredTasks] = useState([]);
-
+  const previousFilteredTasksRef = useRef(filteredTasks);
   const router = useRouter();
   const { slug } = router.query;
 
-  const todayDate = new Date().toISOString().split("T")[0];
-  const tomorrowDate = new Date();
-  tomorrowDate.setDate(new Date().getDate() + 1);
-  const tomorrowDateString = tomorrowDate.toISOString().split("T")[0];
+  const todayDate = useMemo(() => new Date().toISOString().split("T")[0], []);
+  const tomorrowDateString = useMemo(() => {
+    const tomorrow = new Date();
+    tomorrow.setDate(new Date().getDate() + 1);
+    return tomorrow.toISOString().split("T")[0];
+  }, []);
 
   const dueOptionMap = {
     today: "today",
@@ -45,37 +69,38 @@ export default function TasksByDate() {
     }
   };
 
-  const filterTasks = useCallback(() => {
-    return tasks
-      ? tasks
-          .filter((task) => {
-            const taskDueDate = task.dueDate
-              ? new Date(task.dueDate).toISOString().split("T")[0]
-              : null;
-
-            if (slug === "today") {
-              return taskDueDate === todayDate;
-            } else if (slug === "tomorrow") {
-              return taskDueDate === tomorrowDateString;
-            } else if (slug === "someday") {
-              return taskDueDate === null;
-            } else if (slug === "later") {
-              return taskDueDate && taskDueDate > tomorrowDateString;
-            }
-            return false;
-          })
-          .map((task) => ({
-            ...task,
-            duration: formatDuration(task.priority),
-          }))
-      : [];
-  }, [tasks, slug, todayDate, tomorrowDateString]);
-
   useEffect(() => {
-    if (!loading) {
-      setFilteredTasks(filterTasks());
+    if (tasks) {
+      const filtered = tasks
+        .filter((task) => {
+          const taskDueDate = task.dueDate
+            ? new Date(task.dueDate).toISOString().split("T")[0]
+            : null;
+
+          if (slug === "today") {
+            return taskDueDate === todayDate;
+          } else if (slug === "tomorrow") {
+            return taskDueDate === tomorrowDateString;
+          } else if (slug === "someday") {
+            return taskDueDate === null;
+          } else if (slug === "later") {
+            return taskDueDate && taskDueDate > tomorrowDateString;
+          }
+          return false;
+        })
+        .map((task) => ({
+          ...task,
+          duration: formatDuration(task.priority),
+        }));
+      if (
+        JSON.stringify(previousFilteredTasksRef.current) !==
+        JSON.stringify(filtered)
+      ) {
+        setFilteredTasks(filtered);
+        previousFilteredTasksRef.current = filtered;
+      }
     }
-  }, [tasks, filterTasks, loading]);
+  }, [tasks, slug, todayDate, tomorrowDateString]);
 
   const handleFormSubmit = async (event) => {
     event.preventDefault();
@@ -89,14 +114,19 @@ export default function TasksByDate() {
       alert("Please select a specific future date in the form.");
       return;
     }
-
     await addNewTask(newTask);
-    setFilteredTasks(filterTasks());
   };
 
   const handleEditTask = async (updatedTask) => {
     await editTask(updatedTask);
-    setFilteredTasks(filterTasks());
+  };
+
+  const handleDeleteTask = async (taskId) => {
+    await deleteTask(taskId);
+  };
+
+  const handleToggleTaskCompletion = async (taskId) => {
+    await toggleTaskCompletion(taskId);
   };
 
   const getDueDateBySlug = (slug) => {
@@ -116,8 +146,7 @@ export default function TasksByDate() {
     later: "No upcoming tasks scheduled. Add tasks with specific future dates!",
   };
 
-  if (loading) return <p>Loading tasks...</p>;
-
+  if (loading) return <p>Loading todays tasks...</p>;
   return (
     <>
       <h2>Tasks for {slug}</h2>
@@ -125,9 +154,9 @@ export default function TasksByDate() {
         <TaskList
           title={`Tasks for ${slug}`}
           tasks={filteredTasks}
-          onToggle={toggleTaskCompletion}
+          onToggle={handleToggleTaskCompletion}
           onEdit={handleEditTask}
-          onDelete={deleteTask}
+          onDelete={handleDeleteTask}
         />
       ) : (
         <>
