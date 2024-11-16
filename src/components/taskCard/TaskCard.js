@@ -5,6 +5,7 @@ import styles from "./TaskCard.module.css";
 
 export default function TaskCard({ task, onToggle, onDelete, showDueDate }) {
   const todayDate = new Date().toISOString().split("T")[0];
+
   const tomorrowDate = new Date();
   tomorrowDate.setDate(new Date().getDate() + 1);
   const tomorrowDateString = tomorrowDate.toISOString().split("T")[0];
@@ -15,6 +16,9 @@ export default function TaskCard({ task, onToggle, onDelete, showDueDate }) {
   const taskDueDateString = task.dueDate
     ? new Date(task.dueDate).toISOString().split("T")[0]
     : null;
+
+  console.log("Task Due Date:", task.dueDate);
+  console.log("Task Due Date String:", taskDueDateString);
 
   if (taskDueDateString === todayDate) {
     dueDateLabel = "Today";
@@ -29,6 +33,12 @@ export default function TaskCard({ task, onToggle, onDelete, showDueDate }) {
     dueDateLabel = new Date(task.dueDate).toLocaleDateString("de-DE");
     dueDateClass = styles.dueDateLater;
   }
+
+  console.log("Processed Task Due Date:", {
+    taskDueDate: task.dueDate,
+    taskDueDateString,
+    dueDateLabel,
+  });
 
   return (
     <li className={styles.card}>

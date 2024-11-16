@@ -43,7 +43,11 @@ export default function CreateTaskPage() {
     <>
       <h2 id="add-task">Add Task</h2>
       <Link href="/">back</Link>
-      <TaskForm onSubmit={handleAddNewTask} formName={"add-task"} />
+      <TaskForm
+        onSubmit={handleAddNewTask}
+        defaultDueOption="today"
+        formName={"add-task"}
+      />
     </>
   );
 }

@@ -1,27 +1,31 @@
 "use client";
 
 import useSWR from "swr";
-import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
 
 export function useTasks() {
-  const { data: session } = useSession();
-  const router = useRouter();
+  const { data: session, status } = useSession();
 
   const {
     data: tasks,
     error,
     mutate,
-    loading,
   } = useSWR(
     session?.user?.userId ? `/api/tasks/${session.user.userId}` : null
   );
 
+  const loading = status === "loading" || (!tasks && !error);
+
   const addNewTask = async (newTask) => {
-    console.log("Adding new task:", {
-      ...newTask,
-      userId: session.user.userId,
-    });
+    console.log("addNewTask - Received newTask:", newTask);
+
+    if (!session || !session.user?.userId) {
+      console.error("Session or userId is not available");
+      return;
+    }
+
+    const taskData = { ...newTask, userId: session.user.userId };
+    console.log("addNewTask - Final taskData with userId:", taskData);
 
     try {
       const response = await fetch("/api/tasks", {
@@ -29,13 +33,15 @@ export function useTasks() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ ...newTask, userId: session.user.userId }),
+        body: JSON.stringify(taskData),
       });
+
       if (!response.ok) {
         const errorDetails = await response.json();
         console.error("Failed to add task:", errorDetails);
         throw new Error("Failed to add task");
       }
+
       mutate();
     } catch (error) {
       console.error("Failed to add task:", error);
@@ -56,7 +62,7 @@ export function useTasks() {
       if (!response.ok) {
         throw new Error("Failed to update task");
       }
-      // mutate();
+      // mutate(); CHECK IF THIS IS NEEDED!!!
     } catch (error) {
       console.error("Failed to edit task:", error);
     }
@@ -75,6 +81,7 @@ export function useTasks() {
         body: JSON.stringify({
           completed: !task.completed,
           userId: session.user.userId,
+          // userId or taskId ???????????????? CHECK!!!!
         }),
       });
 
@@ -100,7 +107,9 @@ export function useTasks() {
         console.error("Failed to delete task");
         throw new Error("Failed to delete task");
       }
-      // mutate();
+      console.log("Task deleted successfully");
+
+      mutate();
     } catch (error) {
       console.error("Failed to delete task:", error);
     }

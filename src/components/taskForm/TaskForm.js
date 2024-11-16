@@ -4,13 +4,24 @@ import React, { useEffect, useState } from "react";
 import styles from "./TaskForm.module.css";
 
 function getLocalISOString(date) {
+  console.log("getLocalISOString - Input date:", date);
+
   if (!(date instanceof Date) || isNaN(date)) {
     console.error("Invalid date passed to getLocalISOString:", date);
     return null;
   }
   const offset = date.getTimezoneOffset() * 60000;
-  return new Date(date.getTime() - offset).toISOString().split("T")[0];
+  const localISOString = new Date(date.getTime() - offset)
+    .toISOString()
+    .split("T")[0];
+
+  console.log("getLocalISOString - Output:", localISOString);
+  return localISOString;
+
+  // return new Date(date.getTime() - offset).toISOString().split("T")[0];
 }
+
+console.log("Today's Local ISO String:", getLocalISOString(new Date()));
 
 function determineDueOption(dueDate) {
   console.log("determineDueOption - Input dueDate:", dueDate);
@@ -51,7 +62,7 @@ export default function TaskForm({
     isEditing
       ? // && defaultData.dueDate !== undefined
         determineDueOption(getLocalISOString(new Date(defaultData.dueDate)))
-      : ""
+      : "today"
   );
 
   console.log("Render - dueOption (initial):", dueOption);
@@ -78,6 +89,7 @@ export default function TaskForm({
   }, []);
 
   function handleSubmit(event) {
+    console.log("handleSubmit triggered");
     event.preventDefault();
 
     console.log("handleSubmit - Selected dueOption:", dueOption);
@@ -85,7 +97,8 @@ export default function TaskForm({
     const formData = new FormData(event.target);
     const taskData = Object.fromEntries(formData);
 
-    let dueDate;
+    let dueDate = null;
+
     if (dueOption === "later") {
       dueDate = taskData.dueDate || null;
     } else if (dueOption === "today") {
@@ -109,7 +122,10 @@ export default function TaskForm({
 
     taskData.dueDate = dueDate;
 
+    console.log("handleSubmit - Final taskData:", taskData);
+
     onSubmit(isEditing ? taskData : event);
+    // onSubmit(taskData)
   }
 
   function handleDueOptionChange(option) {

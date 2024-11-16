@@ -66,7 +66,11 @@ export default function Home() {
       <>
         <h2>No tasks so far</h2>
         <p>Create your first task!</p>
-        <TaskForm onSubmit={handleAddNewTask} />
+        <TaskForm
+          onSubmit={handleAddNewTask}
+          // defaultDueOption="today"
+          formName={"add-task"}
+        />
       </>
     );
   }

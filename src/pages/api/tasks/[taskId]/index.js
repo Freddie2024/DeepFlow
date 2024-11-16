@@ -13,13 +13,13 @@ export default async function handler(req, res) {
   }
 
   const userId = session.user.userId;
-  const { id } = req.query;
+  const { taskId } = req.query;
 
-  if (!id) {
+  if (!taskId) {
     return res.status(400).json({ error: "ID is required" });
   }
 
-  if (!mongoose.Types.ObjectId.isValid(id)) {
+  if (!mongoose.Types.ObjectId.isValid(taskId)) {
     return res.status(400).json({ error: "Invalid ID format" });
   }
 
@@ -34,11 +34,27 @@ export default async function handler(req, res) {
         .json({ error: error.message || "Failed to retrieve task" });
     }
   } else if (req.method === "PATCH") {
+    const { taskId } = req.query;
+    const { user } = session;
+
+    if (!taskId) {
+      console.error("Task ID is missing");
+      return res.status(400).json({ error: "Task ID is required" });
+    }
+
+    if (!mongoose.Types.ObjectId.isValid(taskId)) {
+      return res.status(400).json({ error: "Invalid Task ID" });
+    }
+
     console.log("Received data:", req.body);
     console.log("Query params:", req.query);
+
     try {
       const updatedTask = await Task.findOneAndUpdate(
-        { userId: userId },
+        {
+          _id: taskId,
+          userId: user.userId,
+        },
         req.body,
         {
           new: true,
@@ -54,15 +70,30 @@ export default async function handler(req, res) {
       res.status(400).json({ error: error.message || "Failed to update task" });
     }
   } else if (req.method === "DELETE") {
-    console.log("Received data:", req.body);
-    console.log("Query params:", req.query);
+    const { taskId } = req.query;
+    const { user } = session;
+
+    if (!taskId) {
+      console.error("Task ID is missing");
+      return res.status(400).json({ error: "Task ID is required" });
+    }
+
+    if (!mongoose.Types.ObjectId.isValid(taskId)) {
+      return res.status(400).json({ error: "Invalid Task ID" });
+    }
+
     try {
       const deletedTask = await Task.findOneAndDelete({
-        userId: userId,
+        _id: taskId,
+        userId: user.userId,
       });
+
       if (!deletedTask) {
+        console.error("No task found with the provided ID and userId");
+
         return res.status(404).json({ error: "Task not found" });
       }
+
       res.status(200).json({ message: "Task deleted successfully" });
     } catch (error) {
       console.error(error);
