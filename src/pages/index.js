@@ -8,8 +8,6 @@ import { useEffect } from "react";
 export default function Home() {
   const { data: session, status } = useSession();
 
-  console.log("Session on HomePage:", session);
-
   const {
     tasks,
     addNewTask,
@@ -66,11 +64,7 @@ export default function Home() {
       <>
         <h2>No tasks so far</h2>
         <p>Create your first task!</p>
-        <TaskForm
-          onSubmit={handleAddNewTask}
-          // defaultDueOption="today"
-          formName={"add-task"}
-        />
+        <TaskForm onSubmit={handleAddNewTask} formName={"add-task"} />
       </>
     );
   }
@@ -82,7 +76,6 @@ export default function Home() {
         tasks={tasks}
         onDelete={deleteTask}
         onToggle={toggleTaskCompletion}
-        // onEdit={editTask}
         showDueDate={true}
       />
     </>

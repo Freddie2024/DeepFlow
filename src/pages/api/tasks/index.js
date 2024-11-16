@@ -1,17 +1,12 @@
 import dbConnect from "@/src/lib/db/mongoose";
 import Task from "@/src/lib/db/models/Task";
-// import { getSession } from "next-auth/react";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../auth/[...nextauth]";
 
 export default async function handler(req, res) {
-  console.log("HTTP method received:", req.method);
-
   await dbConnect();
 
-  // const session = await getSession({ req });
   const session = await getServerSession(req, res, authOptions);
-  // console.log("session;:::::", session);
   if (!session || !session.user?.userId) {
     return res.status(401).json({ error: "Unauthorized" });
   }
@@ -29,16 +24,7 @@ export default async function handler(req, res) {
   }
 
   if (req.method === "POST") {
-    console.log("POST method matched");
-
-    console.log("Received data:", req.body);
-    console.log("Query params:", req.query);
     try {
-      // const taskData = { ...req.body, userId };
-      // gehört das userId hier rein???
-      // console.log("Saving taskData:", taskData);
-      // const newTask = await Task.create(taskData);
-
       const { title, description, priority, dueDate } = req.body;
 
       if (!title || !priority) {
@@ -57,14 +43,9 @@ export default async function handler(req, res) {
         priority,
         dueDate: dueDate ? new Date(dueDate) : null,
         userId,
-        // userId: req.body.userId,
       };
 
-      console.log("POST /api/tasks - Saving taskData:", taskData);
-
       const newTask = await Task.create(taskData);
-
-      console.log("Task successfully saved:", newTask);
 
       return res.status(201).json(newTask);
     } catch (error) {

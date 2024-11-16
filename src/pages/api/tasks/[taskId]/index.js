@@ -46,9 +46,6 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: "Invalid Task ID" });
     }
 
-    console.log("Received data:", req.body);
-    console.log("Query params:", req.query);
-
     try {
       const updatedTask = await Task.findOneAndUpdate(
         {

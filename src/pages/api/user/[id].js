@@ -10,8 +10,6 @@ export default async function handler(req, res) {
     return res.status(401).json({ message: "Unauthorized" });
   }
 
-  // const userId = session.user.userId;
-
   const { id } = req.query;
 
   if (req.method === "GET") {

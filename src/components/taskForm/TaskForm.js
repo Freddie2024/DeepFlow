@@ -4,8 +4,6 @@ import React, { useEffect, useState } from "react";
 import styles from "./TaskForm.module.css";
 
 function getLocalISOString(date) {
-  console.log("getLocalISOString - Input date:", date);
-
   if (!(date instanceof Date) || isNaN(date)) {
     console.error("Invalid date passed to getLocalISOString:", date);
     return null;
@@ -15,35 +13,21 @@ function getLocalISOString(date) {
     .toISOString()
     .split("T")[0];
 
-  console.log("getLocalISOString - Output:", localISOString);
   return localISOString;
-
-  // return new Date(date.getTime() - offset).toISOString().split("T")[0];
 }
 
-console.log("Today's Local ISO String:", getLocalISOString(new Date()));
-
 function determineDueOption(dueDate) {
-  console.log("determineDueOption - Input dueDate:", dueDate);
-
   if (dueDate === null || dueDate === undefined) return "someday";
 
-  // const formattedDueDate = new Date(dueDate).toISOString().split("T")[0];
   const formattedDueDate = getLocalISOString(new Date(dueDate));
 
-  // const today = new Date().toISOString().split("T")[0];
   const today = getLocalISOString(new Date());
 
   const tomorrow = (() => {
     const temp = new Date();
     temp.setDate(temp.getDate() + 1);
-    // return temp.toISOString().split("T")[0];
     return getLocalISOString(temp);
   })();
-
-  console.log("determineDueOption - Today:", today);
-  console.log("determineDueOption - Tomorrow:", tomorrow);
-  console.log("determineDueOption - Formatted Due Date:", formattedDueDate);
 
   if (formattedDueDate === today) return "today";
   if (formattedDueDate === tomorrow) return "tomorrow";
@@ -56,17 +40,12 @@ export default function TaskForm({
   defaultData = {},
   isEditing = false,
   onCancel,
-  // defaultDueOption = "today",
 }) {
   const [dueOption, setDueOption] = useState(
     isEditing
-      ? // && defaultData.dueDate !== undefined
-        determineDueOption(getLocalISOString(new Date(defaultData.dueDate)))
+      ? determineDueOption(getLocalISOString(new Date(defaultData.dueDate)))
       : "today"
   );
-
-  console.log("Render - dueOption (initial):", dueOption);
-  console.log("Render - defaultData.dueDate:", defaultData.dueDate);
 
   const [priority, setPriority] = useState(defaultData.priority || "");
   const [confirmNoDate, setConfirmNoDate] = useState(false);
@@ -89,10 +68,7 @@ export default function TaskForm({
   }, []);
 
   function handleSubmit(event) {
-    console.log("handleSubmit triggered");
     event.preventDefault();
-
-    console.log("handleSubmit - Selected dueOption:", dueOption);
 
     const formData = new FormData(event.target);
     const taskData = Object.fromEntries(formData);
@@ -102,12 +78,10 @@ export default function TaskForm({
     if (dueOption === "later") {
       dueDate = taskData.dueDate || null;
     } else if (dueOption === "today") {
-      // dueDate = new Date().toISOString().split("T")[0];
       dueDate = getLocalISOString(new Date());
     } else if (dueOption === "tomorrow") {
       const tomorrow = new Date();
       tomorrow.setDate(tomorrow.getDate() + 1);
-      // dueDate = tomorrow.toISOString().split("T")[0];
       dueDate = getLocalISOString(tomorrow);
     } else if (dueOption === "someday" && confirmNoDate) {
       dueDate = null;
@@ -118,19 +92,21 @@ export default function TaskForm({
       return;
     }
 
-    console.log("handleSubmit - Calculated dueDate:", dueDate);
-
     taskData.dueDate = dueDate;
 
-    console.log("handleSubmit - Final taskData:", taskData);
-
-    onSubmit(isEditing ? taskData : event);
-    // onSubmit(taskData)
+    if (isEditing) {
+      onSubmit(taskData);
+    } else {
+      const dueDateInput = document.createElement("input");
+      dueDateInput.type = "hidden";
+      dueDateInput.name = "dueDate";
+      dueDateInput.value = dueDate || "";
+      event.target.appendChild(dueDateInput);
+      onSubmit(event);
+    }
   }
 
   function handleDueOptionChange(option) {
-    console.log("handleDueOptionChange - Changing dueOption to:", option);
-
     setDueOption(option);
     if (option !== "someday") {
       setConfirmNoDate(false);

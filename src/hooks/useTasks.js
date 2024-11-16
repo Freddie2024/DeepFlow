@@ -17,15 +17,12 @@ export function useTasks() {
   const loading = status === "loading" || (!tasks && !error);
 
   const addNewTask = async (newTask) => {
-    console.log("addNewTask - Received newTask:", newTask);
-
     if (!session || !session.user?.userId) {
       console.error("Session or userId is not available");
       return;
     }
 
     const taskData = { ...newTask, userId: session.user.userId };
-    console.log("addNewTask - Final taskData with userId:", taskData);
 
     try {
       const response = await fetch("/api/tasks", {
@@ -49,8 +46,6 @@ export function useTasks() {
   };
 
   const editTask = async (taskId, updatedTask) => {
-    console.log("Editing task:", { taskId, updatedTask });
-
     try {
       const response = await fetch(`/api/tasks/${taskId}`, {
         method: "PATCH",
@@ -81,7 +76,6 @@ export function useTasks() {
         body: JSON.stringify({
           completed: !task.completed,
           userId: session.user.userId,
-          // userId or taskId ???????????????? CHECK!!!!
         }),
       });
 
@@ -94,8 +88,6 @@ export function useTasks() {
   };
 
   const deleteTask = async (taskId) => {
-    console.log("Deleting task:", taskId);
-
     try {
       const response = await fetch(`/api/tasks/${taskId}`, {
         method: "DELETE",
@@ -107,7 +99,6 @@ export function useTasks() {
         console.error("Failed to delete task");
         throw new Error("Failed to delete task");
       }
-      console.log("Task deleted successfully");
 
       mutate();
     } catch (error) {

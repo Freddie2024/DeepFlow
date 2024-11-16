@@ -51,11 +51,6 @@ export default function TaskDetailsPage() {
   };
 
   return (
-    <TaskDetails
-      task={task}
-      onToggle={handleToggle}
-      // onEdit={editTask}
-      onDelete={handleDelete}
-    />
+    <TaskDetails task={task} onToggle={handleToggle} onDelete={handleDelete} />
   );
 }

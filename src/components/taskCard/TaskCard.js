@@ -17,9 +17,6 @@ export default function TaskCard({ task, onToggle, onDelete, showDueDate }) {
     ? new Date(task.dueDate).toISOString().split("T")[0]
     : null;
 
-  console.log("Task Due Date:", task.dueDate);
-  console.log("Task Due Date String:", taskDueDateString);
-
   if (taskDueDateString === todayDate) {
     dueDateLabel = "Today";
     dueDateClass = styles.dueDateToday;
@@ -33,12 +30,6 @@ export default function TaskCard({ task, onToggle, onDelete, showDueDate }) {
     dueDateLabel = new Date(task.dueDate).toLocaleDateString("de-DE");
     dueDateClass = styles.dueDateLater;
   }
-
-  console.log("Processed Task Due Date:", {
-    taskDueDate: task.dueDate,
-    taskDueDateString,
-    dueDateLabel,
-  });
 
   return (
     <li className={styles.card}>

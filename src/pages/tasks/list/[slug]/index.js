@@ -27,8 +27,6 @@ export async function getServerSideProps(context) {
 export default function TasksByDate() {
   const { data: session } = useSession();
 
-  console.log("Session on TasksByDate:", session);
-
   const {
     tasks,
     loading,
@@ -37,7 +35,6 @@ export default function TasksByDate() {
     deleteTask,
     addNewTask,
   } = useTasks();
-  console.log("TASKS IN TASKBYDATE", tasks);
   const [filteredTasks, setFilteredTasks] = useState([]);
   const previousFilteredTasksRef = useRef(filteredTasks);
   const router = useRouter();
@@ -73,7 +70,6 @@ export default function TasksByDate() {
   };
 
   useEffect(() => {
-    console.log("tasks:::", tasks);
     if (tasks) {
       const filtered = tasks
         .filter((task) => {
@@ -96,7 +92,6 @@ export default function TasksByDate() {
           ...task,
           duration: formatDuration(task.priority),
         }));
-      console.log("filtered:::", filtered);
       if (
         JSON.stringify(previousFilteredTasksRef.current) !==
         JSON.stringify(filtered)
@@ -119,7 +114,6 @@ export default function TasksByDate() {
       alert("Please select a specific future date in the form.");
       return;
     }
-    console.log("newTask", newTask);
     await addNewTask(newTask);
   };
 
@@ -153,7 +147,6 @@ export default function TasksByDate() {
   };
 
   if (loading) return <p>Loading todays tasks...</p>;
-  console.log("filteredTasks", filteredTasks);
   return (
     <>
       <h2>Tasks for {slug}</h2>

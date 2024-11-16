@@ -12,8 +12,6 @@ export default function CreateTaskPage() {
   const { addNewTask } = useTasks();
   const { data: session, status } = useSession();
 
-  console.log("Session on CreateTaskPage:", session);
-
   useEffect(() => {
     if (status === "unauthenticated") {
       router.push("/");
@@ -43,11 +41,7 @@ export default function CreateTaskPage() {
     <>
       <h2 id="add-task">Add Task</h2>
       <Link href="/">back</Link>
-      <TaskForm
-        onSubmit={handleAddNewTask}
-        defaultDueOption="today"
-        formName={"add-task"}
-      />
+      <TaskForm onSubmit={handleAddNewTask} formName={"add-task"} />
     </>
   );
 }

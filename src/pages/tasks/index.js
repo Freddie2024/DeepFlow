@@ -47,7 +47,6 @@ export default function AllTasksInDetailPage() {
         title="All tasks"
         tasks={tasks}
         onToggle={handleToggleTaskCompletion}
-        // onEdit={editTask}
         onDelete={handleDeleteTask}
       />
     </>

@@ -7,7 +7,6 @@ export default function TaskList({
   title,
   tasks = [],
   onToggle,
-  // onEdit,
   onDelete,
   showDueDate = false,
 }) {
@@ -20,7 +19,6 @@ export default function TaskList({
             key={task._id}
             task={task}
             onToggle={onToggle}
-            // onEdit={onEdit}
             onDelete={onDelete}
             showDueDate={showDueDate}
           />
