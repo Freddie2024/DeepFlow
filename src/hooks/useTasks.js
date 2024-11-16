@@ -6,12 +6,16 @@ import { useSession } from "next-auth/react";
 export function useTasks() {
   const { data: session, status } = useSession();
 
+  console.log("Session:", session);
+  console.log("Session status:", status);
+  console.log("User ID:", session?.user?.userId);
+
   const {
     data: tasks,
     error,
     mutate,
   } = useSWR(
-    session?.user?.userId ? `/api/tasks/${session.user.userId}` : null
+    status === "authenticated" && session?.user?.userId ? `/api/tasks` : null
   );
 
   const loading = status === "loading" || (!tasks && !error);
@@ -57,7 +61,7 @@ export function useTasks() {
       if (!response.ok) {
         throw new Error("Failed to update task");
       }
-      // mutate(); CHECK IF THIS IS NEEDED!!!
+      mutate(); // CHECK IF THIS IS NEEDED!!!
     } catch (error) {
       console.error("Failed to edit task:", error);
     }
@@ -107,7 +111,7 @@ export function useTasks() {
   };
 
   return {
-    tasks: tasks || [],
+    tasks: Array.isArray(tasks) ? tasks : [],
     loading,
     error,
     addNewTask,

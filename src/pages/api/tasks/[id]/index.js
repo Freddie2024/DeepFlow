@@ -7,13 +7,17 @@ import { authOptions } from "../../auth/[...nextauth]";
 export default async function handler(req, res) {
   await dbConnect();
 
+  console.log("Received userId:", req.query.userId);
+
   const session = await getServerSession(req, res, authOptions);
   if (!session) {
     return res.status(401).json({ error: "Unauthorized" });
   }
 
   const userId = session.user.userId;
-  const { taskId } = req.query;
+  // const { taskId } = req.query;
+  console.log("Received taskId:", req.query.id);
+  const taskId = req.query.id;
 
   if (!taskId) {
     return res.status(400).json({ error: "ID is required" });
@@ -25,7 +29,14 @@ export default async function handler(req, res) {
 
   if (req.method === "GET") {
     try {
-      const task = (await Task.find({ userId: userId })) || [];
+      const task = await Task.findOne({
+        _id: taskId,
+        userId: userId,
+      });
+
+      if (!task) {
+        return res.status(404).json({ error: "Task not found" });
+      }
       res.status(200).json(task);
     } catch (error) {
       console.error(error);

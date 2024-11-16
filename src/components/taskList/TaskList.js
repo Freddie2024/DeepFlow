@@ -10,20 +10,24 @@ export default function TaskList({
   onDelete,
   showDueDate = false,
 }) {
+  const taskArray = Array.isArray(tasks) ? tasks : [];
+
   return (
     <div className={styles.container}>
       <h1 className={styles.title}>{title}</h1>
-      <ul className={styles.taskList}>
-        {tasks.map((task) => (
-          <TaskCard
-            key={task._id}
-            task={task}
-            onToggle={onToggle}
-            onDelete={onDelete}
-            showDueDate={showDueDate}
-          />
-        ))}
-      </ul>
+      {taskArray.length > 0 ? (
+        <ul className={styles.taskList}>
+          {tasks.map((task) => (
+            <TaskCard
+              key={task._id}
+              task={task}
+              onToggle={onToggle}
+              onDelete={onDelete}
+              showDueDate={showDueDate}
+            />
+          ))}
+        </ul>
+      ) : null}
     </div>
   );
 }

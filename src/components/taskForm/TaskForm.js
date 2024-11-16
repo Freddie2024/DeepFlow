@@ -38,6 +38,7 @@ function determineDueOption(dueDate) {
 export default function TaskForm({
   onSubmit,
   defaultData = {},
+  disabledPriorities = [],
   isEditing = false,
   onCancel,
 }) {
@@ -149,9 +150,19 @@ export default function TaskForm({
               value="long"
               checked={priority === "long"}
               onChange={() => setPriority("long")}
+              disabled={disabledPriorities.includes("long")}
               required
             />
-            <label htmlFor="long"> 3 hours</label> <br />
+            <label
+              htmlFor="long"
+              className={
+                disabledPriorities.includes("long") ? styles.disabled : ""
+              }
+            >
+              3 hours
+              {disabledPriorities.includes("long") && " (limit reached)"}
+            </label>
+            <br />
             <input
               type="radio"
               name="priority"
@@ -159,8 +170,17 @@ export default function TaskForm({
               value="medium"
               checked={priority === "medium"}
               onChange={() => setPriority("medium")}
+              disabled={disabledPriorities.includes("medium")}
             />
-            <label htmlFor="medium"> 1 hour</label> <br />
+            <label
+              htmlFor="medium"
+              className={
+                disabledPriorities.includes("medium") ? styles.disabled : ""
+              }
+            >
+              1 hour
+            </label>
+            <br />
             <input
               type="radio"
               name="priority"
@@ -168,8 +188,17 @@ export default function TaskForm({
               value="short"
               checked={priority === "short"}
               onChange={() => setPriority("short")}
+              disabled={disabledPriorities.includes("short")}
             />
-            <label htmlFor="short"> 20 minutes</label>
+            <label
+              htmlFor="short"
+              className={
+                disabledPriorities.includes("short") ? styles.disabled : ""
+              }
+            >
+              20 minutes
+              {disabledPriorities.includes("short") && " (limit reached)"}
+            </label>
           </div>
           <div className={styles.radioGroup}>
             <p>Due:</p>
