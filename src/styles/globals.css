@@ -35,6 +35,24 @@ body {
   min-height: 100vh;
 }
 
+h2 {
+  text-align: center;
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+}
+
+.task-status {
+  text-align: center;
+  margin-bottom: 1rem;
+  white-space: pre-line;
+}
+
+.empty-message {
+  text-align: center;
+  font-size: 0.9rem;
+  white-space: pre-line; 
+}
+
 main {
   max-width: 1200px;
   width: 90vw;
@@ -44,5 +62,5 @@ main {
       --accent: #38CCDA;
     }
   }
-  
-}
+  }
+

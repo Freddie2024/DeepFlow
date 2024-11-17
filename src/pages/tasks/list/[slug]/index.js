@@ -1,5 +1,3 @@
-"use client";
-
 import TaskList from "@/src/components/taskList/TaskList";
 import { useRouter } from "next/router";
 import { useTasks } from "@/src/hooks/useTasks";
@@ -25,8 +23,6 @@ export async function getServerSideProps(context) {
 }
 
 export default function TasksByDate() {
-  const { data: session } = useSession();
-
   const {
     tasks,
     loading,
@@ -71,41 +67,99 @@ export default function TasksByDate() {
 
   useEffect(() => {
     if (tasks) {
-      const filtered = tasks
-        .filter((task) => {
-          const taskDueDate = task.dueDate
-            ? new Date(task.dueDate).toISOString().split("T")[0]
-            : null;
+      try {
+        const filtered = tasks
+          .filter((task) => {
+            const taskDueDate = task.dueDate
+              ? new Date(task.dueDate).toISOString().split("T")[0]
+              : null;
 
-          if (slug === "today") {
-            return taskDueDate === todayDate;
-          } else if (slug === "tomorrow") {
-            return taskDueDate === tomorrowDateString;
-          } else if (slug === "someday") {
-            return taskDueDate === null;
-          } else if (slug === "later") {
-            return taskDueDate && taskDueDate > tomorrowDateString;
-          }
-          return false;
-        })
-        .map((task) => ({
-          ...task,
-          duration: formatDuration(task.priority),
-        }));
-      if (
-        JSON.stringify(previousFilteredTasksRef.current) !==
-        JSON.stringify(filtered)
-      ) {
-        setFilteredTasks(filtered);
-        previousFilteredTasksRef.current = filtered;
+            if (slug === "today") {
+              return taskDueDate === todayDate;
+            } else if (slug === "tomorrow") {
+              return taskDueDate === tomorrowDateString;
+            } else if (slug === "someday") {
+              return taskDueDate === null;
+            } else if (slug === "later") {
+              return taskDueDate && taskDueDate > tomorrowDateString;
+            }
+            return false;
+          })
+          .map((task) => ({
+            ...task,
+            duration: formatDuration(task.priority),
+          }));
+        if (
+          JSON.stringify(previousFilteredTasksRef.current) !==
+          JSON.stringify(filtered)
+        ) {
+          setFilteredTasks(filtered);
+          previousFilteredTasksRef.current = filtered;
+        }
+      } catch (error) {
+        console.error("Error filtering tasks:", error);
+        setFilteredTasks([]);
       }
     }
   }, [tasks, slug, todayDate, tomorrowDateString]);
+
+  const getTaskCounts = (tasks) => {
+    if (!tasks) {
+      return { long: 0, medium: 0, short: 0 };
+    }
+    return {
+      long: tasks.filter((t) => t.priority === "long").length,
+      medium: tasks.filter((t) => t.priority === "medium").length,
+      short: tasks.filter((t) => t.priority === "short").length,
+    };
+  };
+
+  const getTaskLimits = () => ({
+    long: 1,
+    medium: 2,
+    short: 3,
+  });
+
+  const getMissingTasksMessage = (taskCounts) => {
+    const limits = getTaskLimits();
+    const missing = [];
+
+    if (taskCounts.long < limits.long) {
+      missing.push(`${limits.long - taskCounts.long} long task`);
+    }
+    if (taskCounts.medium < limits.medium) {
+      missing.push(`${limits.medium - taskCounts.medium} medium tasks`);
+    }
+    if (taskCounts.short < limits.short) {
+      missing.push(`${limits.short - taskCounts.short} short tasks`);
+    }
+
+    return missing.length
+      ? `To complete your daily plan, add:\n${missing.join(", ")}`
+      : "Great! You have all your tasks planned for the day.";
+  };
+
+  const isTaskLimitReached = (priority, taskCounts) => {
+    const limits = getTaskLimits();
+    return taskCounts[priority] >= limits[priority];
+  };
 
   const handleFormSubmit = async (event) => {
     event.preventDefault();
     const formData = new FormData(event.target);
     const newTask = Object.fromEntries(formData);
+
+    if (["today", "tomorrow"].includes(slug)) {
+      const currentTasks = filteredTasks;
+      const taskCounts = getTaskCounts(currentTasks);
+
+      if (isTaskLimitReached(newTask.priority, taskCounts)) {
+        alert(
+          `You've reached the limit for ${newTask.priority} tasks for ${slug}.`
+        );
+        return;
+      }
+    }
 
     const dueDate = getDueDateBySlug(slug);
     if (dueDate !== null || slug !== "later") {
@@ -138,34 +192,68 @@ export default function TasksByDate() {
 
   const emptyMessage = {
     today:
-      "Create 6 tasks you want to focus on today: 1 major, 2 medium, 3 small ones with a total of 6 hours.",
+      "Create 6 tasks you want to focus on today:\n1 long, 2 medium, 3 short ones with a total of 6 hours.",
     tomorrow:
-      "Create 6 tasks you want to focus on tomorrow: 1 major, 2 medium, 3 small ones with a total of 6 hours.",
+      "Create 6 tasks you want to focus on tomorrow:\n1 long, 2 medium, 3 short ones with a total of 6 hours.",
     someday:
-      "Set aside tasks you want to complete someday but that are not urgent.",
-    later: "No upcoming tasks scheduled. Add tasks with specific future dates!",
+      "Set aside tasks you want to complete someday\nbut that are not urgent.",
+    later:
+      "No upcoming tasks scheduled.\nAdd tasks with specific future dates!",
   };
 
   if (loading) return <p>Loading todays tasks...</p>;
+
+  const showTaskForm =
+    ["today", "tomorrow"].includes(slug) && filteredTasks.length < 6;
+  (slug === "someday" || slug === "later") && filteredTasks.length === 0;
+
+  const taskCounts = getTaskCounts(filteredTasks);
+
   return (
     <>
-      <h2>Tasks for {slug}</h2>
-      {filteredTasks.length > 0 ? (
-        <TaskList
-          title={`Tasks for ${slug}`}
-          tasks={filteredTasks}
-          onToggle={handleToggleTaskCompletion}
-          onEdit={handleEditTask}
-          onDelete={handleDeleteTask}
-        />
-      ) : (
+      <h2>
+        {filteredTasks.length > 0
+          ? `Tasks for ${slug}`
+          : `No tasks for ${slug} so far`}
+      </h2>
+      {filteredTasks.length > 0 && (
         <>
-          <p>{emptyMessage[slug] || "No tasks available."}</p>
-          <TaskForm
-            onSubmit={handleFormSubmit}
-            defaultDueOption={defaultDueOption}
+          {["today", "tomorrow"].includes(slug) && (
+            <div className="task-status">
+              <p>{getMissingTasksMessage(taskCounts)}</p>
+            </div>
+          )}
+          <TaskList
+            tasks={filteredTasks}
+            onToggle={handleToggleTaskCompletion}
+            onEdit={handleEditTask}
+            onDelete={handleDeleteTask}
           />
         </>
+      )}
+
+      {!filteredTasks.length ? (
+        <>
+          <p className="empty-message">
+            {emptyMessage[slug] || "No tasks available."}
+          </p>
+        </>
+      ) : null}
+
+      {showTaskForm && (
+        <TaskForm
+          onSubmit={handleFormSubmit}
+          defaultDueOption={defaultDueOption}
+          disabledPriorities={
+            ["today", "tomorrow"].includes(slug)
+              ? Object.entries(taskCounts)
+                  .filter(([priority, count]) =>
+                    isTaskLimitReached(priority, taskCounts)
+                  )
+                  .map(([priority]) => priority)
+              : []
+          }
+        />
       )}
     </>
   );

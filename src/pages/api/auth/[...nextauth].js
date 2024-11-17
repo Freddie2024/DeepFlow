@@ -19,9 +19,7 @@ export const authOptions = {
     }),
   ],
   adapter: MongoDBAdapter(clientPromise),
-  session: {
-    // jwt: true,
-  },
+
   secret: process.env.NEXTAUTH_SECRET,
   debug: true,
 

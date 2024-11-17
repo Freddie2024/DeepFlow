@@ -71,8 +71,8 @@ export default function Home() {
 
   return (
     <>
+      <h2>All Tasks</h2>
       <TaskList
-        title="All Tasks"
         tasks={tasks}
         onDelete={deleteTask}
         onToggle={toggleTaskCompletion}

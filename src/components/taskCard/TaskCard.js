@@ -31,45 +31,80 @@ export default function TaskCard({ task, onToggle, onDelete, showDueDate }) {
     dueDateClass = styles.dueDateLater;
   }
 
+  const getDurationLabel = (priority) => {
+    switch (priority) {
+      case "long":
+        return "3 hours";
+      case "medium":
+        return "1 hour";
+      case "short":
+        return "20 min";
+      default:
+        return "";
+    }
+  };
+
+  const getDurationClass = (priority) => {
+    switch (priority) {
+      case "long":
+        return styles.durationLong;
+      case "medium":
+        return styles.durationMedium;
+      case "short":
+        return styles.durationShort;
+      default:
+        return "";
+    }
+  };
+
   return (
-    <li className={styles.card}>
-      <div className={styles.topRow}>
-        {showDueDate && (
-          <p className={`${styles.dueDateLabel} ${dueDateClass}`}>
-            {dueDateLabel}
+    <div className={styles.cardContainer}>
+      <li className={styles.card}>
+        <div className={styles.topRow}>
+          {showDueDate && (
+            <p className={`${styles.dueDateLabel} ${dueDateClass}`}>
+              {dueDateLabel}
+            </p>
+          )}
+          <p
+            className={`${styles.durationLabel} ${getDurationClass(
+              task.priority
+            )}`}
+          >
+            {getDurationLabel(task.priority)}
           </p>
-        )}
-        <Link href={`/tasks/${task._id}`}>
-          <span className={styles.viewDetailsLink}>View Details</span>
-        </Link>
-      </div>
+          <div className={styles.viewDetailsLink}>
+            <Link href={`/tasks/${task._id}`}>Details</Link>
+          </div>
+        </div>
 
-      <h2 className={styles.cardTitle}>{task.title}</h2>
+        <h2 className={styles.cardTitle}>{task.title}</h2>
 
-      <div className={styles.buttonContainer} aria-label="Task Actions">
-        <Link href={`/tasks/${task._id}/edit`}>
-          <button className={styles.editButton} aria-label="Edit task">
-            Edit
+        <div className={styles.buttonContainer} aria-label="Task Actions">
+          <Link href={`/tasks/${task._id}/edit`}>
+            <button className={styles.editButton} aria-label="Edit task">
+              Edit
+            </button>
+          </Link>
+          <label className={styles.checkboxButton}>
+            <span>Done: </span>
+            <input
+              type="checkbox"
+              className={styles.checkbox}
+              checked={task.completed}
+              onChange={() => onToggle(task._id)}
+              aria-label="Mark task as completed"
+            />
+          </label>
+          <button
+            onClick={() => onDelete(task._id)}
+            className={styles.deleteButton}
+            aria-label="Delete task"
+          >
+            Delete
           </button>
-        </Link>
-        <label className={styles.checkboxButton}>
-          <span>Done: </span>
-          <input
-            type="checkbox"
-            className={styles.checkbox}
-            checked={task.completed}
-            onChange={() => onToggle(task._id)}
-            aria-label="Mark task as completed"
-          />
-        </label>
-        <button
-          onClick={() => onDelete(task._id)}
-          className={styles.deleteButton}
-          aria-label="Delete task"
-        >
-          Delete
-        </button>
-      </div>
-    </li>
+        </div>
+      </li>
+    </div>
   );
 }

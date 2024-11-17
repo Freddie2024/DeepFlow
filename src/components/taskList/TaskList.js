@@ -13,17 +13,19 @@ export default function TaskList({
   return (
     <div className={styles.container}>
       <h1 className={styles.title}>{title}</h1>
-      <ul className={styles.taskList}>
-        {tasks.map((task) => (
-          <TaskCard
-            key={task._id}
-            task={task}
-            onToggle={onToggle}
-            onDelete={onDelete}
-            showDueDate={showDueDate}
-          />
-        ))}
-      </ul>
+      {tasks.length > 0 ? (
+        <ul className={styles.taskList}>
+          {tasks.map((task) => (
+            <TaskCard
+              key={task._id}
+              task={task}
+              onToggle={onToggle}
+              onDelete={onDelete}
+              showDueDate={showDueDate}
+            />
+          ))}
+        </ul>
+      ) : null}
     </div>
   );
 }
