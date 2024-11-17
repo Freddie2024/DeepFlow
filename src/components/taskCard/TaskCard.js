@@ -73,9 +73,9 @@ export default function TaskCard({ task, onToggle, onDelete, showDueDate }) {
           >
             {getDurationLabel(task.priority)}
           </p>
-          <Link href={`/tasks/${task._id}`}>
-            <span className={styles.viewDetailsLink}>View Details</span>
-          </Link>
+          <div className={styles.viewDetailsLink}>
+            <Link href={`/tasks/${task._id}`}>Details</Link>
+          </div>
         </div>
 
         <h2 className={styles.cardTitle}>{task.title}</h2>

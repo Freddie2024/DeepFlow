@@ -66,7 +66,7 @@ export default function TasksByDate() {
   };
 
   useEffect(() => {
-    if (tasks && Array.isArray(tasks)) {
+    if (tasks) {
       try {
         const filtered = tasks
           .filter((task) => {
@@ -104,7 +104,7 @@ export default function TasksByDate() {
   }, [tasks, slug, todayDate, tomorrowDateString]);
 
   const getTaskCounts = (tasks) => {
-    if (!tasks || !Array.isArray(tasks)) {
+    if (!tasks) {
       return { long: 0, medium: 0, short: 0 };
     }
     return {
@@ -135,7 +135,7 @@ export default function TasksByDate() {
     }
 
     return missing.length
-      ? `To complete your daily plan, add: ${missing.join(", ")}`
+      ? `To complete your daily plan, add:\n${missing.join(", ")}`
       : "Great! You have all your tasks planned for the day.";
   };
 
@@ -192,46 +192,51 @@ export default function TasksByDate() {
 
   const emptyMessage = {
     today:
-      "Create 6 tasks you want to focus on today: 1 major, 2 medium, 3 small ones with a total of 6 hours.",
+      "Create 6 tasks you want to focus on today:\n1 long, 2 medium, 3 short ones with a total of 6 hours.",
     tomorrow:
-      "Create 6 tasks you want to focus on tomorrow: 1 major, 2 medium, 3 small ones with a total of 6 hours.",
+      "Create 6 tasks you want to focus on tomorrow:\n1 long, 2 medium, 3 short ones with a total of 6 hours.",
     someday:
-      "Set aside tasks you want to complete someday but that are not urgent.",
-    later: "No upcoming tasks scheduled. Add tasks with specific future dates!",
+      "Set aside tasks you want to complete someday\nbut that are not urgent.",
+    later:
+      "No upcoming tasks scheduled.\nAdd tasks with specific future dates!",
   };
 
   if (loading) return <p>Loading todays tasks...</p>;
 
   const showTaskForm =
-    slug === "someday" ||
-    slug === "later" ||
-    (["today", "tomorrow"].includes(slug) && filteredTasks.length < 6);
+    ["today", "tomorrow"].includes(slug) && filteredTasks.length < 6;
+  (slug === "someday" || slug === "later") && filteredTasks.length === 0;
 
   const taskCounts = getTaskCounts(filteredTasks);
 
   return (
     <>
-      <h2>Tasks for {slug}</h2>
+      <h2>
+        {filteredTasks.length > 0
+          ? `Tasks for ${slug}`
+          : `No tasks for ${slug} so far`}
+      </h2>
       {filteredTasks.length > 0 && (
         <>
-          <TaskList
-            title={`Tasks for ${slug}`}
-            tasks={filteredTasks}
-            onToggle={handleToggleTaskCompletion}
-            onEdit={handleEditTask}
-            onDelete={handleDeleteTask}
-          />
           {["today", "tomorrow"].includes(slug) && (
             <div className="task-status">
               <p>{getMissingTasksMessage(taskCounts)}</p>
             </div>
           )}
+          <TaskList
+            tasks={filteredTasks}
+            onToggle={handleToggleTaskCompletion}
+            onEdit={handleEditTask}
+            onDelete={handleDeleteTask}
+          />
         </>
       )}
 
       {!filteredTasks.length ? (
         <>
-          <p>{emptyMessage[slug] || "No tasks available."}</p>
+          <p className="empty-message">
+            {emptyMessage[slug] || "No tasks available."}
+          </p>
         </>
       ) : null}
 

@@ -111,7 +111,7 @@ export function useTasks() {
   };
 
   return {
-    tasks: Array.isArray(tasks) ? tasks : [],
+    tasks,
     loading,
     error,
     addNewTask,

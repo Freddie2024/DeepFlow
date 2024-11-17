@@ -29,10 +29,10 @@
   }
   
   .topRow {
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(3, 90px);
     justify-content: space-between;
     align-items: center;
-    width: 100%;
     gap: 0.3rem;
   }  
 
@@ -42,14 +42,28 @@
     color: var(--accent);
     background-color: var(--primary-dark);
     padding: 0.2rem 0.5rem;
-    border-radius: 8px;
+    border-radius: 40px;
     display: inline-block;
-    flex: 1;
     text-align: center;
+    width: 90px; 
+    font-size: 0.8rem;
+
   }
 
   .dueDateLabel {
     text-transform: uppercase;
+    justify-self: start;
+    grid-column: 1;
+  }
+
+  .durationLabel {
+    justify-self: center;
+    grid-column: 2; 
+  }
+
+  .topRow:not(:has(.dueDateLabel)) .durationLabel {
+    justify-self: start;
+    grid-column: 1; 
   }
 
   .dueDateToday,
@@ -74,10 +88,19 @@
     font-size: 0.8rem;
     background-color: var(--primary-dark);
     padding: 0.2rem 0.5rem;
-    border-radius: 8px;
+    border-radius: 40px;
     text-decoration: none;
     transition: color 0.2s ease;
     color: var(--white);
+    justify-self: end;
+    width: 90px; 
+    grid-column: 3;
+  }
+
+  .viewDetailsLink a {
+    text-decoration: none;
+    color: var(--white);
+    transition: color 0.2s ease;
   }
   
   .viewDetailsLink:hover {
