@@ -21,6 +21,7 @@ export const authOptions = {
   adapter: MongoDBAdapter(clientPromise),
 
   secret: process.env.NEXTAUTH_SECRET,
+  debug: true,
 
   pages: {
     signIn: "/auth/signin",
