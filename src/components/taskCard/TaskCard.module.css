@@ -1,53 +1,31 @@
-.cardContainer {
-  max-width: 300px;
-  width: 100%;
-  margin: 0 auto;
-}
-
-.card {
-    max-width: 400px;
-    width: 100%;
-    margin: 0.2rem 0;
-    background-color: var(--primary);
-    padding: 0.3rem;
-    border-radius: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    border: 1px solid var(--white);
-    color: var(--white);
-    transition: transform 0.2s ease-in-out;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-  }
-  
-  .card:hover {
-    transform: scale(1.03);
-  }
-  
-  .cardContent {
-    margin-bottom: 1rem;
-  }
-  
   .topRow {
     display: grid;
     grid-template-columns: repeat(3, 90px);
     justify-content: space-between;
     align-items: center;
     gap: 0.3rem;
+    width: 100%;
   }  
 
-  .dueDateLabel,
-  .durationLabel {
-    font-size: 0.8rem;
-    color: var(--accent);
-    background-color: var(--primary-dark);
-    padding: 0.2rem 0.5rem;
-    border-radius: 40px;
-    display: inline-block;
-    text-align: center;
-    width: 90px; 
-    font-size: 0.8rem;
+  .dueDateLabel {
+    justify-self: start;
+    grid-column: 1;
+  }
+  
 
+  .durationLabel {
+    justify-self: center;
+    grid-column: 2;
+  }
+  
+  .topRow:not(:has(.dueDateLabel)) .durationLabel {
+    grid-column: 1;
+    justify-self: start;
+  }
+  
+  .viewDetailsLink {
+    grid-column: 3 !important;
+    justify-self: end;
   }
 
   .dueDateLabel {
@@ -59,29 +37,8 @@
   .durationLabel {
     justify-self: center;
     grid-column: 2; 
-  }
-
-  .topRow:not(:has(.dueDateLabel)) .durationLabel {
-    justify-self: start;
-    grid-column: 1; 
-  }
-
-  .dueDateToday,
-  .durationLong {
-    color: var(--accent);
-  }
-  
-  .dueDateTomorrow,
-  .durationMedium {
-    color: var(--secondary-dark);
-  }
-  
-  .dueDateSomeday,
-  .dueDateLater,
-  .durationShort {
-    color: var(--tertiary);
-  }
-  
+  } 
+   
   .viewDetailsLink {
     display: inline-block;
     text-align: center;
@@ -95,17 +52,6 @@
     justify-self: end;
     width: 90px; 
     grid-column: 3;
-  }
-
-  .viewDetailsLink a {
-    text-decoration: none;
-    color: var(--white);
-    transition: color 0.2s ease;
-  }
-  
-  .viewDetailsLink:hover {
-    color: var(--primary-dark);
-    text-decoration: underline;
   }
 
   .cardTitle {
@@ -124,42 +70,14 @@
     margin-bottom: 1rem;
     color: var(--grey-light);
   }
-  
-  .cardDetails {
-    display: flex;
-    justify-content: space-between;
-    font-size: 0.8rem;
-  }
-  
-  .priority {
-    font-weight: bold;
-    color: var(--accent);
-  }
-  
+    
   .buttonContainer {
     display: flex;
     justify-content: space-around;
     margin-top: 0.5rem;
     gap: 0.3rem;
   }
-  
-  .editButton,
-  .deleteButton,
-  .checkboxButton {
-    width: 90px;
-    background-color: var(--accent);
-    color: var(--primary-dark);
-    border: 1px solid var(--grey-light);
-    border-radius: 40px;
-    padding: 0.2rem 0.4rem;
-    cursor: pointer;
-    font-size: 0.75rem;
-    text-align: center;
-    box-sizing: border-box; 
-    transition: background-color 0.2s;
-    display: block;
-  }
-  
+    
   .editButton:hover,
   .deleteButton:hover,
   .checkboxButton:hover {
@@ -169,29 +87,10 @@
   
   .buttonContainer a {
     text-decoration: none;
-}
+} 
 
-  .deleteButton {
-    background-color: var(--primary-dark);
-    color: var(--white);
-  }
-
-  .deleteButton:hover {
-    background-color: var(--tertiary);
-    color: var(--white);
-  }
-  
   .checkbox {
     margin-left: 0.25rem;
     border: 1px solid var(--accent);
     vertical-align: middle;
   }
-
-  .checkboxButton {
-    background-color: var(--secondary);
-    padding: 0.2rem 0.2rem 0.2rem 0.6rem;
-  }
-
- 
-  
-  

@@ -1,0 +1,49 @@
+.label {
+    font-size: 0.8rem;
+    color: var(--accent);
+    background-color: var(--primary-dark);
+    padding: 0.2rem 0.5rem;
+    border-radius: 40px;
+    display: inline-block;
+    text-align: center;
+    width: 90px;
+  }
+  
+  .today {
+    color: var(--accent);
+  }
+  
+  .tomorrow {
+    color: var(--secondary-dark);
+  }
+  
+  .someday,
+  .later {
+    color: var(--tertiary);
+  }
+
+  .long {
+    color: var(--accent);
+  }
+  
+  .medium {
+    color: var(--secondary-dark);
+  }
+  
+  .short {
+    color: var(--tertiary);
+  }
+
+  .details {
+    color: var(--white);
+  }
+  
+  .details a {
+    text-decoration: none;
+    color: inherit;
+  }
+  
+  .details:hover {
+    color: var(--primary-dark);
+    text-decoration: underline;
+  }

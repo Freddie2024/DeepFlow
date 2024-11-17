@@ -1,70 +1,49 @@
-.card {
-    max-width: 400px;
-    margin: 2rem auto;
-    background-color: var(--primary);
-    padding: 2rem;
-    border-radius: 40px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    border: 2px solid var(--white);
-    color: var(--white);
+  .topRow {
+    display: grid;
+    grid-template-columns: repeat(3, 90px);
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.3rem;
+  }
+
+  .durationLabel {
+    grid-column: 1;
+    justify-self: start;
   }
   
-  .cardContent {
-    margin-bottom: 1rem;
+  .viewDetailsLink {
+    grid-column: 3;
+    justify-self: end;
   }
   
   .cardTitle {
-    font-size: 1.5rem;
-    font-weight: bold;
-    margin-bottom: 0.5rem;
-    display: flex;
-    align-items: center;
-  }
-  
-  .checkbox {
-    margin-right: 0.5rem;
-    border: 1px solid var(--accent);
-  }
-  
-  .cardDescription {
     font-size: 1rem;
-    margin-bottom: 1rem;
-  }
-  
-  .cardDetails {
-    display: flex;
-    justify-content: space-between;
-    font-size: 0.9rem;
-  }
-  
-  .priority {
     font-weight: bold;
+    text-align: center;
+    margin: 0.2rem 0;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    width: 100%;
+    max-width: 100%;
   }
   
   .buttonContainer {
     display: flex;
-    justify-content: space-between;
-    margin-top: 1rem;
-  }
-  
-  .editButton,
-  .deleteButton,
-  .checkboxButton {
-    background-color: var(--accent);
-    color: var(--primary-dark);
-    border: 2px solid var(--grey-light);
-    border-radius: 20px;
-    padding: 0.5rem 1rem;
-    cursor: pointer;
-  }
-  
-  .deleteButton {
-    background-color: var(--black-light);
-    color: var(--white);
+    justify-content: space-around;
+    margin-top: 0.5rem;
+    gap: 0.3rem;
   }
 
-  .checkboxButton {
-    background-color: var(--secondary);
-    padding: 0.5rem 0.5rem 0.5rem 1rem;
+  .checkbox {
+    margin-left: 0.25rem; 
+    border: 1px solid var(--accent);
+    vertical-align: middle;
   }
+  
+  .cardDescription {
+    font-size: 0.9rem;
+    margin: 0.5rem 0;
+    color: var(--grey-light);
+    padding: 0 0.5rem;
 
+  }

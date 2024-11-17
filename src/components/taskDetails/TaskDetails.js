@@ -2,6 +2,9 @@
 
 import styles from "./TaskDetails.module.css";
 import Link from "next/link";
+import Button from "../button/Button";
+import Label from "../label/Label";
+import Card from "../card/Card";
 
 export default function TaskDetails({ task, tasks, onToggle, onDelete }) {
   const formatDuration = (priority) => {
@@ -21,21 +24,26 @@ export default function TaskDetails({ task, tasks, onToggle, onDelete }) {
   return (
     <section aria-label="Task Details">
       {tasksToRender.map((task) => (
-        <article key={task._id} className={styles.card}>
-          <header className={styles.cardTitle}>
-            <h3>{task.title}</h3>
-          </header>
+        <Card key={task._id}>
+          <div className={styles.topRow}>
+            <Label type={task.priority} className={styles.durationLabel}>
+              {formatDuration(task.priority)}
+            </Label>
+            <Label variant="details" className={styles.viewDetailsLink}>
+              <Link href="/tasks/list/today">Back</Link>
+            </Label>
+          </div>
+
+          <h3 className={styles.cardTitle}>{task.title}</h3>
           <p className={styles.cardDescription}>{task.description}</p>
-          <footer className={styles.cardDetails}>
-            <span>Duration: {formatDuration(task.priority)}</span>
-          </footer>
+
           <nav className={styles.buttonContainer} aria-label="Task Actions">
             <Link href={`/tasks/${task._id}/edit`}>
-              <button className={styles.editButton} aria-label="Edit task">
+              <Button variant="primary" aria-label="Edit task">
                 Edit
-              </button>
+              </Button>
             </Link>
-            <label className={styles.checkboxButton}>
+            <Button variant="checkbox" as="label">
               <span>Done: </span>
               <input
                 type="checkbox"
@@ -44,16 +52,16 @@ export default function TaskDetails({ task, tasks, onToggle, onDelete }) {
                 onChange={() => onToggle(task._id)}
                 aria-label="Mark task as completed"
               />
-            </label>
-            <button
-              className={styles.deleteButton}
+            </Button>
+            <Button
+              variant="delete"
               onClick={() => onDelete(task._id)}
               aria-label="Delete task"
             >
               Delete
-            </button>
+            </Button>
           </nav>
-        </article>
+        </Card>
       ))}
     </section>
   );

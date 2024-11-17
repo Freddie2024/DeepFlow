@@ -5,27 +5,28 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "../../auth/[...nextauth]";
 
 export default async function handler(req, res) {
-  await dbConnect();
-
-  console.log("Received userId:", req.query.userId);
-
   const session = await getServerSession(req, res, authOptions);
+
   if (!session) {
     return res.status(401).json({ error: "Unauthorized" });
   }
 
-  const userId = session.user.userId;
-  // const { taskId } = req.query;
-  console.log("Received taskId:", req.query.id);
-  const taskId = req.query.id;
+  const userId = session?.user?.userId;
+  const { id: taskId } = req.query;
 
-  if (!taskId) {
-    return res.status(400).json({ error: "ID is required" });
+  if (!userId) {
+    return res.status(400).json({ error: "User ID is missing" });
+  }
+
+  if (taskId === undefined || taskId === "") {
+    return res.status(400).json({ error: "Task ID is missing" });
   }
 
   if (!mongoose.Types.ObjectId.isValid(taskId)) {
     return res.status(400).json({ error: "Invalid ID format" });
   }
+
+  await dbConnect();
 
   if (req.method === "GET") {
     try {
@@ -45,23 +46,11 @@ export default async function handler(req, res) {
         .json({ error: error.message || "Failed to retrieve task" });
     }
   } else if (req.method === "PATCH") {
-    const { taskId } = req.query;
-    const { user } = session;
-
-    if (!taskId) {
-      console.error("Task ID is missing");
-      return res.status(400).json({ error: "Task ID is required" });
-    }
-
-    if (!mongoose.Types.ObjectId.isValid(taskId)) {
-      return res.status(400).json({ error: "Invalid Task ID" });
-    }
-
     try {
       const updatedTask = await Task.findOneAndUpdate(
         {
           _id: taskId,
-          userId: user.userId,
+          userId: userId,
         },
         req.body,
         {
@@ -78,22 +67,10 @@ export default async function handler(req, res) {
       res.status(400).json({ error: error.message || "Failed to update task" });
     }
   } else if (req.method === "DELETE") {
-    const { taskId } = req.query;
-    const { user } = session;
-
-    if (!taskId) {
-      console.error("Task ID is missing");
-      return res.status(400).json({ error: "Task ID is required" });
-    }
-
-    if (!mongoose.Types.ObjectId.isValid(taskId)) {
-      return res.status(400).json({ error: "Invalid Task ID" });
-    }
-
     try {
       const deletedTask = await Task.findOneAndDelete({
         _id: taskId,
-        userId: user.userId,
+        userId: userId,
       });
 
       if (!deletedTask) {

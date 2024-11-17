@@ -156,11 +156,10 @@ export default function TaskForm({
             <label
               htmlFor="long"
               className={
-                disabledPriorities.includes("long") ? styles.disabled : ""
+                disabledPriorities.includes("long") ? styles.disabled : " "
               }
             >
               3 hours
-              {disabledPriorities.includes("long") && " (limit reached)"}
             </label>
             <br />
             <input
@@ -175,7 +174,7 @@ export default function TaskForm({
             <label
               htmlFor="medium"
               className={
-                disabledPriorities.includes("medium") ? styles.disabled : ""
+                disabledPriorities.includes("medium") ? styles.disabled : " "
               }
             >
               1 hour
@@ -193,11 +192,10 @@ export default function TaskForm({
             <label
               htmlFor="short"
               className={
-                disabledPriorities.includes("short") ? styles.disabled : ""
+                disabledPriorities.includes("short") ? styles.disabled : " "
               }
             >
               20 minutes
-              {disabledPriorities.includes("short") && " (limit reached)"}
             </label>
           </div>
           <div className={styles.radioGroup}>
@@ -261,7 +259,7 @@ export default function TaskForm({
                 checked={confirmNoDate}
                 onChange={() => setConfirmNoDate(!confirmNoDate)}
               />
-              Save this task without a specific date?
+              Save task without a specific date?
             </label>
           </div>
         )}

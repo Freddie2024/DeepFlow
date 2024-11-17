@@ -61,7 +61,7 @@ export function useTasks() {
       if (!response.ok) {
         throw new Error("Failed to update task");
       }
-      mutate(); // CHECK IF THIS IS NEEDED!!!
+      // mutate(); // CHECK IF THIS IS NEEDED!!!
     } catch (error) {
       console.error("Failed to edit task:", error);
     }
