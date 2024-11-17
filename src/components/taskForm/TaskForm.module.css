@@ -86,3 +86,7 @@
     background-color: var(--primary-dark);
     color: var(--white);
   }
+
+  .confirmNoDate input[type="checkbox"] {
+    margin-right: 0.3rem;
+  }

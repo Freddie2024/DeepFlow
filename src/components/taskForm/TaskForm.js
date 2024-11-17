@@ -160,7 +160,6 @@ export default function TaskForm({
               }
             >
               3 hours
-              {/* {disabledPriorities.includes("long")} */}
             </label>
             <br />
             <input
@@ -197,7 +196,6 @@ export default function TaskForm({
               }
             >
               20 minutes
-              {/* {disabledPriorities.includes("short") && " (limit reached)"} */}
             </label>
           </div>
           <div className={styles.radioGroup}>
@@ -261,7 +259,7 @@ export default function TaskForm({
                 checked={confirmNoDate}
                 onChange={() => setConfirmNoDate(!confirmNoDate)}
               />
-              Save this task without a specific date?
+              Save task without a specific date?
             </label>
           </div>
         )}
