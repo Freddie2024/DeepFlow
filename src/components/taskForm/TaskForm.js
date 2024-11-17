@@ -41,6 +41,9 @@ export default function TaskForm({
   disabledPriorities = [],
   isEditing = false,
   onCancel,
+  tasksForToday = [],
+  tasksForTomorrow = [],
+  currentTaskId = null,
 }) {
   const [dueOption, setDueOption] = useState(
     isEditing
@@ -73,6 +76,89 @@ export default function TaskForm({
 
     const formData = new FormData(event.target);
     const taskData = Object.fromEntries(formData);
+    const selectedPriority = taskData.priority;
+
+    if (dueOption === "today") {
+      const todayCount = tasksForToday.filter(
+        (task) => task._id !== currentTaskId
+      ).length;
+      if (todayCount >= 6) {
+        alert(
+          "You already have 6 tasks scheduled for today. Please choose another day."
+        );
+        return;
+      }
+
+      const todayTasks = tasksForToday.filter(
+        (task) => task._id !== currentTaskId
+      );
+      const longTasksToday = todayTasks.filter(
+        (task) => task.priority === "long"
+      ).length; // Changed from longTasks
+      const mediumTasksToday = todayTasks.filter(
+        (task) => task.priority === "medium"
+      ).length; // Changed from mediumTasks
+      const shortTasksToday = todayTasks.filter(
+        (task) => task.priority === "short"
+      ).length; // Changed from shortTasks
+
+      if (selectedPriority === "long" && longTasksToday >= 1) {
+        // Changed from longTasks
+        alert("You can only have 1 long task (3 hours) per day.");
+        return;
+      }
+      if (selectedPriority === "medium" && mediumTasksToday >= 2) {
+        // Changed from mediumTasks
+        alert("You can only have 2 medium tasks (1 hour) per day.");
+        return;
+      }
+      if (selectedPriority === "short" && shortTasksToday >= 3) {
+        // Changed from shortTasks
+        alert("You can only have 3 short tasks (20 minutes) per day.");
+        return;
+      }
+    }
+
+    if (dueOption === "tomorrow") {
+      const tomorrowCount = tasksForTomorrow.filter(
+        (task) => task._id !== currentTaskId
+      ).length;
+      if (tomorrowCount >= 6) {
+        alert(
+          "You already have 6 tasks scheduled for tomorrow. Please choose another day."
+        );
+        return;
+      }
+
+      const tomorrowTasks = tasksForTomorrow.filter(
+        (task) => task._id !== currentTaskId
+      );
+      const longTasksTomorrow = tomorrowTasks.filter(
+        (task) => task.priority === "long"
+      ).length; // Changed from longTasks
+      const mediumTasksTomorrow = tomorrowTasks.filter(
+        (task) => task.priority === "medium"
+      ).length; // Changed from mediumTasks
+      const shortTasksTomorrow = tomorrowTasks.filter(
+        (task) => task.priority === "short"
+      ).length; // Changed from shortTasks
+
+      if (selectedPriority === "long" && longTasksTomorrow >= 1) {
+        // Changed from longTasks
+        alert("You can only have 1 long task (3 hours) per day.");
+        return;
+      }
+      if (selectedPriority === "medium" && mediumTasksTomorrow >= 2) {
+        // Changed from mediumTasks
+        alert("You can only have 2 medium tasks (1 hour) per day.");
+        return;
+      }
+      if (selectedPriority === "short" && shortTasksTomorrow >= 3) {
+        // Changed from shortTasks
+        alert("You can only have 3 short tasks (20 minutes) per day.");
+        return;
+      }
+    }
 
     let dueDate = null;
 
@@ -113,6 +199,15 @@ export default function TaskForm({
       setConfirmNoDate(false);
     }
   }
+
+  const todayCount = tasksForToday.filter(
+    (task) => task._id !== currentTaskId
+  ).length;
+  const tomorrowCount = tasksForTomorrow.filter(
+    (task) => task._id !== currentTaskId
+  ).length;
+  const isTodayFull = todayCount >= 6;
+  const isTomorrowFull = tomorrowCount >= 6;
 
   return (
     <>
