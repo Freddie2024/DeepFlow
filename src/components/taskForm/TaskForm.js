@@ -156,11 +156,11 @@ export default function TaskForm({
             <label
               htmlFor="long"
               className={
-                disabledPriorities.includes("long") ? styles.disabled : ""
+                disabledPriorities.includes("long") ? styles.disabled : " "
               }
             >
               3 hours
-              {disabledPriorities.includes("long") && " (limit reached)"}
+              {/* {disabledPriorities.includes("long")} */}
             </label>
             <br />
             <input
@@ -175,7 +175,7 @@ export default function TaskForm({
             <label
               htmlFor="medium"
               className={
-                disabledPriorities.includes("medium") ? styles.disabled : ""
+                disabledPriorities.includes("medium") ? styles.disabled : " "
               }
             >
               1 hour
@@ -193,11 +193,11 @@ export default function TaskForm({
             <label
               htmlFor="short"
               className={
-                disabledPriorities.includes("short") ? styles.disabled : ""
+                disabledPriorities.includes("short") ? styles.disabled : " "
               }
             >
               20 minutes
-              {disabledPriorities.includes("short") && " (limit reached)"}
+              {/* {disabledPriorities.includes("short") && " (limit reached)"} */}
             </label>
           </div>
           <div className={styles.radioGroup}>

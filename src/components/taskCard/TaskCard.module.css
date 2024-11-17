@@ -1,4 +1,4 @@
-.cardContainer {
+/* .cardContainer {
   max-width: 300px;
   width: 100%;
   margin: 0 auto;
@@ -26,7 +26,7 @@
   
   .cardContent {
     margin-bottom: 1rem;
-  }
+  } */
   
   .topRow {
     display: grid;
@@ -34,9 +34,31 @@
     justify-content: space-between;
     align-items: center;
     gap: 0.3rem;
+    width: 100%;
   }  
 
-  .dueDateLabel,
+  .dueDateLabel {
+    justify-self: start;
+    grid-column: 1;
+  }
+  
+
+  .durationLabel {
+    justify-self: center;
+    grid-column: 2;
+  }
+  
+  .topRow:not(:has(.dueDateLabel)) .durationLabel {
+    grid-column: 1;
+    justify-self: start;
+  }
+  
+  .viewDetailsLink {
+    grid-column: 3 !important;
+    justify-self: end;
+  }
+
+  /* .dueDateLabel,
   .durationLabel {
     font-size: 0.8rem;
     color: var(--accent);
@@ -59,14 +81,11 @@
   .durationLabel {
     justify-self: center;
     grid-column: 2; 
-  }
+  } */
 
-  .topRow:not(:has(.dueDateLabel)) .durationLabel {
-    justify-self: start;
-    grid-column: 1; 
-  }
+ 
 
-  .dueDateToday,
+  /* .dueDateToday,
   .durationLong {
     color: var(--accent);
   }
@@ -95,9 +114,11 @@
     justify-self: end;
     width: 90px; 
     grid-column: 3;
-  }
+  } */
 
-  .viewDetailsLink a {
+  
+
+  /* .viewDetailsLink a {
     text-decoration: none;
     color: var(--white);
     transition: color 0.2s ease;
@@ -106,7 +127,7 @@
   .viewDetailsLink:hover {
     color: var(--primary-dark);
     text-decoration: underline;
-  }
+  } */
 
   .cardTitle {
     font-size: 1rem;
@@ -125,7 +146,7 @@
     color: var(--grey-light);
   }
   
-  .cardDetails {
+  /* .cardDetails {
     display: flex;
     justify-content: space-between;
     font-size: 0.8rem;
@@ -134,7 +155,7 @@
   .priority {
     font-weight: bold;
     color: var(--accent);
-  }
+  } */
   
   .buttonContainer {
     display: flex;
@@ -143,7 +164,7 @@
     gap: 0.3rem;
   }
   
-  .editButton,
+  /* .editButton,
   .deleteButton,
   .checkboxButton {
     width: 90px;
@@ -169,9 +190,9 @@
   
   .buttonContainer a {
     text-decoration: none;
-}
+} */
 
-  .deleteButton {
+  /* .deleteButton {
     background-color: var(--primary-dark);
     color: var(--white);
   }
@@ -180,16 +201,20 @@
     background-color: var(--tertiary);
     color: var(--white);
   }
-  
+   */
   .checkbox {
     margin-left: 0.25rem;
     border: 1px solid var(--accent);
     vertical-align: middle;
   }
 
-  .checkboxButton {
+  /* .checkboxButton {
     background-color: var(--secondary);
     padding: 0.2rem 0.2rem 0.2rem 0.6rem;
+  } */
+
+  .card:last-child {
+    margin-bottom: 2rem;
   }
 
  

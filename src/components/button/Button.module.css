@@ -1,0 +1,35 @@
+.button {
+    width: 90px;
+    border: 1px solid var(--grey-light);
+    border-radius: 40px;
+    padding: 0.2rem 0.4rem;
+    cursor: pointer;
+    font-size: 0.75rem;
+    text-align: center;
+    transition: background-color 0.2s;
+  }
+  
+  .primary {
+    background-color: var(--accent);
+    color: var(--primary-dark);
+  }
+  
+  .delete {
+    background-color: var(--primary-dark);
+    color: var(--white);
+  }
+  
+  .delete:hover {
+    background-color: var(--tertiary);
+    color: var(--white);
+  }
+
+  .checkbox {
+    background-color: var(--secondary);
+    padding: 0.2rem 0.2rem 0.2rem 0.6rem;
+  }
+  
+  .checkbox:hover {
+    background-color: var(--primary-dark);
+    color: var(--white);
+  }

@@ -1,4 +1,4 @@
-.card {
+/* .card {
     max-width: 400px;
     margin: 2rem auto;
     background-color: var(--primary);
@@ -11,43 +11,74 @@
   
   .cardContent {
     margin-bottom: 1rem;
+  } */
+
+  .topRow {
+    display: grid;
+    grid-template-columns: repeat(3, 90px);
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.3rem;
+  }
+
+  .durationLabel {
+    grid-column: 1;
+    justify-self: start;
+  }
+  
+  .viewDetailsLink {
+    grid-column: 3;
+    justify-self: end;
   }
   
   .cardTitle {
-    font-size: 1.5rem;
-    font-weight: bold;
-    margin-bottom: 0.5rem;
-    display: flex;
-    align-items: center;
-  }
-  
-  .checkbox {
-    margin-right: 0.5rem;
-    border: 1px solid var(--accent);
-  }
-  
-  .cardDescription {
     font-size: 1rem;
-    margin-bottom: 1rem;
-  }
-  
-  .cardDetails {
-    display: flex;
-    justify-content: space-between;
-    font-size: 0.9rem;
-  }
-  
-  .priority {
     font-weight: bold;
+    text-align: center;
+    margin: 0.2rem 0;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    width: 100%;
+    max-width: 100%;
+    /* display: flex;
+    align-items: center; */
   }
   
   .buttonContainer {
     display: flex;
-    justify-content: space-between;
-    margin-top: 1rem;
+    justify-content: space-around;
+    margin-top: 0.5rem;
+    gap: 0.3rem;
+  }
+
+  .checkbox {
+    margin-left: 0.25rem; 
+    /* margin-right: 0.5rem; */
+    border: 1px solid var(--accent);
+    vertical-align: middle;
   }
   
-  .editButton,
+  .cardDescription {
+    font-size: 0.9rem;
+    margin: 0.5rem 0;
+    color: var(--grey-light);
+    padding: 0 0.5rem;
+
+  }
+  
+  /* .cardDetails {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.9rem;
+  } */
+  
+  /* .priority {
+    font-weight: bold;
+  }
+   */
+  
+  
+  /* .editButton,
   .deleteButton,
   .checkboxButton {
     background-color: var(--accent);
@@ -56,9 +87,9 @@
     border-radius: 20px;
     padding: 0.5rem 1rem;
     cursor: pointer;
-  }
+  } */
   
-  .deleteButton {
+  /* .deleteButton {
     background-color: var(--black-light);
     color: var(--white);
   }
@@ -66,5 +97,5 @@
   .checkboxButton {
     background-color: var(--secondary);
     padding: 0.5rem 0.5rem 0.5rem 1rem;
-  }
+  } */
 

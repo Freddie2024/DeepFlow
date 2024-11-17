@@ -218,17 +218,17 @@ export default function TasksByDate() {
       </h2>
       {filteredTasks.length > 0 && (
         <>
-          {["today", "tomorrow"].includes(slug) && (
-            <div className="task-status">
-              <p>{getMissingTasksMessage(taskCounts)}</p>
-            </div>
-          )}
           <TaskList
             tasks={filteredTasks}
             onToggle={handleToggleTaskCompletion}
             onEdit={handleEditTask}
             onDelete={handleDeleteTask}
           />
+          {["today", "tomorrow"].includes(slug) && (
+            <div className="task-status">
+              <p>{getMissingTasksMessage(taskCounts)}</p>
+            </div>
+          )}
         </>
       )}
 

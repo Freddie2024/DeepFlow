@@ -2,6 +2,9 @@
 
 import Link from "next/link";
 import styles from "./TaskCard.module.css";
+import Button from "../button/Button";
+import Label from "../label/Label";
+import Card from "../card/Card";
 
 export default function TaskCard({ task, onToggle, onDelete, showDueDate }) {
   const todayDate = new Date().toISOString().split("T")[0];
@@ -58,35 +61,40 @@ export default function TaskCard({ task, onToggle, onDelete, showDueDate }) {
   };
 
   return (
-    <div className={styles.cardContainer}>
-      <li className={styles.card}>
+    <Card>
+      <li>
         <div className={styles.topRow}>
           {showDueDate && (
-            <p className={`${styles.dueDateLabel} ${dueDateClass}`}>
+            <Label
+              variant={
+                taskDueDateString === todayDate
+                  ? "today"
+                  : taskDueDateString === tomorrowDateString
+                  ? "tomorrow"
+                  : "later"
+              }
+              className={styles.dueDateLabel}
+            >
               {dueDateLabel}
-            </p>
+            </Label>
           )}
-          <p
-            className={`${styles.durationLabel} ${getDurationClass(
-              task.priority
-            )}`}
-          >
+          <Label type={task.priority} className={styles.durationLabel}>
             {getDurationLabel(task.priority)}
-          </p>
-          <div className={styles.viewDetailsLink}>
+          </Label>
+          <Label variant="details" className={styles.viewDetailsLink}>
             <Link href={`/tasks/${task._id}`}>Details</Link>
-          </div>
+          </Label>
         </div>
 
         <h2 className={styles.cardTitle}>{task.title}</h2>
 
         <div className={styles.buttonContainer} aria-label="Task Actions">
           <Link href={`/tasks/${task._id}/edit`}>
-            <button className={styles.editButton} aria-label="Edit task">
+            <Button variant="primary" aria-label="Edit task">
               Edit
-            </button>
+            </Button>
           </Link>
-          <label className={styles.checkboxButton}>
+          <Button variant="checkbox" as="label">
             <span>Done: </span>
             <input
               type="checkbox"
@@ -95,16 +103,16 @@ export default function TaskCard({ task, onToggle, onDelete, showDueDate }) {
               onChange={() => onToggle(task._id)}
               aria-label="Mark task as completed"
             />
-          </label>
-          <button
+          </Button>
+          <Button
+            variant="delete"
             onClick={() => onDelete(task._id)}
-            className={styles.deleteButton}
             aria-label="Delete task"
           >
             Delete
-          </button>
+          </Button>
         </div>
       </li>
-    </div>
+    </Card>
   );
 }
