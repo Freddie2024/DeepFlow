@@ -4,16 +4,30 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useTasks } from "@/src/hooks/useTasks";
 import TaskForm from "@/src/components/taskForm/TaskForm";
-import { useSession } from "next-auth/react";
 
 export default function EditTaskPage() {
   const router = useRouter();
   const { id } = router.query;
   const { tasks, editTask } = useTasks();
-  const { data: session } = useSession();
   const [task, setTask] = useState(null);
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState(null);
+
+  const tasksForToday =
+    tasks?.filter((t) => {
+      const taskDate = new Date(t.dueDate).toISOString().split("T")[0];
+      const today = new Date().toISOString().split("T")[0];
+      return taskDate === today;
+    }) || [];
+
+  const tasksForTomorrow =
+    tasks?.filter((t) => {
+      const taskDate = new Date(t.dueDate).toISOString().split("T")[0];
+      const tomorrow = new Date();
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      const tomorrowDate = tomorrow.toISOString().split("T")[0];
+      return taskDate === tomorrowDate;
+    }) || [];
 
   useEffect(() => {
     if (id && tasks) {
@@ -52,6 +66,9 @@ export default function EditTaskPage() {
         defaultData={task}
         isEditing={true}
         disabled={isSaving}
+        tasksForToday={tasksForToday}
+        tasksForTomorrow={tasksForTomorrow}
+        currentTaskId={id}
       />
     </>
   );
