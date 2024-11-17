@@ -21,9 +21,16 @@ export const authOptions = {
   adapter: MongoDBAdapter(clientPromise),
 
   secret: process.env.NEXTAUTH_SECRET,
-  debug: true,
+
+  pages: {
+    signIn: "/auth/signin",
+  },
 
   callbacks: {
+    async redirect({ url, baseUrl }) {
+      return url.startsWith(baseUrl) ? url : baseUrl;
+    },
+
     async session({ session, user }) {
       session.user.userId = user.id;
 
