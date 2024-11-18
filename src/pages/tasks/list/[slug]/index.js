@@ -7,6 +7,13 @@ import { getSession } from "next-auth/react";
 import Button from "@/src/components/button/Button";
 import Link from "next/link";
 import TaskSummary from "@/src/components/taskSummary/taskSummary";
+import TaskSorter from "@/src/components/taskSort/taskSorter";
+import { SORT_OPTIONS, sortTasks } from "@/src/components/taskSort/sortUtils";
+import TaskFilter from "@/src/components/taskFilter/TaskFilter";
+import {
+  DURATION_FILTERS,
+  filterTasksByDuration,
+} from "@/src/components/taskFilter/filterUtils";
 
 export async function getServerSideProps(context) {
   const session = await getSession(context);
@@ -35,6 +42,9 @@ export default function TasksByDate() {
     addNewTask,
   } = useTasks();
   const [filteredTasks, setFilteredTasks] = useState([]);
+  const [sortOption, setSortOption] = useState(SORT_OPTIONS.DEFAULT);
+  const [durationFilter, setDurationFilter] = useState(DURATION_FILTERS.ALL);
+
   const previousFilteredTasksRef = useRef(filteredTasks);
   const router = useRouter();
   const { slug } = router.query;
@@ -67,6 +77,13 @@ export default function TasksByDate() {
         return "unknown";
     }
   };
+
+  useEffect(() => {
+    const savedSort = localStorage.getItem("taskSortPreference");
+    if (savedSort) {
+      setSortOption(savedSort);
+    }
+  }, []);
 
   useEffect(() => {
     if (tasks) {
@@ -202,6 +219,22 @@ export default function TasksByDate() {
             : `No tasks for ${slug} so far`}
         </h2>
 
+        {slug === "later" && (
+          <TaskSorter
+            onSortChange={(option) => {
+              setSortOption(option);
+              localStorage.setItem("taskSortPreference", option);
+            }}
+            currentSort={sortOption}
+          />
+        )}
+        {slug === "someday" && (
+          <TaskFilter
+            onFilterChange={setDurationFilter}
+            currentFilter={durationFilter}
+          />
+        )}
+
         {(slug === "later" || slug === "someday") && (
           <Link href="/create" passHref>
             <Button as="a" variant="centered">
@@ -214,7 +247,14 @@ export default function TasksByDate() {
       {filteredTasks.length > 0 && (
         <>
           <TaskList
-            tasks={filteredTasks}
+            tasks={
+              slug === "later"
+                ? sortTasks(filteredTasks, sortOption)
+                : slug === "someday"
+                ? filterTasksByDuration(filteredTasks, durationFilter)
+                : filteredTasks
+              // filteredTasks
+            }
             onToggle={handleToggleTaskCompletion}
             onEdit={handleEditTask}
             onDelete={handleDeleteTask}
