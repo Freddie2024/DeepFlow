@@ -75,6 +75,14 @@ h2 {
   margin: 1rem 0; 
 }
 
+.header-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+  margin-bottom: 0.25rem;
+}
+
 .task-status {
   text-align: center;
   margin: 1rem;
@@ -85,6 +93,36 @@ h2 {
   text-align: center;
   font-size: 0.9rem;
   white-space: pre-line; 
+}
+
+.Toastify__toast {
+  border-radius: 8px !important;
+  font-size: 0.9rem !important;
+}
+
+.Toastify__toast--success {
+  background: var(--primary) !important;
+  color: var(--grey-light) !important;
+  border: 1px solid var(--primary-light) !important;
+}
+
+.Toastify__toast--error {
+  background: var(--tertiary) !important;
+  color: var(--black-light) !important;
+}
+
+.Toastify__toast--warning {
+  background: var(--accent) !important;
+  color: var(--black-light) !important;
+}
+
+.Toastify__toast--info {
+  background: var(--secondary-dark) !important;
+  color: var(--black-light) !important;
+}
+
+.Toastify__progress-bar {
+  background: var(--primary) !important;
 }
 
 main {

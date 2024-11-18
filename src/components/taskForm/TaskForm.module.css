@@ -90,3 +90,60 @@
   .confirmNoDate input[type="checkbox"] {
     margin-right: 0.3rem;
   }
+
+  .customPopup {
+    background: var(--primary-dark) !important;
+    opacity: 0.85 !important;
+    color: var(--grey-light) !important;
+    border: 1.5px solid var(--accent) !important;
+    border-radius: 20px !important;
+    font-size: 0.8rem !important;
+    width: 300px !important;
+    max-width: 90% !important;
+    padding: 0.3rem !important;
+    position: fixed !important;
+    bottom: 45px !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1) !important;
+  }
+  
+  .customPopup h2 {
+    font-size: 0.9rem !important;
+    margin-bottom: 0.5rem !important;
+    color: var(--accent) !important;
+  }
+  
+  .confirmButton {
+    width: 90px !important;
+    border: 1px solid var(--grey-light) !important;
+    border-radius: 40px !important;
+    padding: 0.2rem 0.4rem !important;
+    font-size: 0.75rem !important;
+    background: var(--accent) !important;
+    color: var(--black-light) !important;
+    cursor: pointer !important;
+    transition: background-color 0.2s !important;
+  }
+
+  .confirmButton:hover {
+    background-color: var(--secondary-dark) !important;
+    color: var(--white) !important;
+  }
+  
+  .cancelButton {
+    width: 90px !important;
+    border: 1px solid var(--grey-light) !important;
+    border-radius: 40px !important;
+    padding: 0.2rem 0.4rem !important;
+    font-size: 0.75rem !important;
+    background-color: var(--primary-dark) !important;
+    color: var(--white) !important;
+    cursor: pointer !important;
+    transition: background-color 0.2s !important;
+  }
+
+  .cancelButton:hover {
+    background-color: var(--tertiary) !important;
+    color: var(--white) !important;
+  }

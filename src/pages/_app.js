@@ -3,6 +3,8 @@ import "../styles/globals.css";
 import Main_Layout from "../components/layouts/Main_Layout";
 import { SessionProvider } from "next-auth/react";
 import { SWRConfig } from "swr";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -27,6 +29,13 @@ export default function App({
         <Main_Layout>
           <SWRConfig value={{ fetcher }}>
             <Component {...pageProps} />
+            <ToastContainer
+              position="top-center"
+              autoClose={3000}
+              hideProgressBar={false}
+              closeOnClick={true}
+              pauseOnHover={true}
+            />
           </SWRConfig>
         </Main_Layout>
       </div>
