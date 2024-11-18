@@ -13,6 +13,11 @@
     background-color: var(--accent);
     color: var(--primary-dark);
   }
+
+  .primary:hover {
+    background-color: var(--primary-dark);
+    color: var(--white);
+  }
   
   .delete {
     background-color: var(--primary-dark);
@@ -33,3 +38,19 @@
     background-color: var(--primary-dark);
     color: var(--white);
   }
+
+  .button.centered {
+    display: block;
+    margin: 1rem auto;
+    width: 90px;
+    text-decoration: none !important;
+  }
+
+  .centered:hover {
+    background-color: var(--accent);
+    text-decoration: none !important;
+}
+
+a.button.centered {
+    text-decoration: none !important;
+}

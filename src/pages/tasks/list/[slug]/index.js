@@ -4,6 +4,8 @@ import { useTasks } from "@/src/hooks/useTasks";
 import TaskForm from "@/src/components/taskForm/TaskForm";
 import { useEffect, useState, useMemo, useRef } from "react";
 import { useSession, getSession } from "next-auth/react";
+import Button from "@/src/components/button/Button";
+import Link from "next/link";
 
 export async function getServerSideProps(context) {
   const session = await getSession(context);
@@ -254,6 +256,13 @@ export default function TasksByDate() {
               : []
           }
         />
+      )}
+      {(slug === "later" || slug === "someday") && (
+        <Link href="/create" passHref>
+          <Button as="a" variant="centered">
+            Add Task
+          </Button>
+        </Link>
       )}
     </>
   );

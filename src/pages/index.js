@@ -4,6 +4,8 @@ import TaskList from "../components/taskList/TaskList";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
+import Button from "../components/button/Button";
+import Link from "next/link";
 
 export default function Home() {
   const { data: session, status } = useSession();
@@ -78,6 +80,11 @@ export default function Home() {
         onToggle={toggleTaskCompletion}
         showDueDate={true}
       />
+      <Link href="/create" passHref>
+        <Button as="a" variant="centered">
+          Add Task
+        </Button>
+      </Link>
     </>
   );
 }
