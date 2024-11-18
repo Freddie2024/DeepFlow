@@ -2,6 +2,7 @@
 
 import useSWR from "swr";
 import { useSession } from "next-auth/react";
+import { showSuccess } from "../lib/sweetAlertUtils";
 
 export function useTasks() {
   const { data: session, status } = useSession();
@@ -61,7 +62,7 @@ export function useTasks() {
       if (!response.ok) {
         throw new Error("Failed to update task");
       }
-      // mutate(); // CHECK IF THIS IS NEEDED!!!
+      mutate(); // CHECK IF THIS IS NEEDED!!!
     } catch (error) {
       console.error("Failed to edit task:", error);
     }
@@ -99,6 +100,9 @@ export function useTasks() {
           "Content-Type": "application/json",
         },
       });
+      if (response.ok) {
+        await showSuccess("Success!", "Task deleted successfully!");
+      }
       if (!response.ok) {
         console.error("Failed to delete task");
         throw new Error("Failed to delete task");

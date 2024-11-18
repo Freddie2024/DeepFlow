@@ -6,6 +6,7 @@ import { useTasks } from "../hooks/useTasks";
 import { useSession } from "next-auth/react";
 import { useEffect } from "react";
 import { toast } from "react-toastify";
+import { showSuccess } from "../lib/sweetAlertUtils";
 
 export default function CreateTaskPage() {
   const router = useRouter();
@@ -33,14 +34,7 @@ export default function CreateTaskPage() {
       if (data.dueOption === "someday") targetLocation = "someday";
       if (data.dueOption === "tomorrow") targetLocation = "tomorrow";
 
-      toast.success(`Task successfully added to ${targetLocation}!`, {
-        position: "top-center",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-      });
+      await showSuccess("Success!", "Task created successfully!");
 
       router.back();
     } catch (error) {

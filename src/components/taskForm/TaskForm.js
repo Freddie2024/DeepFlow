@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import styles from "./TaskForm.module.css";
 import Button from "../button/Button";
-import Swal from "sweetalert2";
+import { showWarning } from "../../lib/sweetAlertUtils";
 
 function getLocalISOString(date) {
   if (!(date instanceof Date) || isNaN(date)) {
@@ -86,25 +86,6 @@ export default function TaskForm({
       onCancel();
     }
   };
-
-  async function showWarning(title, message) {
-    const result = await Swal.fire({
-      title: title,
-      text: message,
-      icon: "warning",
-      iconColor: "var(--accent)",
-      showCancelButton: true,
-      confirmButtonText: "Continue",
-      cancelButtonText: "Cancel",
-      backdrop: false,
-      customClass: {
-        popup: styles.customPopup,
-        confirmButton: styles.confirmButton,
-        cancelButton: styles.cancelButton,
-      },
-    });
-    return result.isConfirmed;
-  }
 
   async function handleSubmit(event) {
     event.preventDefault();
