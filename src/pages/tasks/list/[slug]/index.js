@@ -3,9 +3,10 @@ import { useRouter } from "next/router";
 import { useTasks } from "@/src/hooks/useTasks";
 import TaskForm from "@/src/components/taskForm/TaskForm";
 import { useEffect, useState, useMemo, useRef } from "react";
-import { useSession, getSession } from "next-auth/react";
+import { getSession } from "next-auth/react";
 import Button from "@/src/components/button/Button";
 import Link from "next/link";
+import TaskSummary from "@/src/components/taskSummary/taskSummary";
 
 export async function getServerSideProps(context) {
   const session = await getSession(context);
@@ -122,25 +123,6 @@ export default function TasksByDate() {
     short: 3,
   });
 
-  const getMissingTasksMessage = (taskCounts) => {
-    const limits = getTaskLimits();
-    const missing = [];
-
-    if (taskCounts.long < limits.long) {
-      missing.push(`${limits.long - taskCounts.long} long task`);
-    }
-    if (taskCounts.medium < limits.medium) {
-      missing.push(`${limits.medium - taskCounts.medium} medium tasks`);
-    }
-    if (taskCounts.short < limits.short) {
-      missing.push(`${limits.short - taskCounts.short} short tasks`);
-    }
-
-    return missing.length
-      ? `To complete your daily plan, add:\n${missing.join(", ")}`
-      : `Great! You have all your tasks planned for ${slug}.`;
-  };
-
   const isTaskLimitReached = (priority, taskCounts) => {
     const limits = getTaskLimits();
     return taskCounts[priority] >= limits[priority];
@@ -238,9 +220,7 @@ export default function TasksByDate() {
             onDelete={handleDeleteTask}
           />
           {["today", "tomorrow"].includes(slug) && (
-            <div className="task-status">
-              <p>{getMissingTasksMessage(taskCounts)}</p>
-            </div>
+            <TaskSummary tasks={filteredTasks} dateType={slug} />
           )}
         </>
       )}

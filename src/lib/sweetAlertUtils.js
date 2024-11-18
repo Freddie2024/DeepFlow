@@ -8,7 +8,7 @@ export async function showWarning(title, message) {
     icon: "warning",
     iconColor: "var(--accent)",
     showCancelButton: true,
-    confirmButtonText: "Continue Anyway",
+    confirmButtonText: "Continue",
     cancelButtonText: "Cancel",
     backdrop: false,
     customClass: {
