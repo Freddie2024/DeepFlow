@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import styles from "./TaskForm.module.css";
 import Button from "../button/Button";
+import Swal from "sweetalert2";
 
 function getLocalISOString(date) {
   if (!(date instanceof Date) || isNaN(date)) {
@@ -86,55 +87,57 @@ export default function TaskForm({
     }
   };
 
-  function handleSubmit(event) {
+  async function showWarning(title, message) {
+    const result = await Swal.fire({
+      title: title,
+      text: message,
+      icon: "warning",
+      iconColor: "var(--accent)",
+      showCancelButton: true,
+      confirmButtonText: "Continue",
+      cancelButtonText: "Cancel",
+      backdrop: false,
+      customClass: {
+        popup: styles.customPopup,
+        confirmButton: styles.confirmButton,
+        cancelButton: styles.cancelButton,
+      },
+    });
+    return result.isConfirmed;
+  }
+
+  async function handleSubmit(event) {
     event.preventDefault();
 
     const formData = new FormData(event.target);
     const taskData = Object.fromEntries(formData);
     const selectedPriority = taskData.priority;
 
-    console.log("Submit started:", {
-      isEditing,
-      dueOption,
-      selectedPriority,
-    });
-
-    // if (dueOption === "today") {
-    // const todayCount = tasksForToday.filter(
-    //   (task) => task._id !== currentTaskId
-    // ).length;
-    // if (todayCount >= 6) {
-    //   alert(
-    //     "You already have 6 tasks scheduled for today. Please choose another day."
-    //   );
-    //   return;
-    // }
-
-    // const todayTasks = tasksForToday.filter(
-    //   (task) => task._id !== currentTaskId
-    // );
-
     if (dueOption === "today") {
       const otherTodayTasks = tasksForToday.filter(
         (task) => task._id !== currentTaskId
       );
 
-      console.log("Today's tasks:", {
-        otherTodayTasks,
-        length: otherTodayTasks.length,
-      });
-
       if (otherTodayTasks.length >= 6) {
-        if (
-          !confirm(
-            "You already have 6 tasks scheduled for today.\nPlease check the tasks duration to ensure a balanced workload: \n\n" +
-              "• Maximum 1 long task (3 hours)\n" +
-              "• Maximum 2 medium tasks (1 hour each)\n" +
-              "• Maximum 3 short tasks (20 minutes each)"
-          )
-        ) {
-          return;
-        }
+        // if (
+        //   !confirm(
+        //     "You already have 6 tasks scheduled for today.\nPlease check the tasks duration to ensure a balanced workload: \n\n" +
+        //       "• Maximum 1 long task (3 hours)\n" +
+        //       "• Maximum 2 medium tasks (1 hour each)\n" +
+        //       "• Maximum 3 short tasks (20 minutes each)"
+        //   )
+        // ) {
+        //   return;
+        // }
+        const confirmed = await showWarning(
+          "Task Limit Warning",
+          "You already have 6 tasks scheduled for today.\n\n" +
+            "Please check the tasks duration to ensure a balanced workload:\n" +
+            "• Maximum 1 long task (3 hours)\n" +
+            "• Maximum 2 medium tasks (1 hour each)\n" +
+            "• Maximum 3 short tasks (20 minutes each)"
+        );
+        if (!confirmed) return;
       }
 
       const longTasksToday = otherTodayTasks.filter(
@@ -147,108 +150,134 @@ export default function TaskForm({
         (task) => task.priority === "short"
       ).length;
 
-      console.log("Task counts:", {
-        longTasksToday,
-        mediumTasksToday,
-        shortTasksToday,
-      });
-
       if (selectedPriority === "long" && longTasksToday >= 1) {
-        if (
-          !confirm(
-            "You should only have 1 long task (3 hours) per day. Continue anyway?"
-          )
-        ) {
-          return;
-        }
+        // if (
+        //   !confirm(
+        //     "You should only have 1 long task (3 hours) per day. Continue anyway?"
+        //   )
+        // ) {
+        //   return;
+        // }
+        const confirmed = await showWarning(
+          "Long Task Warning",
+          "You should only have 1 long task (3 hours) per day. Continue anyway?"
+        );
+        if (!confirmed) return;
       }
       if (selectedPriority === "medium" && mediumTasksToday >= 2) {
-        if (
-          !confirm(
-            "You should only have 2 medium tasks (1 hour) per day. Continue anyway?"
-          )
-        ) {
-          return;
-        }
+        //
+        const confirmed = await showWarning(
+          "Medium Task Warning",
+          "You should only have 2 medium tasks (1 hour each) per day. Continue anyway?"
+        );
+        if (!confirmed) return;
       }
       if (selectedPriority === "short" && shortTasksToday >= 3) {
-        if (
-          !confirm(
-            "You should only have 3 short tasks (20 minutes) per day. Continue anyway?"
-          )
-        ) {
-          return;
-        }
+        // if (
+        //   !confirm(
+        //     "You should only have 3 short tasks (20 minutes) per day. Continue anyway?"
+        //   )
+        // ) {
+        //   return;
+        // }
+        const confirmed = await showWarning(
+          "Short Task Warning",
+          "You should only have 3 short tasks (20 minutes each) per day. Continue anyway?"
+        );
+        if (!confirmed) return;
       }
-    }
 
-    if (dueOption === "tomorrow") {
-      // const tomorrowCount = tasksForTomorrow.filter(
-      //   (task) => task._id !== currentTaskId
-      // ).length;
-      // if (tomorrowCount >= 6) {
-      //   alert(
-      //     "You already have 6 tasks scheduled for tomorrow. Please choose another day."
-      //   );
-      //   return;
-      // }
+      if (dueOption === "tomorrow") {
+        // const tomorrowCount = tasksForTomorrow.filter(
+        //   (task) => task._id !== currentTaskId
+        // ).length;
+        // if (tomorrowCount >= 6) {
+        //   alert(
+        //     "You already have 6 tasks scheduled for tomorrow. Please choose another day."
+        //   );
+        //   return;
+        // }
 
-      const otherTomorrowTasks = tasksForTomorrow.filter(
-        (task) => task._id !== currentTaskId
-      );
+        const otherTomorrowTasks = tasksForTomorrow.filter(
+          (task) => task._id !== currentTaskId
+        );
 
-      if (otherTomorrowTasks.length >= 6) {
-        if (
-          !confirm(
-            "You already have 6 tasks scheduled for tomorrow.\nPlease check the tasks duration to ensure a balanced workload: \n\n" +
+        if (otherTomorrowTasks.length >= 6) {
+          // if (
+          //   !confirm(
+          //     "You already have 6 tasks scheduled for tomorrow.\nPlease check the tasks duration to ensure a balanced workload: \n\n" +
+          //       "• Maximum 1 long task (3 hours)\n" +
+          //       "• Maximum 2 medium tasks (1 hour each)\n" +
+          //       "• Maximum 3 short tasks (20 minutes each)"
+          //   )
+          // ) {
+          //   return;
+          // }
+          const confirmed = await showWarning(
+            "Task Limit Warning",
+            "You already have 6 tasks scheduled for tomorrow.\n\n" +
+              "Please check the tasks duration to ensure a balanced workload:\n" +
               "• Maximum 1 long task (3 hours)\n" +
               "• Maximum 2 medium tasks (1 hour each)\n" +
               "• Maximum 3 short tasks (20 minutes each)"
-          )
-        ) {
-          return;
+          );
+          if (!confirmed) return;
         }
-      }
 
-      // const tomorrowTasks = tasksForTomorrow.filter(
-      //   (task) => task._id !== currentTaskId
-      // );
-      const longTasksTomorrow = otherTomorrowTasks.filter(
-        (task) => task.priority === "long"
-      ).length;
-      const mediumTasksTomorrow = otherTomorrowTasks.filter(
-        (task) => task.priority === "medium"
-      ).length;
-      const shortTasksTomorrow = otherTomorrowTasks.filter(
-        (task) => task.priority === "short"
-      ).length;
+        // const tomorrowTasks = tasksForTomorrow.filter(
+        //   (task) => task._id !== currentTaskId
+        // );
+        const longTasksTomorrow = otherTomorrowTasks.filter(
+          (task) => task.priority === "long"
+        ).length;
+        const mediumTasksTomorrow = otherTomorrowTasks.filter(
+          (task) => task.priority === "medium"
+        ).length;
+        const shortTasksTomorrow = otherTomorrowTasks.filter(
+          (task) => task.priority === "short"
+        ).length;
 
-      if (selectedPriority === "long" && longTasksTomorrow >= 1) {
-        if (
-          !confirm(
+        if (selectedPriority === "long" && longTasksTomorrow >= 1) {
+          // if (
+          //   !confirm(
+          //     "You should only have 1 long task (3 hours) per day. Continue anyway?"
+          //   )
+          // ) {
+          //   return;
+          // }
+          const confirmed = await showWarning(
+            "Long Task Warning",
             "You should only have 1 long task (3 hours) per day. Continue anyway?"
-          )
-        ) {
-          return;
+          );
+          if (!confirmed) return;
         }
-      }
-      if (selectedPriority === "medium" && mediumTasksTomorrow >= 2) {
-        if (
-          !confirm(
-            "You should only have 2 medium tasks (1 hour) per day. Continue anyway?"
-          )
-        ) {
-          return;
+        if (selectedPriority === "medium" && mediumTasksTomorrow >= 2) {
+          // if (
+          //   !confirm(
+          //     "You should only have 2 medium tasks (1 hour) per day. Continue anyway?"
+          //   )
+          // ) {
+          //   return;
+          // }
+          const confirmed = await showWarning(
+            "Medium Task Warning",
+            "You should only have 2 medium tasks (1 hour each) per day. Continue anyway?"
+          );
+          if (!confirmed) return;
         }
-      }
-      if (selectedPriority === "short" && shortTasksTomorrow >= 3) {
-        if (
-          !confirm(
-            "You should only have 3 short tasks (20 minutes) per day. Continue anyway?"
-          )
-        ) {
-          return;
-        }
+        // if (selectedPriority === "short" && shortTasksTomorrow >= 3) {
+        //   if (
+        //     !confirm(
+        //       "You should only have 3 short tasks (20 minutes) per day. Continue anyway?"
+        //     )
+        //   ) {
+        //     return;
+        //   }
+        const confirmed = await showWarning(
+          "Short Task Warning",
+          "You should only have 3 short tasks (20 minutes each) per day. Continue anyway?"
+        );
+        if (!confirmed) return;
       }
     }
 

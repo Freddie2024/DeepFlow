@@ -49,6 +49,7 @@ export default function EditTaskPage() {
     setError(null);
     try {
       await editTask(id, taskData);
+      toast.success("Task successfully updated!");
     } catch (err) {
       setError("Failed to save changes. Please try again.");
       console.error(err);
