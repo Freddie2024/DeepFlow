@@ -138,7 +138,7 @@ export default function TasksByDate() {
 
     return missing.length
       ? `To complete your daily plan, add:\n${missing.join(", ")}`
-      : "Great! You have all your tasks planned for the day.";
+      : `Great! You have all your tasks planned for ${slug}.`;
   };
 
   const isTaskLimitReached = (priority, taskCounts) => {
@@ -213,11 +213,22 @@ export default function TasksByDate() {
 
   return (
     <>
-      <h2>
-        {filteredTasks.length > 0
-          ? `Tasks for ${slug}`
-          : `No tasks for ${slug} so far`}
-      </h2>
+      <div className="header-container">
+        <h2>
+          {filteredTasks.length > 0
+            ? `Tasks for ${slug}`
+            : `No tasks for ${slug} so far`}
+        </h2>
+
+        {(slug === "later" || slug === "someday") && (
+          <Link href="/create" passHref>
+            <Button as="a" variant="centered">
+              + Add Task
+            </Button>
+          </Link>
+        )}
+      </div>
+
       {filteredTasks.length > 0 && (
         <>
           <TaskList
@@ -256,13 +267,6 @@ export default function TasksByDate() {
               : []
           }
         />
-      )}
-      {(slug === "later" || slug === "someday") && (
-        <Link href="/create" passHref>
-          <Button as="a" variant="centered">
-            Add Task
-          </Button>
-        </Link>
       )}
     </>
   );

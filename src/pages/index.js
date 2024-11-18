@@ -73,18 +73,21 @@ export default function Home() {
 
   return (
     <>
-      <h2>All Tasks</h2>
+      <div className="header-container">
+        <h2>All Tasks</h2>
+        <Link href="/create" passHref>
+          <Button as="a" variant="centered">
+            Add Task
+          </Button>
+        </Link>
+      </div>
+
       <TaskList
         tasks={tasks}
         onDelete={deleteTask}
         onToggle={toggleTaskCompletion}
         showDueDate={true}
       />
-      <Link href="/create" passHref>
-        <Button as="a" variant="centered">
-          Add Task
-        </Button>
-      </Link>
     </>
   );
 }
