@@ -1,6 +1,7 @@
 import Head from "next/head";
 import Footer from "../footer/Footer";
 import Nav from "../nav/Nav";
+import styles from "./Main_Layout.module.css";
 
 export default function Main_Layout({ children }) {
   return (
@@ -16,7 +17,7 @@ export default function Main_Layout({ children }) {
           <link rel="icon" href="/favicon.ico" />
         </Head>
         <Nav />
-        <main>{children}</main>
+        <main className={styles.main}>{children}</main>
         <Footer />
       </div>
     </div>
