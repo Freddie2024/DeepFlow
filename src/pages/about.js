@@ -20,12 +20,16 @@ export default function About() {
         <h2>How It Works - In Short</h2>
         <p className={styles.intro}>
           DeepFlow helps you focus on what matters most. Rooted in the{" "}
-          <strong>1-2-3 List</strong>, DeepFlow helps you focus on six
-          meaningful tasks:
+          <strong>1-2-3 List</strong>, DeepFlow helps you focus on 6 meaningful
+          tasks:
         </p>
         <div className={styles.listContainer}>
           <ul>
-            <li>1 long (3h), 2 medium (1h), 3 short (20min) tasks a day</li>
+            <li>
+              1 long, 2 medium, 3 short tasks a day
+              <br />
+              (3 hours, 1 hour, 20 minutes)
+            </li>
             <li>Total of 6 hours of focused work</li>
             <li>Plan ahead with Tomorrow and Later sections</li>
             <li>Keep track of future ideas in Someday</li>
