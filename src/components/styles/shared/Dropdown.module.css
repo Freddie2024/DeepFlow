@@ -1,0 +1,44 @@
+.container {
+    display: flex;
+    justify-content: center;
+    margin: 1rem 0;
+    position: relative;
+}
+  
+.select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    padding: 0.5rem 1.5rem 0.5rem 0.75rem;
+    border: 1px solid var(--primary-dark);
+    border-radius: 40px;
+    background-color: var(--primary-dark);
+    color: var(--white);
+    font-size: 0.8rem;
+    cursor: pointer;
+    outline: none;
+    min-width: 90px;
+    width: fit-content;
+    line-height: 1;
+}
+  
+.container::after {
+    content: '▼';
+    font-size: 0.8rem;
+    color: var(--white);
+    position: absolute;
+    right: 0.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+}
+  
+.select:hover {
+    background-color: var(--primary-light);
+}
+  
+.select option {
+    background-color: var(--white);
+    color: var(--text);
+    padding: 0.5rem;
+}

@@ -8,6 +8,7 @@ import Button from "../components/button/Button";
 import Link from "next/link";
 import TaskSorter from "../components/taskSort/TaskSorter";
 import { SORT_OPTIONS, sortTasks } from "../components/taskSort/sortUtils";
+import styles from "./index.module.css";
 
 export default function Home() {
   const { data: session, status } = useSession();
@@ -91,20 +92,23 @@ export default function Home() {
 
   return (
     <>
-      <div className="header-container">
-        <h2>All Tasks</h2>
-        <TaskSorter
-          onSortChange={(option) => {
-            setSortOption(option);
-            localStorage.setItem("taskSortPreference", option);
-          }}
-          currentSort={sortOption}
-        />
-        <Link href="/create" passHref>
-          <Button as="a" variant="centered">
-            + Add Task
-          </Button>
-        </Link>
+      <div className={styles.headerContainer}>
+        <h2 className={styles.title}>All Tasks</h2>
+        <div className={styles.controls}>
+          <TaskSorter
+            onSortChange={(option) => {
+              setSortOption(option);
+              localStorage.setItem("taskSortPreference", option);
+            }}
+            currentSort={sortOption}
+          />
+
+          <Link href="/create" passHref>
+            <Button as="a" variant="centered">
+              + Add Task
+            </Button>
+          </Link>
+        </div>
       </div>
 
       <TaskList
