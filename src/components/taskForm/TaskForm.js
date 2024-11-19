@@ -333,9 +333,9 @@ export default function TaskForm({
           </div>
         )}
         <div className={styles.buttonContainer}>
-          <button className={styles.submitButton} type="submit">
+          <Button type="submit" variant="primary">
             {isEditing ? "Save" : "Add Task"}
-          </button>
+          </Button>
           <Button type="button" variant="delete" onClick={handleCancel}>
             Cancel
           </Button>

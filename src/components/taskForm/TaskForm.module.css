@@ -68,25 +68,6 @@
     cursor: not-allowed;
   }
   
-  .submitButton {
-    width: 90px;
-    background-color: var(--accent);
-    color: var(--primary-dark);
-    border: 1px solid var(--grey-light);
-    border-radius: 40px;
-    padding: 0.2rem 0.4rem;
-    margin: 0.8rem auto 0;
-    display: block;
-    cursor: pointer;
-    transition: background-color 0.2s;
-    font-size: 0.75rem;
-  }
-
-  .submitButton:hover {
-    background-color: var(--primary-dark);
-    color: var(--white);
-  }
-
   .confirmNoDate input[type="checkbox"] {
     margin-right: 0.3rem;
   }
@@ -112,6 +93,40 @@
     font-size: 0.9rem !important;
     margin-bottom: 0.5rem !important;
     color: var(--accent) !important;
+  }
+
+  .buttonContainer {
+    display: flex;
+    gap: 1rem;
+    justify-content:space-around;
+    /* align-items: center; */
+    margin-top: 1rem;
+  }
+
+  .buttonContainer button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .submitButton {
+    width: 90px;
+    background-color: var(--accent);
+    color: var(--primary-dark);
+    border: 1px solid var(--grey-light);
+    border-radius: 40px;
+    padding: 0.2rem 0.4rem;
+    margin: 0.8rem auto 0;
+    display: block;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    font-size: 0.75rem;
+    flex: 0 0 auto;
+  }
+
+  .submitButton:hover {
+    background-color: var(--primary-dark);
+    color: var(--white);
   }
   
   .confirmButton {
