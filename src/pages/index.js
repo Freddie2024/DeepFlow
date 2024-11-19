@@ -6,7 +6,7 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import Button from "../components/button/Button";
 import Link from "next/link";
-import TaskSorter from "../components/taskSort/taskSorter";
+import TaskSorter from "../components/taskSort/TaskSorter";
 import { SORT_OPTIONS, sortTasks } from "../components/taskSort/sortUtils";
 
 export default function Home() {

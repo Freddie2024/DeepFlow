@@ -4,38 +4,33 @@ import React, { useEffect, useState } from "react";
 import styles from "./TaskForm.module.css";
 import Button from "../button/Button";
 import { showWarning } from "../../lib/sweetAlertUtils";
+import {
+  getLocalISOString,
+  determineDueOption,
+  getTodayDate,
+  getTomorrowDate,
+} from "../../utils/dateUtils";
+import {
+  validateDailyTaskLimit,
+  validatePriorityLimit,
+  filterCurrentTask,
+} from "../../utils/taskValidation";
 
-function getLocalISOString(date) {
-  if (!(date instanceof Date) || isNaN(date)) {
-    console.error("Invalid date passed to getLocalISOString:", date);
-    return null;
-  }
-  const offset = date.getTimezoneOffset() * 60000;
-  const localISOString = new Date(date.getTime() - offset)
-    .toISOString()
-    .split("T")[0];
-
-  return localISOString;
-}
-
-function determineDueOption(dueDate) {
-  if (dueDate === null || dueDate === undefined) return "someday";
-
-  const formattedDueDate = getLocalISOString(new Date(dueDate));
-
-  const today = getLocalISOString(new Date());
-
-  const tomorrow = (() => {
-    const temp = new Date();
-    temp.setDate(temp.getDate() + 1);
-    return getLocalISOString(temp);
-  })();
-
-  if (formattedDueDate === today) return "today";
-  if (formattedDueDate === tomorrow) return "tomorrow";
-
-  return "later";
-}
+/**
+ * TaskForm Component
+ * Handles creation and editing of tasks with validation for daily limits
+ * and priority-based time management
+ *
+ * @component
+ * @param {Object} props
+ * @param {Function} props.onSubmit - Handler for form submission
+ * @param {Object} props.defaultData - Default values for editing mode
+ * @param {boolean} props.isEditing - Whether form is in edit mode
+ * @param {Function} props.onCancel - Handler for cancellation
+ * @param {Array} props.tasksForToday - List of tasks scheduled for today
+ * @param {Array} props.tasksForTomorrow - List of tasks scheduled for tomorrow
+ * @param {string|null} props.currentTaskId - ID of task being edited
+ */
 
 export default function TaskForm({
   onSubmit,
@@ -47,6 +42,7 @@ export default function TaskForm({
   tasksForTomorrow = [],
   currentTaskId = null,
 }) {
+  // --- State Management ---
   const [dueOption, setDueOption] = useState(
     isEditing
       ? determineDueOption(getLocalISOString(new Date(defaultData.dueDate)))
@@ -56,10 +52,12 @@ export default function TaskForm({
   const [confirmNoDate, setConfirmNoDate] = useState(false);
   const [hasChanges, setHasChanges] = useState(false);
 
+  // Reset someday confirmation when component mounts
   useEffect(() => {
     setConfirmNoDate(false);
   }, []);
 
+  // Auto-resize textarea for description
   useEffect(() => {
     const textarea = document.getElementById("description");
 
@@ -73,10 +71,17 @@ export default function TaskForm({
     return () => textarea.removeEventListener("input", autoResize);
   }, []);
 
+  // --- Event Handlers ---
+  /**
+   * Tracks changes in form inputs
+   */
   const handleInputChange = () => {
     setHasChanges(true);
   };
 
+  /**
+   * Handles form cancellation with unsaved changes warning
+   */
   const handleCancel = () => {
     if (hasChanges) {
       if (window.confirm("Are you sure you want to discard your changes?")) {
@@ -87,6 +92,10 @@ export default function TaskForm({
     }
   };
 
+  /**
+   * Handles form submission with validation
+   * @param {Event} event - Form submission event
+   */
   async function handleSubmit(event) {
     event.preventDefault();
 
@@ -94,174 +103,42 @@ export default function TaskForm({
     const taskData = Object.fromEntries(formData);
     const selectedPriority = taskData.priority;
 
+    // Validate tasks for today
     if (dueOption === "today") {
-      const otherTodayTasks = tasksForToday.filter(
-        (task) => task._id !== currentTaskId
-      );
+      const otherTodayTasks = filterCurrentTask(tasksForToday, currentTaskId);
 
-      if (otherTodayTasks.length >= 6) {
-        // if (
-        //   !confirm(
-        //     "You already have 6 tasks scheduled for today.\nPlease check the tasks duration to ensure a balanced workload: \n\n" +
-        //       "• Maximum 1 long task (3 hours)\n" +
-        //       "• Maximum 2 medium tasks (1 hour each)\n" +
-        //       "• Maximum 3 short tasks (20 minutes each)"
-        //   )
-        // ) {
-        //   return;
-        // }
-        const confirmed = await showWarning(
-          "Task Limit Warning",
-          "You already have 6 tasks scheduled for today.\n\n" +
-            "Please check the tasks duration to ensure a balanced workload:\n" +
-            "• Maximum 1 long task (3 hours)\n" +
-            "• Maximum 2 medium tasks (1 hour each)\n" +
-            "• Maximum 3 short tasks (20 minutes each)"
-        );
-        if (!confirmed) return;
+      // Check daily task limit
+      if (!(await validateDailyTaskLimit(otherTodayTasks, "today"))) {
+        return;
       }
 
-      const longTasksToday = otherTodayTasks.filter(
-        (task) => task.priority === "long"
-      ).length;
-      const mediumTasksToday = otherTodayTasks.filter(
-        (task) => task.priority === "medium"
-      ).length;
-      const shortTasksToday = otherTodayTasks.filter(
-        (task) => task.priority === "short"
-      ).length;
-
-      if (selectedPriority === "long" && longTasksToday >= 1) {
-        // if (
-        //   !confirm(
-        //     "You should only have 1 long task (3 hours) per day. Continue anyway?"
-        //   )
-        // ) {
-        //   return;
-        // }
-        const confirmed = await showWarning(
-          "Long Task Warning",
-          "You should only have 1 long task (3 hours) per day. Continue anyway?"
-        );
-        if (!confirmed) return;
-      }
-      if (selectedPriority === "medium" && mediumTasksToday >= 2) {
-        //
-        const confirmed = await showWarning(
-          "Medium Task Warning",
-          "You should only have 2 medium tasks (1 hour each) per day. Continue anyway?"
-        );
-        if (!confirmed) return;
-      }
-      if (selectedPriority === "short" && shortTasksToday >= 3) {
-        // if (
-        //   !confirm(
-        //     "You should only have 3 short tasks (20 minutes) per day. Continue anyway?"
-        //   )
-        // ) {
-        //   return;
-        // }
-        const confirmed = await showWarning(
-          "Short Task Warning",
-          "You should only have 3 short tasks (20 minutes each) per day. Continue anyway?"
-        );
-        if (!confirmed) return;
-      }
-
-      if (dueOption === "tomorrow") {
-        // const tomorrowCount = tasksForTomorrow.filter(
-        //   (task) => task._id !== currentTaskId
-        // ).length;
-        // if (tomorrowCount >= 6) {
-        //   alert(
-        //     "You already have 6 tasks scheduled for tomorrow. Please choose another day."
-        //   );
-        //   return;
-        // }
-
-        const otherTomorrowTasks = tasksForTomorrow.filter(
-          (task) => task._id !== currentTaskId
-        );
-
-        if (otherTomorrowTasks.length >= 6) {
-          // if (
-          //   !confirm(
-          //     "You already have 6 tasks scheduled for tomorrow.\nPlease check the tasks duration to ensure a balanced workload: \n\n" +
-          //       "• Maximum 1 long task (3 hours)\n" +
-          //       "• Maximum 2 medium tasks (1 hour each)\n" +
-          //       "• Maximum 3 short tasks (20 minutes each)"
-          //   )
-          // ) {
-          //   return;
-          // }
-          const confirmed = await showWarning(
-            "Task Limit Warning",
-            "You already have 6 tasks scheduled for tomorrow.\n\n" +
-              "Please check the tasks duration to ensure a balanced workload:\n" +
-              "• Maximum 1 long task (3 hours)\n" +
-              "• Maximum 2 medium tasks (1 hour each)\n" +
-              "• Maximum 3 short tasks (20 minutes each)"
-          );
-          if (!confirmed) return;
-        }
-
-        // const tomorrowTasks = tasksForTomorrow.filter(
-        //   (task) => task._id !== currentTaskId
-        // );
-        const longTasksTomorrow = otherTomorrowTasks.filter(
-          (task) => task.priority === "long"
-        ).length;
-        const mediumTasksTomorrow = otherTomorrowTasks.filter(
-          (task) => task.priority === "medium"
-        ).length;
-        const shortTasksTomorrow = otherTomorrowTasks.filter(
-          (task) => task.priority === "short"
-        ).length;
-
-        if (selectedPriority === "long" && longTasksTomorrow >= 1) {
-          // if (
-          //   !confirm(
-          //     "You should only have 1 long task (3 hours) per day. Continue anyway?"
-          //   )
-          // ) {
-          //   return;
-          // }
-          const confirmed = await showWarning(
-            "Long Task Warning",
-            "You should only have 1 long task (3 hours) per day. Continue anyway?"
-          );
-          if (!confirmed) return;
-        }
-        if (selectedPriority === "medium" && mediumTasksTomorrow >= 2) {
-          // if (
-          //   !confirm(
-          //     "You should only have 2 medium tasks (1 hour) per day. Continue anyway?"
-          //   )
-          // ) {
-          //   return;
-          // }
-          const confirmed = await showWarning(
-            "Medium Task Warning",
-            "You should only have 2 medium tasks (1 hour each) per day. Continue anyway?"
-          );
-          if (!confirmed) return;
-        }
-        // if (selectedPriority === "short" && shortTasksTomorrow >= 3) {
-        //   if (
-        //     !confirm(
-        //       "You should only have 3 short tasks (20 minutes) per day. Continue anyway?"
-        //     )
-        //   ) {
-        //     return;
-        //   }
-        const confirmed = await showWarning(
-          "Short Task Warning",
-          "You should only have 3 short tasks (20 minutes each) per day. Continue anyway?"
-        );
-        if (!confirmed) return;
+      // Check priority-specific limits
+      if (!(await validatePriorityLimit(selectedPriority, otherTodayTasks))) {
+        return;
       }
     }
 
+    // Validate tasks for tomorrow
+    if (dueOption === "tomorrow") {
+      const otherTomorrowTasks = filterCurrentTask(
+        tasksForTomorrow,
+        currentTaskId
+      );
+
+      // Check daily task limit
+      if (!(await validateDailyTaskLimit(otherTomorrowTasks, "tomorrow"))) {
+        return;
+      }
+
+      // Check priority-specific limits
+      if (
+        !(await validatePriorityLimit(selectedPriority, otherTomorrowTasks))
+      ) {
+        return;
+      }
+    }
+
+    // Set due date based on selected option
     let dueDate = null;
 
     if (dueOption === "later") {
@@ -275,7 +152,7 @@ export default function TaskForm({
     } else if (dueOption === "someday" && confirmNoDate) {
       dueDate = null;
     } else {
-      alert(
+      await showWarning(
         "Please confirm that you want to add this task without a due date."
       );
       return;
@@ -283,6 +160,7 @@ export default function TaskForm({
 
     taskData.dueDate = dueDate;
 
+    // Handle form submission based on mode
     if (isEditing) {
       onSubmit(taskData);
     } else {
@@ -295,21 +173,16 @@ export default function TaskForm({
     }
   }
 
+  /**
+   * Handles changes in due date option
+   * @param {string} option - Selected due date option
+   */
   function handleDueOptionChange(option) {
     setDueOption(option);
     if (option !== "someday") {
       setConfirmNoDate(false);
     }
   }
-
-  // const todayCount = tasksForToday.filter(
-  //   (task) => task._id !== currentTaskId
-  // ).length;
-  // const tomorrowCount = tasksForTomorrow.filter(
-  //   (task) => task._id !== currentTaskId
-  // ).length;
-  // const isTodayFull = todayCount >= 6;
-  // const isTomorrowFull = tomorrowCount >= 6;
 
   return (
     <>
@@ -352,17 +225,9 @@ export default function TaskForm({
                 setPriority("long");
                 handleInputChange();
               }}
-              // disabled={disabledPriorities.includes("long")}
               required
             />
-            <label
-              htmlFor="long"
-              // className={
-              //   disabledPriorities.includes("long") ? styles.disabled : " "
-              // }
-            >
-              3 hours
-            </label>
+            <label htmlFor="long">3 hours</label>
             <br />
             <input
               type="radio"
@@ -374,16 +239,8 @@ export default function TaskForm({
                 setPriority("medium");
                 handleInputChange();
               }}
-              // disabled={disabledPriorities.includes("medium")}
             />
-            <label
-              htmlFor="medium"
-              // className={
-              //   disabledPriorities.includes("medium") ? styles.disabled : " "
-              // }
-            >
-              1 hour
-            </label>
+            <label htmlFor="medium">1 hour</label>
             <br />
             <input
               type="radio"
@@ -395,16 +252,8 @@ export default function TaskForm({
                 setPriority("short");
                 handleInputChange();
               }}
-              // disabled={disabledPriorities.includes("short")}
             />
-            <label
-              htmlFor="short"
-              // className={
-              //   disabledPriorities.includes("short") ? styles.disabled : " "
-              // }
-            >
-              20 minutes
-            </label>
+            <label htmlFor="short">20 minutes</label>
           </div>
           <div className={styles.radioGroup}>
             <p>Due:</p>
@@ -418,7 +267,6 @@ export default function TaskForm({
                 handleInputChange();
               }}
               checked={dueOption === "today"}
-              // disabled={isTodayFull}
               required
             />
             <label htmlFor="today"> Today</label> <br />
@@ -432,7 +280,6 @@ export default function TaskForm({
                 handleInputChange();
               }}
               checked={dueOption === "tomorrow"}
-              // disabled={isTomorrowFull}
             />
             <label htmlFor="tomorrow"> Tomorrow</label> <br />
             <input
@@ -486,11 +333,7 @@ export default function TaskForm({
           </div>
         )}
         <div className={styles.buttonContainer}>
-          <button
-            className={styles.submitButton}
-            type="submit"
-            // disabled={dueOption === "someday" && !confirmNoDate}
-          >
+          <button className={styles.submitButton} type="submit">
             {isEditing ? "Save" : "Add Task"}
           </button>
           <Button type="button" variant="delete" onClick={handleCancel}>
