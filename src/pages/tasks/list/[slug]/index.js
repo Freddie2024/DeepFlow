@@ -14,6 +14,7 @@ import {
   DURATION_FILTERS,
   filterTasksByDuration,
 } from "@/src/components/taskFilter/filterUtils";
+import styles from "../../../../components/taskList/TaskList.module.css";
 
 /**
  * Server-side authentication check
@@ -247,36 +248,38 @@ export default function TasksByDate() {
 
   return (
     <>
-      <div className="header-container">
-        <h2>
+      <div className={styles.headerContainer}>
+        <h2 className={styles.title}>
           {filteredTasks.length > 0
             ? `Tasks for ${slug}`
             : `No tasks for ${slug} so far`}
         </h2>
 
-        {slug === "later" && (
-          <TaskSorter
-            onSortChange={(option) => {
-              setSortOption(option);
-              localStorage.setItem("taskSortPreference", option);
-            }}
-            currentSort={sortOption}
-          />
-        )}
-        {slug === "someday" && (
-          <TaskFilter
-            onFilterChange={setDurationFilter}
-            currentFilter={durationFilter}
-          />
-        )}
+        <div className={styles.controls}>
+          {slug === "later" && (
+            <TaskSorter
+              onSortChange={(option) => {
+                setSortOption(option);
+                localStorage.setItem("taskSortPreference", option);
+              }}
+              currentSort={sortOption}
+            />
+          )}
+          {slug === "someday" && (
+            <TaskFilter
+              onFilterChange={setDurationFilter}
+              currentFilter={durationFilter}
+            />
+          )}
 
-        {(slug === "later" || slug === "someday") && (
-          <Link href="/create" passHref>
-            <Button as="a" variant="centered">
-              + Add Task
-            </Button>
-          </Link>
-        )}
+          {(slug === "later" || slug === "someday") && (
+            <Link href="/create" passHref>
+              <Button as="a" variant="centered">
+                + Add Task
+              </Button>
+            </Link>
+          )}
+        </div>
       </div>
 
       {filteredTasks.length > 0 && (

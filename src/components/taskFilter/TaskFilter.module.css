@@ -1,0 +1,42 @@
+.filterContainer {
+    display: flex;
+    justify-content: center;
+    margin: 1rem 0;
+    position: relative;
+  }
+  
+  .filterSelect {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    padding: 0.5rem 2rem 0.5rem 1rem;
+    border: 1px solid var(--primary-dark);
+    border-radius: 40px;
+    background-color: var(--primary-dark);
+    color: var(--white);
+    font-size: 0.8rem;
+    cursor: pointer;
+    outline: none;
+    min-width: 150px;
+  }
+  
+  .filterContainer::after {
+    content: '▼';
+    font-size: 0.8rem;
+    color: var(--white);
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+  }
+  
+  .filterSelect:hover {
+    background-color: var(--primary-light);
+  }
+  
+  .filterSelect option {
+    background-color: var(--white);
+    color: var(--text);
+    padding: 0.5rem;
+  }
