@@ -89,7 +89,7 @@ export default function About() {
             onClick={() => router.push("/tasks/list/today")}
             variant="primary"
           >
-            Back to Tasks
+            Back
           </Button>
         )
       ) : (
