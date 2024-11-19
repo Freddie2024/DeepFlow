@@ -92,8 +92,17 @@
     text-decoration: none;
 } 
 
+.checkboxContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
   .checkbox {
-    margin-left: 0.25rem;
+    margin: 0;
     border: 1px solid var(--accent);
     vertical-align: middle;
+    width: 14px;
+    height: 14px;
   }

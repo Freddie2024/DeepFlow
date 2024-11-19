@@ -98,14 +98,16 @@ export default function TaskCard({ task, onToggle, onDelete, showDueDate }) {
             </Button>
           </Link>
           <Button variant="checkbox" as="label" title="Mark as completed">
-            <span>Done: </span>
-            <input
-              type="checkbox"
-              className={styles.checkbox}
-              checked={task.completed}
-              onChange={() => onToggle(task._id)}
-              aria-label="Mark task as completed"
-            />
+            <div className={styles.checkboxContainer}>
+              <Check size={18} />{" "}
+              <input
+                type="checkbox"
+                className={styles.checkbox}
+                checked={task.completed}
+                onChange={() => onToggle(task._id)}
+                aria-label="Mark task as completed"
+              />
+            </div>
           </Button>
           <Button
             variant="delete"
