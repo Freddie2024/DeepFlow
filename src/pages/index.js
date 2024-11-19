@@ -42,10 +42,16 @@ export default function Home() {
   useEffect(() => {
     if (status === "authenticated") {
       const hasSeenAbout = localStorage.getItem("hasSeenAbout");
+      const isHomeClick = localStorage.getItem("clickedHome");
 
       if (!hasSeenAbout) {
         router.push("/about");
-      } else {
+      } else if (isHomeClick) {
+        setTimeout(() => {
+          localStorage.removeItem("clickedHome");
+        }, 1000);
+      } else if (window.location.pathname === "/") {
+        router.push("/tasks/list/today");
         router.push("/tasks/list/today");
       }
     }
