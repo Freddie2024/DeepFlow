@@ -7,7 +7,18 @@ import { getSession } from "next-auth/react";
 import Button from "@/src/components/button/Button";
 import Link from "next/link";
 import TaskSummary from "@/src/components/taskSummary/taskSummary";
+import TaskSorter from "@/src/components/taskSort/TaskSorter";
+import { SORT_OPTIONS, sortTasks } from "@/src/components/taskSort/sortUtils";
+import TaskFilter from "@/src/components/taskFilter/TaskFilter";
+import {
+  DURATION_FILTERS,
+  filterTasksByDuration,
+} from "@/src/components/taskFilter/filterUtils";
 
+/**
+ * Server-side authentication check
+ * Redirects to homepage if user is not authenticated
+ */
 export async function getServerSideProps(context) {
   const session = await getSession(context);
 
@@ -25,7 +36,13 @@ export async function getServerSideProps(context) {
   };
 }
 
+/**
+ * Main component for task management by date/category
+ * Handles tasks for today, tomorrow, later and someday
+ */
 export default function TasksByDate() {
+  // --- HOOKS AND STATE MANAGEMENT ---
+  // Core task management hooks
   const {
     tasks,
     loading,
@@ -34,11 +51,18 @@ export default function TasksByDate() {
     deleteTask,
     addNewTask,
   } = useTasks();
+  // State for filtered, sorted, and filtered tasks
   const [filteredTasks, setFilteredTasks] = useState([]);
+  const [sortOption, setSortOption] = useState(SORT_OPTIONS.DEFAULT);
+  const [durationFilter, setDurationFilter] = useState(DURATION_FILTERS.ALL);
+
+  // Reference for preventing unnecessary re-renders
   const previousFilteredTasksRef = useRef(filteredTasks);
   const router = useRouter();
   const { slug } = router.query;
 
+  // --- MEMOIZED DATE CALCULATIONS ---
+  // Calculate today's and tomorrow's dates in ISO format
   const todayDate = useMemo(() => new Date().toISOString().split("T")[0], []);
   const tomorrowDateString = useMemo(() => {
     const tomorrow = new Date();
@@ -46,6 +70,8 @@ export default function TasksByDate() {
     return tomorrow.toISOString().split("T")[0];
   }, []);
 
+  // --- CONSTANTS AND MAPPINGS ---
+  // Map route slugs to due date options
   const dueOptionMap = {
     today: "today",
     tomorrow: "tomorrow",
@@ -55,6 +81,8 @@ export default function TasksByDate() {
 
   const defaultDueOption = dueOptionMap[slug] || "today";
 
+  // --- UTILITY FUNCTIONS ---
+  // Convert priority levels to human-readable durations
   const formatDuration = (priority) => {
     switch (priority) {
       case "long":
@@ -68,6 +96,16 @@ export default function TasksByDate() {
     }
   };
 
+  // --- EFFECTS ---
+  // Load saved sort preference from localStorage
+  useEffect(() => {
+    const savedSort = localStorage.getItem("taskSortPreference");
+    if (savedSort) {
+      setSortOption(savedSort);
+    }
+  }, []);
+
+  // Filter tasks based on date and slug
   useEffect(() => {
     if (tasks) {
       try {
@@ -106,6 +144,8 @@ export default function TasksByDate() {
     }
   }, [tasks, slug, todayDate, tomorrowDateString]);
 
+  // --- TASK MANAGEMENT FUNCTIONS ---
+  // Count tasks by priority
   const getTaskCounts = (tasks) => {
     if (!tasks) {
       return { long: 0, medium: 0, short: 0 };
@@ -117,6 +157,7 @@ export default function TasksByDate() {
     };
   };
 
+  // Define task limits per priority
   const getTaskLimits = () => ({
     long: 1,
     medium: 2,
@@ -128,12 +169,15 @@ export default function TasksByDate() {
     return taskCounts[priority] >= limits[priority];
   };
 
+  // --- EVENT HANDLERS ---
+  // Handle new task submission
   const handleFormSubmit = async (event) => {
     event.preventDefault();
     const formData = new FormData(event.target);
     const newTask = Object.fromEntries(formData);
-
+    // Task limit validation for today and tomorrow
     if (["today", "tomorrow"].includes(slug)) {
+      // Get current tasks for the selected day
       const currentTasks = filteredTasks;
       const taskCounts = getTaskCounts(currentTasks);
 
@@ -144,17 +188,21 @@ export default function TasksByDate() {
         return;
       }
     }
-
+    // Set the due date based on the current page
     const dueDate = getDueDateBySlug(slug);
+    // Handle due date assignment
     if (dueDate !== null || slug !== "later") {
+      // For today, tomorrow, or someday tasks
       newTask.dueDate = dueDate;
     } else if (slug === "later" && !newTask.dueDate) {
+      // For 'later' tasks, ensure a specific future date is selected
       alert("Please select a specific future date in the form.");
       return;
     }
     await addNewTask(newTask);
   };
 
+  // Handle task operations (edit, delete, toggle)
   const handleEditTask = async (updatedTask) => {
     await editTask(updatedTask);
   };
@@ -174,6 +222,8 @@ export default function TasksByDate() {
     return null;
   };
 
+  // --- RENDER HELPERS ---
+  // Get empty state messages
   const emptyMessage = {
     today:
       "Create 6 tasks you want to focus on today:\n1 long, 2 medium, 3 short ones with a total of 6 hours.",
@@ -185,8 +235,10 @@ export default function TasksByDate() {
       "No upcoming tasks scheduled.\nAdd tasks with specific future dates!",
   };
 
+  // --- RENDER LOGIC ---
   if (loading) return <p>Loading todays tasks...</p>;
 
+  // Control task form visibility
   const showTaskForm =
     ["today", "tomorrow"].includes(slug) && filteredTasks.length < 6;
   (slug === "someday" || slug === "later") && filteredTasks.length === 0;
@@ -202,6 +254,22 @@ export default function TasksByDate() {
             : `No tasks for ${slug} so far`}
         </h2>
 
+        {slug === "later" && (
+          <TaskSorter
+            onSortChange={(option) => {
+              setSortOption(option);
+              localStorage.setItem("taskSortPreference", option);
+            }}
+            currentSort={sortOption}
+          />
+        )}
+        {slug === "someday" && (
+          <TaskFilter
+            onFilterChange={setDurationFilter}
+            currentFilter={durationFilter}
+          />
+        )}
+
         {(slug === "later" || slug === "someday") && (
           <Link href="/create" passHref>
             <Button as="a" variant="centered">
@@ -214,7 +282,14 @@ export default function TasksByDate() {
       {filteredTasks.length > 0 && (
         <>
           <TaskList
-            tasks={filteredTasks}
+            tasks={
+              slug === "later"
+                ? sortTasks(filteredTasks, sortOption)
+                : slug === "someday"
+                ? filterTasksByDuration(filteredTasks, durationFilter)
+                : filteredTasks
+              // filteredTasks
+            }
             onToggle={handleToggleTaskCompletion}
             onEdit={handleEditTask}
             onDelete={handleDeleteTask}
