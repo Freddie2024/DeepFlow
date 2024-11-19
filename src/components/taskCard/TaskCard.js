@@ -5,6 +5,7 @@ import styles from "./TaskCard.module.css";
 import Button from "../button/Button";
 import Label from "../label/Label";
 import Card from "../card/Card";
+import { ArrowRight, Edit2, Check, Trash2 } from "lucide-react";
 
 export default function TaskCard({ task, onToggle, onDelete, showDueDate }) {
   const todayDate = new Date().toISOString().split("T")[0];
@@ -82,7 +83,9 @@ export default function TaskCard({ task, onToggle, onDelete, showDueDate }) {
             {getDurationLabel(task.priority)}
           </Label>
           <Label variant="details" className={styles.viewDetailsLink}>
-            <Link href={`/tasks/${task._id}`}>Details</Link>
+            <Link href={`/tasks/${task._id}`}>
+              <ArrowRight size={18} />
+            </Link>
           </Label>
         </div>
 
@@ -90,11 +93,11 @@ export default function TaskCard({ task, onToggle, onDelete, showDueDate }) {
 
         <div className={styles.buttonContainer} aria-label="Task Actions">
           <Link href={`/tasks/${task._id}/edit`}>
-            <Button variant="primary" aria-label="Edit task">
-              Edit
+            <Button variant="primary" aria-label="Edit task" title="Edit task">
+              <Edit2 size={18} />
             </Button>
           </Link>
-          <Button variant="checkbox" as="label">
+          <Button variant="checkbox" as="label" title="Mark as completed">
             <span>Done: </span>
             <input
               type="checkbox"
@@ -108,8 +111,9 @@ export default function TaskCard({ task, onToggle, onDelete, showDueDate }) {
             variant="delete"
             onClick={() => onDelete(task._id)}
             aria-label="Delete task"
+            title="Delete task"
           >
-            Delete
+            <Trash2 size={18} />{" "}
           </Button>
         </div>
       </li>

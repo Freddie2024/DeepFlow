@@ -36,11 +36,14 @@
 
   .details {
     color: var(--white);
+    text-align: center;
   }
   
   .details a {
     text-decoration: none;
     color: inherit;
+    display: flex;
+    justify-content: center;
   }
   
   .details:hover {
