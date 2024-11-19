@@ -12,14 +12,8 @@ import { SORT_OPTIONS, sortTasks } from "../components/taskSort/sortUtils";
 export default function Home() {
   const { data: session, status } = useSession();
 
-  const {
-    tasks,
-    addNewTask,
-    deleteTask,
-    toggleTaskCompletion,
-    editTask,
-    loading,
-  } = useTasks();
+  const { tasks, addNewTask, deleteTask, toggleTaskCompletion, loading } =
+    useTasks();
 
   const [sortOption, setSortOption] = useState(SORT_OPTIONS.DEFAULT);
 
@@ -46,10 +40,16 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    if (session === "authenticated") {
-      router.push("/tasks/list/today");
+    if (status === "authenticated") {
+      const hasSeenAbout = localStorage.getItem("hasSeenAbout");
+
+      if (!hasSeenAbout) {
+        router.push("/about");
+      } else {
+        router.push("/tasks/list/today");
+      }
     }
-  }, [session, router]);
+  }, [status, router]);
 
   if (status === "loading") {
     return <p>Loading session...</p>;
