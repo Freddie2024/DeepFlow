@@ -1,9 +1,6 @@
+import styles from "../../../../components/taskList/TaskList.module.css";
 import TaskList from "@/src/components/taskList/TaskList";
-import { useRouter } from "next/router";
-import { useTasks } from "@/src/hooks/useTasks";
 import TaskForm from "@/src/components/taskForm/TaskForm";
-import { useEffect, useState, useMemo, useRef } from "react";
-import { getSession } from "next-auth/react";
 import Button from "@/src/components/button/Button";
 import Link from "next/link";
 import TaskSummary from "@/src/components/taskSummary/taskSummary";
@@ -14,7 +11,10 @@ import {
   DURATION_FILTERS,
   filterTasksByDuration,
 } from "@/src/components/taskFilter/filterUtils";
-import styles from "../../../../components/taskList/TaskList.module.css";
+import { useRouter } from "next/router";
+import { useTasks } from "@/src/hooks/useTasks";
+import { useEffect, useState, useMemo, useRef } from "react";
+import { getSession } from "next-auth/react";
 
 /**
  * Server-side authentication check
@@ -236,15 +236,25 @@ export default function TasksByDate() {
       "No upcoming tasks scheduled.\nAdd tasks with specific future dates!",
   };
 
-  // --- RENDER LOGIC ---
-  if (loading) return <p>Loading todays tasks...</p>;
+  const completedMessage = {
+    today:
+      "Your today's tasks are complete!\nYou can mark them as done when finished.",
+    tomorrow:
+      "Your tomorrow's tasks are complete!\nYou can mark them as done when finished.",
+  };
+
+  const activeFilteredTasks = filteredTasks.filter((task) => !task.completed);
+  const completedFilteredTasks = filteredTasks.filter((task) => task.completed);
 
   // Control task form visibility
   const showTaskForm =
-    ["today", "tomorrow"].includes(slug) && filteredTasks.length < 6;
-  (slug === "someday" || slug === "later") && filteredTasks.length === 0;
+    (["today", "tomorrow"].includes(slug) && filteredTasks.length < 6) ||
+    ((slug === "someday" || slug === "later") && filteredTasks.length === 0);
 
   const taskCounts = getTaskCounts(filteredTasks);
+
+  // --- RENDER LOGIC ---
+  if (loading) return <p>Loading todays tasks...</p>;
 
   return (
     <>
@@ -282,34 +292,68 @@ export default function TasksByDate() {
         </div>
       </div>
 
-      {filteredTasks.length > 0 && (
+      {["today", "tomorrow"].includes(slug) ? (
         <>
           <TaskList
-            tasks={
-              slug === "later"
-                ? sortTasks(filteredTasks, sortOption)
-                : slug === "someday"
-                ? filterTasksByDuration(filteredTasks, durationFilter)
-                : filteredTasks
-              // filteredTasks
-            }
+            tasks={filteredTasks}
             onToggle={handleToggleTaskCompletion}
             onEdit={handleEditTask}
             onDelete={handleDeleteTask}
           />
-          {["today", "tomorrow"].includes(slug) && (
+          {filteredTasks.length > 0 && (
             <TaskSummary tasks={filteredTasks} dateType={slug} />
+          )}
+          {(filteredTasks.length === 0 || filteredTasks.length === 6) && (
+            <p className="empty-message">
+              {filteredTasks.length < 6
+                ? emptyMessage[slug]
+                : completedMessage[slug]}
+            </p>
+          )}
+        </>
+      ) : (
+        <>
+          {activeFilteredTasks.length > 0 && (
+            <TaskList
+              tasks={
+                slug === "later"
+                  ? sortTasks(activeFilteredTasks, sortOption)
+                  : slug === "someday"
+                  ? filterTasksByDuration(activeFilteredTasks, durationFilter)
+                  : activeFilteredTasks
+              }
+              onToggle={handleToggleTaskCompletion}
+              onEdit={handleEditTask}
+              onDelete={handleDeleteTask}
+            />
+          )}
+
+          {completedFilteredTasks.length > 0 && (
+            <>
+              <h2 className={styles.completedTitle}>Completed Tasks</h2>
+              <TaskList
+                tasks={
+                  slug === "later"
+                    ? sortTasks(completedFilteredTasks, sortOption)
+                    : filterTasksByDuration(
+                        completedFilteredTasks,
+                        durationFilter
+                      )
+                }
+                onToggle={handleToggleTaskCompletion}
+                onEdit={handleEditTask}
+                onDelete={handleDeleteTask}
+              />
+            </>
+          )}
+
+          {!activeFilteredTasks.length && !completedFilteredTasks.length && (
+            <p className="empty-message">
+              {emptyMessage[slug] || "No tasks available."}
+            </p>
           )}
         </>
       )}
-
-      {!filteredTasks.length ? (
-        <>
-          <p className="empty-message">
-            {emptyMessage[slug] || "No tasks available."}
-          </p>
-        </>
-      ) : null}
 
       {showTaskForm && (
         <TaskForm

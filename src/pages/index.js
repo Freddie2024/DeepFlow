@@ -62,6 +62,11 @@ export default function Home() {
     return <p>Loading session...</p>;
   }
 
+  if (loading) return <p>Loading tasks...</p>;
+
+  const activeTasks = tasks.filter((task) => !task.completed);
+  const completedTasks = tasks.filter((task) => task.completed);
+
   if (!session) {
     return (
       <div>
@@ -111,12 +116,29 @@ export default function Home() {
         </div>
       </div>
 
-      <TaskList
-        tasks={sortTasks(tasks, sortOption)}
-        onDelete={deleteTask}
-        onToggle={toggleTaskCompletion}
-        showDueDate={true}
-      />
+      {activeTasks.length > 0 && (
+        <TaskList
+          tasks={sortTasks(activeTasks, sortOption)}
+          onDelete={deleteTask}
+          onToggle={toggleTaskCompletion}
+          showDueDate={true}
+        />
+      )}
+
+      {completedTasks.length > 0 && (
+        <>
+          <h2 className={styles.completedTitle}>Completed Tasks</h2>
+          <TaskList
+            tasks={sortTasks(completedTasks, sortOption)}
+            onDelete={deleteTask}
+            onToggle={toggleTaskCompletion}
+            showDueDate={true}
+          />
+        </>
+      )}
+      {!activeTasks.length && !completedTasks.length && (
+        <p className="empty-message">No tasks available.</p>
+      )}
     </>
   );
 }

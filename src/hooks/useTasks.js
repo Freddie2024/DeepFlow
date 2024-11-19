@@ -12,7 +12,7 @@ export function useTasks() {
   console.log("User ID:", session?.user?.userId);
 
   const {
-    data: tasks,
+    data: tasks = [],
     error,
     mutate,
   } = useSWR(

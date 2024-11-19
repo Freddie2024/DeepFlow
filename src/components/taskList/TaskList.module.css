@@ -34,4 +34,11 @@
     justify-content: center;
   }
 
+  .completedTitle {
+    margin-top: 1rem;
+    margin-bottom: 1.5rem;
+    padding-top: 1.5rem; 
+    color: var(--text-light);
+  }
+
   
