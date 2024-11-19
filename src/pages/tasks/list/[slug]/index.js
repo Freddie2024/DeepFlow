@@ -7,7 +7,7 @@ import { getSession } from "next-auth/react";
 import Button from "@/src/components/button/Button";
 import Link from "next/link";
 import TaskSummary from "@/src/components/taskSummary/taskSummary";
-import TaskSorter from "@/src/components/taskSort/taskSorter";
+import TaskSorter from "@/src/components/taskSort/TaskSorter";
 import { SORT_OPTIONS, sortTasks } from "@/src/components/taskSort/sortUtils";
 import TaskFilter from "@/src/components/taskFilter/TaskFilter";
 import {
