@@ -21,14 +21,21 @@ export default function Contact() {
       <div className={styles.qrSections}>
         <div className={styles.qrSection}>
           <h2>
-            Connect on LinkedIn
-            <Image
-              src="/linkedin.svg"
-              alt="LinkedIn Icon"
-              width={24}
-              height={24}
-              className={styles.icon}
-            />
+            <a
+              href="https://www.linkedin.com/in/frida-lemke"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={styles.socialLink}
+            >
+              Connect on LinkedIn
+              <Image
+                src="/linkedin.svg"
+                alt="LinkedIn Icon"
+                width={24}
+                height={24}
+                className={styles.icon}
+              />
+            </a>
           </h2>
           <Image
             src="/linkedin-qr.png"
@@ -42,14 +49,21 @@ export default function Contact() {
 
         <div className={styles.qrSection}>
           <h2>
-            Check out my GitHub
-            <Image
-              src="/github.svg"
-              alt="GitHub Icon"
-              width={24}
-              height={24}
-              className={styles.icon}
-            />
+            <a
+              href="https://github.com/Freddie2024"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={styles.socialLink}
+            >
+              Check out my GitHub
+              <Image
+                src="/github.svg"
+                alt="GitHub Icon"
+                width={24}
+                height={24}
+                className={styles.icon}
+              />
+            </a>
           </h2>
           <Image
             src="/github-qr.png"
