@@ -13,6 +13,7 @@ import {
   LogOut,
   LogIn,
   Info,
+  UserPlus,
   MoreHorizontal,
 } from "lucide-react";
 import { signIn, signOut, useSession } from "next-auth/react";
@@ -26,6 +27,10 @@ export default function Nav() {
     <nav className={styles.nav}>
       <Link href="/about">
         <Info /> <span>About</span>
+      </Link>
+
+      <Link href="/contact">
+        <UserPlus /> <span>Contact</span>
       </Link>
 
       <Link

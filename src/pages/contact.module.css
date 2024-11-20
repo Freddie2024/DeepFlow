@@ -1,0 +1,40 @@
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem;
+    text-align: center;
+  }
+  
+  .qrSections {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    gap: 3rem;
+    margin-top: 2rem;
+  }
+  
+  .qrSection {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    background: var(--background-light);
+    padding: 1rem;
+    border-radius: 8px;
+  }
+  
+  .qrCode {
+    background: white;
+    padding: 8px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    width: 150px;
+    height: 150px;
+  }
+
+  .icon {
+    margin-left: 0.5rem;
+    vertical-align: middle;
+    width: 24px;
+    height: 24px;
+  }
