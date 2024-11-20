@@ -5,6 +5,18 @@ export default function Contact() {
   return (
     <div className={styles.container}>
       <h1>Let&apos;s Connect!</h1>
+      <p>
+        If you want to get an update when DeepFlow is updated, <br />
+        drop me a line:
+        <br />
+        <br />
+        <a
+          href="mailto:fridaysdevelopment@gmail.com"
+          className={styles.emailLink}
+        >
+          fridaysdevelopment@gmail.com
+        </a>
+      </p>
 
       <div className={styles.qrSections}>
         <div className={styles.qrSection}>

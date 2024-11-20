@@ -38,3 +38,14 @@
     width: 24px;
     height: 24px;
   }
+
+  .emailLink {
+    /* color: #0073e6; */
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+  
+  .emailLink:hover {
+    color: #005bb5;
+    text-decoration: underline;
+  }
