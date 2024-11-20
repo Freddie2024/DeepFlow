@@ -7,9 +7,7 @@ export const SORT_OPTIONS = {
 export function sortTasks(tasks, sortOption) {
   if (!tasks) return [];
 
-  const incompleteTasks = tasks.filter((task) => !task.completed);
-
-  return [...incompleteTasks].sort((a, b) => {
+  return [...tasks].sort((a, b) => {
     switch (sortOption) {
       case SORT_OPTIONS.DATE_ASC:
         return new Date(a.dueDate) - new Date(b.dueDate);
