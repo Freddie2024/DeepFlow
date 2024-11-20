@@ -90,7 +90,6 @@ export default function EditTaskPage() {
 
         let warningMessage = null;
 
-        // Prüfe Zeitlimit
         if (totalMinutes > 360) {
           warningMessage = `This would result in ${Math.floor(
             totalMinutes / 60
