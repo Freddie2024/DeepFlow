@@ -325,6 +325,7 @@ export default function TasksByDate() {
               onToggle={handleToggleTaskCompletion}
               onEdit={handleEditTask}
               onDelete={handleDeleteTask}
+              showDueDate={slug === "later"}
             />
           )}
 
@@ -343,6 +344,7 @@ export default function TasksByDate() {
                 onToggle={handleToggleTaskCompletion}
                 onEdit={handleEditTask}
                 onDelete={handleDeleteTask}
+                showDueDate={slug === "later"}
               />
             </>
           )}
