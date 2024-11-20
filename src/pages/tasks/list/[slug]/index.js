@@ -1,4 +1,5 @@
 import styles from "../../../../components/taskList/TaskList.module.css";
+import Swal from "sweetalert2";
 import TaskList from "@/src/components/taskList/TaskList";
 import TaskForm from "@/src/components/taskForm/TaskForm";
 import Button from "@/src/components/button/Button";
@@ -183,10 +184,20 @@ export default function TasksByDate() {
       const taskCounts = getTaskCounts(currentTasks);
 
       if (isTaskLimitReached(newTask.priority, taskCounts)) {
-        alert(
-          `You've reached the limit for ${newTask.priority} tasks for ${slug}.`
-        );
-        return;
+        const result = await Swal.fire({
+          title: "Task Limit Warning",
+          text: `You've already planned ${taskCounts[newTask.priority]} ${
+            newTask.priority
+          } tasks for ${slug}. Are you sure you want to add another one?`,
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonText: "Yes, add it anyway",
+          cancelButtonText: "No, cancel",
+        });
+
+        if (!result.isConfirmed) {
+          return;
+        }
       }
     }
     // Set the due date based on the current page
@@ -201,6 +212,7 @@ export default function TasksByDate() {
       return;
     }
     await addNewTask(newTask);
+    event.target.reset();
   };
 
   // Handle task operations (edit, delete, toggle)
