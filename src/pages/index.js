@@ -73,10 +73,10 @@ export default function Home() {
         <h2>Welcome to DeepFlow</h2>
         <p>Please create an account or log in to see your tasks.</p>
         <button onClick={() => signIn("google")}>Log in with Google</button>
-        <p>or</p>
-        <button onClick={() => signIn()}>
+        {/* <p>or</p> */}
+        {/* <button onClick={() => signIn()}>
           Create account or log in with email
-        </button>
+        </button> */}
       </div>
     );
   }
