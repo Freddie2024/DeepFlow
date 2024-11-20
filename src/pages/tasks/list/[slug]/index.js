@@ -283,7 +283,7 @@ export default function TasksByDate() {
           )}
 
           {(slug === "later" || slug === "someday") && (
-            <Link href="/create" passHref>
+            <Link href="/create" legacyBehavior passHref>
               <Button as="a" variant="centered">
                 + Add Task
               </Button>

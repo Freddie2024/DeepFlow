@@ -108,7 +108,7 @@ export default function Home() {
             currentSort={sortOption}
           />
 
-          <Link href="/create" passHref>
+          <Link href="/create" legacyBehavior passHref>
             <Button as="a" variant="centered">
               + Add Task
             </Button>
