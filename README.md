@@ -1,37 +1,28 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
-
-## Getting Started
-
-First, run the development server:
-
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
 # DeepFlow
+
+Developed as the capstone project for my Web Development Bootcamp at **SPICED Academy**, this app was built using [Next.js](https://nextjs.org/) and bootstrapped with [create-next-app](https://nextjs.org/docs/pages/api-reference/cli/create-next-app).
+
+## About
+**DeepFlow** serves as a streamlined task manager, helping you focus on your most important daily goals. Inspired by the **1-2-3 List** method, it encourages you to plan your day by prioritizing **1 major task**, **2 medium tasks**, and **3 small tasks**.
+
+### Key Features:
+- **Daily and Tomorrow Lists**: 
+  - Organize your day with compact, focused to-do lists limited to six tasks.
+  - Add details like title, optional description, due date, and estimated duration:
+    - 1 major tasks: 3 hours
+    - 2 medium tasks: 1 hour
+    - 3 small tasks: 20 minutes
+- **Long-Term Task Management**: 
+  - Keep track of additional tasks and ideas on dedicated lists:
+    - **Later Date**: For tasks with a specific due date.
+    - **Someday**: For tasks without a defined timeline.
+- **Comprehensive Overview**:
+  - View and manage all tasks in a centralized list.
+  - Use filtering and sorting tools to stay organized.
+- **Seamless Task Interaction**:
+  - Edit task details whenever necessary.
+  - Open detailed task views for in-depth information.
+  - Mark tasks as completed (displayed in a separate section below active tasks).
+  - Remove tasks that are no longer relevant.
+
+With its intuitive design and practical features, TaskFlow helps you prioritize effectively and stay on top of your to-dos with confidence.
