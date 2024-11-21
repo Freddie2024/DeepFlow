@@ -37,14 +37,14 @@ export default function Contact() {
               />
             </a>
           </h2>
-          <Image
+          {/* <Image
             src="/linkedin-qr.png"
             alt="LinkedIn QR Code"
             width={100}
             height={100}
             className={styles.qrCode}
             priority
-          />
+          /> */}
         </div>
 
         <div className={styles.qrSection}>
@@ -65,17 +65,17 @@ export default function Contact() {
               />
             </a>
           </h2>
-          <Image
+          {/* <Image
             src="/github-qr.png"
             alt="GitHub QR Code"
             width={100}
             height={100}
             className={styles.qrCode}
             priority
-          />
+          /> */}
         </div>
 
-        <div className={styles.qrSection}>
+        {/* <div className={styles.qrSection}>
           <h2>Try DeepFlow my Capstone Project</h2>
           <Image
             src="/deepflow-qr.png"
@@ -85,7 +85,7 @@ export default function Contact() {
             className={styles.qrCode}
             priority
           />
-        </div>
+        </div> */}
       </div>
     </div>
   );
